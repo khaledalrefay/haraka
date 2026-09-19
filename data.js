@@ -1,6 +1,6 @@
 /* Content is original Arabic guidance for a gentle beginner routine, not a diagnosis. */
 window.HARAKA = (() => {
- const ex = (id,name,en,area,steps,avoid,easier) => ({id,name,en,area,steps,avoid,easier,image:`assets/exercises/${id}.svg`});
+ const ex = (id,name,en,area,steps,avoid,easier) => ({id,name,en,area,steps,avoid,easier,image:`assets/exercises/${id}.jpg`,fallbackImage:`assets/exercises/${id}.svg`});
  const exercises = [
  ex('march','مشي هادئ بالمكان','March in place','حركة عامة',['قف باستقامة مريحة، واترك ذراعيك يتحركان بطبيعتهما.','ارفع قدمًا ثم الأخرى بخطوات قصيرة، بدون قفز.','تنفّس براحة؛ خفف السرعة إذا صعب عليك الكلام.'],'لا تحوّل الحركة إلى ركض أو ترفع الركبة بالقوة.','امشِ ببطء في الغرفة أو استند بيد إلى الحائط.'),
  ex('shoulders','لفّ الكتفين','Shoulder rolls','الرقبة والكتفان',['قف أو اجلس مع إرخاء الذراعين.','ارفع الكتفين قليلًا، ثم حرّكهما للخلف وللأسفل بدوائر صغيرة.','كرر بهدوء دون تحريك الرأس أو حبس النفس.'],'لا تضغط الكتفين للخلف بعنف، ولا تصنع دوائر مؤلمة.','قلّل حجم الدائرة أو اكتفِ برفع الكتفين وإرخائهما.'),

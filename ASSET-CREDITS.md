@@ -38,3 +38,7 @@ Original Arabic instructions and conservative beginner starting doses were autho
 - [NHS back pain](https://www.nhs.uk/conditions/back-pain/)
 
 No images are hotlinked. No association with, or endorsement by, the sources is claimed.
+
+## User-supplied primary JPG images
+
+Primary exercise image paths now target `<exercise-id>.jpg`. These replacement images are supplied separately by the site owner and are not included in this archive. Existing SVG diagrams are retained as fallback assets. The licenses above apply to the bundled assets, not to replacement images.

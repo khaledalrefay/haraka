@@ -1,6 +1,6 @@
 /* Bump VERSION when deploying a changed offline shell. */
 'use strict';
-const VERSION = '2026-09-20-1';
+const VERSION = '2026-09-20-2';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'haraka-pwa-' + BASE.pathname + '-';
 const CACHE = PREFIX + VERSION;

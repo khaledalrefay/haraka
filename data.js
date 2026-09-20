@@ -1,6 +1,7 @@
 /* Content is original Arabic guidance for a gentle beginner routine, not a diagnosis. */
 window.HARAKA = (() => {
- const ex = (id,name,en,area,steps,avoid,easier) => ({id,name,en,area,steps,avoid,easier,image:`assets/exercises/${id}.jpg`,fallbackImage:`assets/exercises/${id}.svg`});
+ const imageSizes={"march":[1024,572],"shoulders":[1024,572],"neck":[1024,572],"squat":[1024,572],"wall-slide":[1024,572],"wall-push":[1024,572],"bridge":[1024,572],"bird-dog":[1024,572],"hinge":[1024,572],"calf":[1024,572],"forearm-plank":[1024,572],"wall-plank":[1024,572],"side-plank":[1024,572],"side-step":[1024,572],"cat":[1024,572],"chest":[1024,572],"breathe":[1024,572]};
+ const ex = (id,name,en,area,steps,avoid,easier) => ({id,name,en,area,steps,avoid,easier,imageSize:imageSizes[id],image:`assets/exercises/${id}.jpg`,fallbackImage:`assets/exercises/${id}.svg`});
  const exercises = [
  ex('march','مشي هادئ بالمكان','March in place','حركة عامة',['قف باستقامة مريحة، واترك ذراعيك يتحركان بطبيعتهما.','ارفع قدمًا ثم الأخرى بخطوات قصيرة، بدون قفز.','تنفّس براحة؛ خفف السرعة إذا صعب عليك الكلام.'],'لا تحوّل الحركة إلى ركض أو ترفع الركبة بالقوة.','امشِ ببطء في الغرفة أو استند بيد إلى الحائط.'),
  ex('shoulders','لفّ الكتفين','Shoulder rolls','الرقبة والكتفان',['قف أو اجلس مع إرخاء الذراعين.','ارفع الكتفين قليلًا، ثم حرّكهما للخلف وللأسفل بدوائر صغيرة.','كرر بهدوء دون تحريك الرأس أو حبس النفس.'],'لا تضغط الكتفين للخلف بعنف، ولا تصنع دوائر مؤلمة.','قلّل حجم الدائرة أو اكتفِ برفع الكتفين وإرخائهما.'),
@@ -20,8 +21,6 @@ window.HARAKA = (() => {
  ex('chest','فتح الصدر بلطف','Gentle chest opening','الرقبة والكتفان',['قف أو اجلس باستقامة مريحة، والذراعان قرب جانبيك.','افتح الذراعين قليلًا مع راحتي اليدين للأمام.','دع الكتفين يرجعان قليلًا دون ضغط، وتنفس بهدوء.'],'لا تدفع الصدر بقوة ولا تقوّس أسفل الظهر.','ابقِ الذراعين منخفضتين واكتفِ بإرخاء الكتفين للخلف.'),
  ex('breathe','تهدئة وتنفس مريح','Easy breathing','تهدئة',['اجلس أو قف بوضع مريح وأرخِ الكتفين.','خذ شهيقًا طبيعيًا ثم زفيرًا هادئًا دون إجبار.','دع النفس يعود لإيقاعه المعتاد.'],'لا تحبس النفس ولا تأخذ أنفاسًا عميقة وسريعة.','تنفس بطبيعتك؛ لا تحتاج لإيقاع محدد.')
  ];
- for(const id of ['squat','bridge','cat']){const e=exercises.find(x=>x.id===id);e.photos=[`assets/exercises/${id}-0.jpg`,`assets/exercises/${id}-1.jpg`];e.photoCredit='Free Exercise DB · Unlicense';}
- const shoulder=exercises.find(x=>x.id==='shoulders');shoulder.photos=['assets/exercises/shoulder-rolls-reference.svg'];shoulder.photoCredit='Cancer Research UK / Wikimedia Commons · CC BY-SA 4.0 · دون تعديل. لا يعني استخدام الرسم تأييد الجهة لهذا البرنامج.';
  const E=Object.fromEntries(exercises.map(e=>[e.id,e]));
  const item=(id,dose,seconds=0)=>({id,dose,seconds});
  const warm=[item('march','دقيقتان',120),item('shoulders','8 لفات هادئة'),item('neck','3 مرات لكل جهة'),item('squat','5 عدّات خفيفة')];

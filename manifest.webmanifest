@@ -21,5 +21,8 @@
       "type": "image/png",
       "purpose": "any"
     }
-  ]
+  ],
+  "id": "./",
+  "description": "برنامج منزلي للحركة اليومية مع شرح التمارين والمؤقت وحفظ تقدمك على جهازك.",
+  "prefer_related_applications": false
 }

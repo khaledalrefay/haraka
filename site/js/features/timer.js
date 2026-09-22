@@ -1,3 +1,4 @@
+import { recordSequence } from '../core/records.js';
 import {
 runtime
 }
@@ -80,3 +81,22 @@ const n=Math.ceil(ms/1000);
 return `${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`;
 }
 ;
+
+// Legacy saved sessions have no total; derive a safe baseline once.
+export function timerTotal() {
+  const a = runtime.state.active, t = a?.timer;
+  if (!t) return 0;
+  if (!Number.isFinite(t.total) || t.total <= 0) {
+    const seconds = a.mode === 'rest' ? 0 : recordSequence(a)[a.cursor]?.seconds || 0;
+    t.total = Math.max(1, t.remaining, remaining(), seconds * 1000);
+  }
+  return t.total;
+}
+export function refreshTimerProgress() {
+  const total = timerTotal();
+  if (!total) return;
+  const ratio = Math.max(0, Math.min(1, 1 - remaining() / total));
+  document.querySelector('[data-timer-fill]')?.style?.setProperty('--timer-progress', `${ratio * 100}%`);
+  document.querySelector('[data-rest-arc]')?.setAttribute('stroke-dashoffset', String(100 * (1 - ratio)));
+  document.querySelector('[data-rest-dot]')?.setAttribute('transform', `rotate(${ratio * 360} 50 50)`);
+}

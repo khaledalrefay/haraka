@@ -5,7 +5,7 @@ import { reconcileActive } from './reconcile.js';
 import { chooseSessionRounds, confirmStart } from '../features/workout.js';
 import { setDefaultRounds } from '../features/settings.js';
 import {
-prepareSound, ringTimer, pauseTimer, toggleTimer, remaining, timeText
+prepareSound, ringTimer, pauseTimer, toggleTimer, remaining, timeText, timerTotal, refreshTimerProgress
 }
 from '../features/timer.js';
 import {
@@ -146,7 +146,9 @@ break;
 case 'extend':{
 const a=runtime.state.active;
 if(!a?.timer)break;
+const total=timerTotal();
 const n=remaining()+15000;
+a.timer.total=total+15000;
 a.timer.remaining=n;
 if(a.timer.running)a.timer.deadline=Date.now()+n;
 save();
@@ -261,6 +263,7 @@ if(!t?.running)return;
 const ms=remaining();
 const node=$('#timer');
 if(node)node.textContent=timeText(ms);
+refreshTimerProgress();
 if(ms<=0){
 ringTimer();
 t.remaining=0;

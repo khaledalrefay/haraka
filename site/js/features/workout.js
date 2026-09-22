@@ -38,7 +38,7 @@ save
 }
 from '../core/storage.js';
 import {
-timeText, remaining, pauseTimer
+timeText, remaining, pauseTimer, refreshTimerProgress
 }
 from './timer.js';
 import {
@@ -106,7 +106,7 @@ const a=runtime.state.active;
 if(!a)return;
 const item=recordSequence(a)[a.cursor];
 a.timer=item.seconds?{
-remaining:item.seconds*1000,running:false,deadline:0
+total:item.seconds*1000,remaining:item.seconds*1000,running:false,deadline:0
 }
 :null;
 }
@@ -120,10 +120,11 @@ return;
 const seq=recordSequence(a),i=seq[a.cursor],e=D.E[i.id];
 const rest = a.mode === 'rest';
 const timed = rest || Boolean(i.seconds);
+const dose = i.dose.replace(/^حتى\s+/, '').replace(/\s*·\s*يمكنك التوقف قبلها$/, '');
 const round = i.round && isMain(a.session) ? `الجولة ${i.round} من ${a.rounds}` : '';
 const progress = `<div class="session-progress" role="progressbar" aria-label="تقدم الجلسة" aria-valuetext="${a.cursor} من ${seq.length} خطوات" aria-valuenow="${a.cursor}" aria-valuemin="0" aria-valuemax="${seq.length}">${seq.map((step,index)=>`<span class="${index<a.cursor?(a.results[index]==='skip'?'skipped':'complete'):index===a.cursor?'current':''}" aria-hidden="true"></span>`).join('')}</div>`;
 const controls = `<div class="timer-controls" ${timed ? '' : 'inert aria-hidden="true"'}>
-  <button class="secondary" data-action="timer" ${timed ? '' : 'disabled'}>${icon(a.timer?.running?'pause':'play')} ${a.timer?.running?'إيقاف مؤقت':'تشغيل المؤقّت'}</button>
+  <button class="secondary timer-trigger" ${rest ? '' : 'data-timer-fill'} data-action="timer" ${timed ? '' : 'disabled'}><span class="timer-trigger-content">${icon(a.timer?.running?'pause':'play')} ${a.timer?.running?'إيقاف مؤقت':'تشغيل المؤقّت'}</span></button>
   <button class="text-btn" data-action="${rest ? 'extend' : 'reset-timer'}" ${timed ? '' : 'disabled'}>${rest ? '+ 15 ثانية' : 'إعادة الوقت'}</button>
 </div>`;
 main.innerHTML = `<div class="session-layout session-focus ${rest ? 'is-rest' : 'is-exercise'}">
@@ -133,21 +134,22 @@ main.innerHTML = `<div class="session-layout session-focus ${rest ? 'is-rest' : 
     ${rest ? `<div class="rest-body">
       <div class="workout-meta"><span class="phase-tag">${icon('coffee')} وقت الراحة</span><span>التالي ${a.cursor+1} من ${seq.length}</span></div>
       <h1 class="rest-title">استراحة</h1>
-      <div class="rest-clock-area"><div class="rest-clock"><span>الوقت المتبقي</span><div id="timer" class="timer-value" aria-label="وقت الاستراحة">${timeText(remaining())}</div></div></div>
-      <div class="rest-next"><div><span class="next-label">التمرين التالي${round ? ' · '+round : ''}</span><h2>${itemName(i)}</h2><span class="next-dose">${i.dose}</span></div><button class="icon-btn" data-exercise="${e.id}" aria-label="طريقة أداء ${e.name}">${icon('info')}</button></div>
+      <div class="rest-clock-area"><div class="rest-clock"><svg class="rest-orbit" viewBox="0 0 100 100" aria-hidden="true"><circle class="orbit-track" cx="50" cy="50" r="44"/><circle data-rest-arc class="orbit-arc" cx="50" cy="50" r="44" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" transform="rotate(-90 50 50)"/><g data-rest-dot><circle class="orbit-dot" cx="50" cy="6" r="2.5"/></g></svg><span>الوقت المتبقي</span><div id="timer" class="timer-value" aria-label="وقت الاستراحة">${timeText(remaining())}</div></div></div>
+      <div class="rest-next"><div><span class="next-label">التمرين التالي${round ? ' · '+round : ''}</span><h2>${itemName(i)}</h2><span class="next-dose">${dose}</span></div><button class="icon-btn" data-exercise="${e.id}" aria-label="طريقة أداء ${e.name}">${icon('info')}</button></div>
       ${controls}
       <div class="player-actions"><button class="primary" data-action="end-rest">ابدأ التمرين التالي ${icon('arrow')}</button></div>
     </div>` : `<div class="player-body">
       <div class="workout-meta"><span class="phase-tag">${i.phase}</span><span>${round ? round+' · ' : ''}<bdi>${a.cursor+1} / ${seq.length}</bdi></span></div>
       <div class="exercise-heading"><h1>${itemName(i)}</h1><button class="icon-btn" data-exercise="${e.id}" aria-label="طريقة أداء ${e.name}" title="طريقة الأداء">${icon('info')}</button></div>
-      ${exerciseImage(e)}
-      <div class="workout-dose"><strong>${i.dose}</strong>${i.id==='chest'&&i.seconds===40?'<small>أرخِ الذراعين بين المرتين</small>':''}</div>
+      <div class="workout-media">${exerciseImage(e)}
+      <div class="workout-dose"><strong>${dose}</strong>${i.id==='chest'&&i.seconds===40?'<small>أرخِ الذراعين بين المرتين</small>':''}</div></div>
       <div class="workout-timing">${timed ? `<div class="timer-value" id="timer" aria-label="وقت التمرين">${timeText(remaining())}</div>` : '<div aria-hidden="true"></div>'}${controls}</div>
-      <div class="player-actions"><button class="primary" data-action="done">${icon('check')} ${i.side ? 'أنهيت هذه الجهة' : 'أنهيت التمرين'}</button><button class="text-btn" data-action="skip">تخطّي</button></div>
+      <div class="player-actions"><button class="primary" data-action="done">${icon('check')} ${i.side ? 'أنهيت هذه الجهة' : 'أنهيت التمرين'}</button></div>
     </div>`}
   </section>
-  <button class="text-btn workout-stop" data-action="stop">إنهاء الجلسة مبكرًا</button>
+  <div class="workout-footer">${rest ? '' : '<button class="text-btn" data-action="skip">تخطّي التمرين</button>'}<button class="text-btn workout-stop" data-action="stop">إنهاء الجلسة</button></div>
 </div>`;
+refreshTimerProgress();
 }
 export function advance(result){
 if (!reconcileActive()) return;
@@ -167,7 +169,7 @@ const rest = restBetween(previous, next, recordVersion(a), runtime.state.setting
 if(rest > 0){
 a.mode='rest';
 a.timer={
-remaining:rest*1000,running:true,deadline:Date.now()+rest*1000
+total:rest*1000,remaining:rest*1000,running:true,deadline:Date.now()+rest*1000
 }
 ;
 }

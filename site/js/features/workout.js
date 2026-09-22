@@ -118,7 +118,34 @@ navigate('today');
 return;
 }
 const seq=recordSequence(a),i=seq[a.cursor],e=D.E[i.id];
-main.innerHTML=`<div class="session-layout"><div class="player-head"><button class="text-btn" data-action="pause-home">${icon('pause')} حفظ وخروج</button><span class="small muted">${recordTitle(a)}</span></div><div class="session-progress" role="progressbar" aria-label="تقدم الجلسة" aria-valuetext="${a.cursor} من ${seq.length} خطوات" aria-valuenow="${a.cursor}" aria-valuemin="0" aria-valuemax="${seq.length}">${seq.map((step,index)=>`<span class="${index<a.cursor?(a.results[index]==='skip'?'skipped':'complete'):index===a.cursor?'current':''}" aria-hidden="true"></span>`).join('')}</div>${a.mode==='rest'?`<section class="card rest-panel"><span class="pill">استراحة</span><h2 style="margin-top:18px">خذ نفسًا، على مهلك</h2><p>يمكنك تمديد الراحة قبل الحركة التالية.</p><div class="timer-value" id="timer">${timeText(remaining())}</div><div class="timer-controls"><button class="secondary" data-action="timer">${icon(a.timer.running?'pause':'play')} ${a.timer.running?'إيقاف مؤقت':'تشغيل'}</button><button class="secondary" data-action="extend">+ 15 ثانية</button></div><div class="next-preview"><span class="eyebrow">التالي · ${i.phase}${i.round?' · الجولة '+i.round:''}</span><h3>${itemName(i)}</h3><span class="small muted">${i.dose}</span></div><button class="primary full" data-action="end-rest">جاهز، انتقل للتمرين ${icon('arrow')}</button></section>`:`<section class="card player-card"><div class="player-body"><span class="eyebrow">${i.phase}${i.round&&isMain(a.session)?` · الجولة ${i.round} من ${a.rounds}`:''} · الخطوة ${a.cursor+1} من ${seq.length}</span><div class="exercise-heading"><h1>${itemName(i)}</h1><button class="icon-btn" data-exercise="${e.id}" aria-label="طريقة أداء ${e.name}" title="طريقة الأداء">${icon('info')}</button></div>${exerciseImage(e)}<div class="dose"><div><small>الهدف المريح</small><strong>${i.dose}</strong></div><span class="pill">بدون استعجال</span></div>${i.side?'<p class="small muted">خذ وقتك عند تبديل الجهة؛ ابدأ عندما تكون جاهزًا.</p>':''}${i.id==='chest'&&i.seconds===40?'<p class="small muted">أرخِ الذراعين لحظة بين المرتين.</p>':''}${i.seconds?`<div class="timer-value" id="timer">${timeText(remaining())}</div><div class="timer-controls"><button class="secondary" data-action="timer">${icon(a.timer?.running?'pause':'play')} ${a.timer?.running?'إيقاف المؤقّت':'ابدأ المؤقّت'}</button><button class="text-btn" data-action="reset-timer">إعادة الوقت</button></div>`:''}<div class="player-actions"><button class="primary" data-action="done">${icon('check')} ${i.phase==='التمارين'?'أنهيت المجموعة':'أنهيت الخطوة'}</button><button class="text-btn" data-action="skip">تخطّي</button></div><p class="small muted" style="margin-top:12px">إذا زاد الانزعاج، توقف. يمكنك إنهاء الخطوة قبل العدد أو الوقت المستهدف.</p></div></section>`}<div class="button-row" style="margin-top:14px"><button class="text-btn" data-action="stop">إنهاء الجلسة مبكرًا</button></div></div>`;
+const rest = a.mode === 'rest';
+const timed = rest || Boolean(i.seconds);
+const note = rest ? 'يمكنك تمديد الراحة قبل الحركة التالية.'
+  : i.side ? 'خذ وقتك عند تبديل الجهة؛ ابدأ عندما تكون جاهزًا.'
+  : i.id === 'chest' && i.seconds === 40 ? 'أرخِ الذراعين لحظة بين المرتين.' : 'تحرّك بإيقاع مريح، بدون استعجال.';
+main.innerHTML = `<div class="session-layout session-focus">
+  <div class="player-head"><button class="text-btn" data-action="pause-home">${icon('pause')} حفظ وخروج</button><span class="small muted">${recordTitle(a)}</span></div>
+  <div class="session-progress" role="progressbar" aria-label="تقدم الجلسة" aria-valuetext="${a.cursor} من ${seq.length} خطوات" aria-valuenow="${a.cursor}" aria-valuemin="0" aria-valuemax="${seq.length}">${seq.map((step,index)=>`<span class="${index<a.cursor?(a.results[index]==='skip'?'skipped':'complete'):index===a.cursor?'current':''}" aria-hidden="true"></span>`).join('')}</div>
+  <section class="card player-card">
+    <div class="player-body">
+      <span class="eyebrow">${rest ? 'استراحة · التالي: ' : ''}${i.phase}${i.round&&isMain(a.session)?` · الجولة ${i.round} من ${a.rounds}`:''} · ${a.cursor+1} / ${seq.length}</span>
+      <div class="exercise-heading"><h1>${rest ? 'التالي: ' : ''}${itemName(i)}</h1><button class="icon-btn" data-exercise="${e.id}" aria-label="طريقة أداء ${e.name}" title="طريقة الأداء">${icon('info')}</button></div>
+      ${exerciseImage(e)}
+      <div class="dose"><small>${rest ? 'هدف التمرين التالي' : 'الهدف المريح'}</small><strong>${i.dose}</strong></div>
+      <p class="workout-hint small muted">${note}</p>
+      <div class="workout-timing">
+        ${timed ? `<div class="timer-value" id="timer" aria-label="${rest ? 'وقت الراحة' : 'وقت التمرين'}">${timeText(remaining())}</div>` : '<div class="timer-value untimed-label">بدون مؤقّت</div>'}
+        <div class="timer-controls" ${timed ? '' : 'inert aria-hidden="true"'}>
+          <button class="secondary" data-action="timer" ${timed ? '' : 'disabled'}>${icon(a.timer?.running?'pause':'play')} ${a.timer?.running?'إيقاف مؤقت':'ابدأ المؤقّت'}</button>
+          <button class="text-btn" data-action="${rest ? 'extend' : 'reset-timer'}" ${timed ? '' : 'disabled'}>${rest ? '+ 15 ثانية' : 'إعادة الوقت'}</button>
+        </div>
+      </div>
+      <div class="player-actions"><button class="primary" data-action="${rest ? 'end-rest' : 'done'}">${icon(rest ? 'arrow' : 'check')} ${rest ? 'جاهز، ابدأ التمرين' : i.phase==='التمارين'?'أنهيت المجموعة':'أنهيت الخطوة'}</button><button class="text-btn" data-action="skip" ${rest ? 'disabled aria-hidden="true" tabindex="-1"' : ''}>تخطّي</button></div>
+      <p class="workout-safety small muted">إذا زاد الانزعاج، توقف. يمكنك إنهاء الخطوة قبل الهدف.</p>
+    </div>
+  </section>
+  <button class="text-btn workout-stop" data-action="stop">إنهاء الجلسة مبكرًا</button>
+</div>`;
 }
 export function advance(result){
 if (!reconcileActive()) return;

@@ -134,7 +134,7 @@ main.innerHTML = `<div class="session-layout session-focus">
       <div class="dose"><small>${rest ? 'هدف التمرين التالي' : 'الهدف المريح'}</small><strong>${i.dose}</strong></div>
       <p class="workout-hint small muted">${note}</p>
       <div class="workout-timing">
-        ${timed ? `<div class="timer-value" id="timer" aria-label="${rest ? 'وقت الراحة' : 'وقت التمرين'}">${timeText(remaining())}</div>` : '<div class="timer-value untimed-label">بدون مؤقّت</div>'}
+        ${timed ? `<div class="timer-value" id="timer" aria-label="${rest ? 'وقت الراحة' : 'وقت التمرين'}">${timeText(remaining())}</div>` : '<div class="timer-value" aria-hidden="true"></div>'}
         <div class="timer-controls" ${timed ? '' : 'inert aria-hidden="true"'}>
           <button class="secondary" data-action="timer" ${timed ? '' : 'disabled'}>${icon(a.timer?.running?'pause':'play')} ${a.timer?.running?'إيقاف مؤقت':'ابدأ المؤقّت'}</button>
           <button class="text-btn" data-action="${rest ? 'extend' : 'reset-timer'}" ${timed ? '' : 'disabled'}>${rest ? '+ 15 ثانية' : 'إعادة الوقت'}</button>

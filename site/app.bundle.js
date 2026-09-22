@@ -1123,7 +1123,7 @@
       <div class="dose"><small>${rest ? "\u0647\u062F\u0641 \u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0627\u0644\u062A\u0627\u0644\u064A" : "\u0627\u0644\u0647\u062F\u0641 \u0627\u0644\u0645\u0631\u064A\u062D"}</small><strong>${i.dose}</strong></div>
       <p class="workout-hint small muted">${note}</p>
       <div class="workout-timing">
-        ${timed ? `<div class="timer-value" id="timer" aria-label="${rest ? "\u0648\u0642\u062A \u0627\u0644\u0631\u0627\u062D\u0629" : "\u0648\u0642\u062A \u0627\u0644\u062A\u0645\u0631\u064A\u0646"}">${timeText(remaining())}</div>` : '<div class="timer-value untimed-label">\u0628\u062F\u0648\u0646 \u0645\u0624\u0642\u0651\u062A</div>'}
+        ${timed ? `<div class="timer-value" id="timer" aria-label="${rest ? "\u0648\u0642\u062A \u0627\u0644\u0631\u0627\u062D\u0629" : "\u0648\u0642\u062A \u0627\u0644\u062A\u0645\u0631\u064A\u0646"}">${timeText(remaining())}</div>` : '<div class="timer-value" aria-hidden="true"></div>'}
         <div class="timer-controls" ${timed ? "" : 'inert aria-hidden="true"'}>
           <button class="secondary" data-action="timer" ${timed ? "" : "disabled"}>${icon(a.timer?.running ? "pause" : "play")} ${a.timer?.running ? "\u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A" : "\u0627\u0628\u062F\u0623 \u0627\u0644\u0645\u0624\u0642\u0651\u062A"}</button>
           <button class="text-btn" data-action="${rest ? "extend" : "reset-timer"}" ${timed ? "" : "disabled"}>${rest ? "+ 15 \u062B\u0627\u0646\u064A\u0629" : "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0648\u0642\u062A"}</button>

@@ -78,41 +78,60 @@
 
 .palette-name{flex:1;min-width:0}.palette-check{width:16px;flex-shrink:0;font-weight:700}.palette-choice{gap:8px}.palette-choices{grid-template-columns:repeat(2,minmax(0,1fr))}@media(min-width:600px){.palette-choices{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
-/* Focused workout: identical slots across exercises and rest. */
+/* Workout and rest: distinct views with stable exercise controls. */
 body:has(.session-focus) .app-header{display:none}
 body:has(.session-focus) .shell{padding:8px 12px;max-width:860px}
 body:has(.session-focus) .bottom-nav{display:none}
-.session-focus{height:calc(100dvh - 16px);min-height:600px;max-width:760px;display:grid;grid-template-rows:44px 7px minmax(0,1fr) 44px;gap:6px;margin:0 auto}
-.session-focus .player-head{margin:0;gap:8px;min-width:0}
-.session-focus .player-head .text-btn{min-height:44px;padding:8px;font-size:14px;flex-shrink:0}
-.session-focus .player-head>span{font-size:13px;text-align:left;line-height:1.3}
-.session-focus .session-progress{margin:0;height:7px}
-.session-focus .player-card{min-height:0;border-radius:18px;box-shadow:none}
-.session-focus .player-card .player-body{height:100%;padding:10px 12px;display:grid;grid-template-rows:18px 48px minmax(60px,1fr) 48px 28px 110px 44px 30px;gap:clamp(4px,1dvh,10px)}
-.session-focus .eyebrow{margin:0;font-size:12px;line-height:18px}
-.session-focus .exercise-heading{margin:0;gap:8px;min-width:0}
-.session-focus .exercise-heading h1{font-size:clamp(17px,4.7vw,23px);line-height:1.25;letter-spacing:0}
-.session-focus .exercise-heading .icon-btn{width:44px;height:44px}
-.session-focus .exercise-illustration{margin:0;min-height:0;height:100%;width:100%;display:grid;place-items:center;border-radius:12px;overflow:hidden;background:transparent}
-.session-focus .exercise-illustration img{width:auto;height:auto;min-height:0;max-width:100%;max-height:100%;object-fit:contain;display:block;background:transparent;border-radius:12px}
-.session-focus .exercise-illustration figcaption{padding:8px;color:#202833}
-.session-focus .dose{margin:0;padding:5px 10px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;border-radius:10px}
-.session-focus .dose small{font-size:11px;line-height:14px}
-.session-focus .dose strong{font-size:16px;line-height:1.15}
-.session-focus .workout-hint,.session-focus .workout-safety{margin:0;font-size:12px;line-height:14px;align-self:center}
-.session-focus .workout-timing{display:grid;grid-template-rows:46px 44px;gap:10px;padding-bottom:10px}
-.session-focus .timer-value{margin:0;font-size:38px;line-height:46px;letter-spacing:1px}
-.session-focus .timer-controls{display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:8px}
+.session-focus{height:calc(100dvh - 16px);min-height:604px;max-width:680px;display:grid;grid-template-rows:44px 6px minmax(0,1fr) 44px;gap:6px;margin:auto}
+.session-focus .player-head{margin:0;gap:12px;min-width:0}
+.session-focus .player-head .text-btn{padding:8px 4px;min-height:44px;font-size:14px;flex-shrink:0}
+.session-focus .player-head>span{font-size:13px;line-height:1.3;color:var(--muted);text-align:left}
+.session-focus .session-progress{margin:0;height:6px}
+.session-focus .player-card{min-height:0;border-radius:22px;box-shadow:none}
+.session-focus .player-body,.session-focus .rest-body{height:100%;padding:12px;display:grid;gap:8px;min-height:0}
+.session-focus .player-card .player-body{grid-template-rows:24px 56px minmax(60px,1fr) 40px 96px 48px}
+.workout-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;line-height:1.3;color:var(--muted)}
+.phase-tag{display:inline-flex;align-items:center;gap:5px;color:var(--accent-ink);font-weight:700}
+.phase-tag .icon{width:17px;height:17px}
+.session-focus .exercise-heading{margin:0;gap:10px;min-width:0}
+.session-focus .exercise-heading h1{font-size:clamp(19px,5.3vw,26px);line-height:1.25;letter-spacing:0}
+.session-focus .icon-btn{width:44px;height:44px;flex-shrink:0}
+.session-focus .exercise-illustration{margin:0;min-height:0;height:100%;width:100%;display:grid;place-items:center;background:transparent;overflow:hidden}
+.session-focus .exercise-illustration img{width:auto;height:auto;max-width:100%;max-height:100%;min-height:0;object-fit:contain;border-radius:14px;background:transparent}
+.session-focus .exercise-illustration figcaption{font-size:13px;color:var(--muted)}
+.workout-dose{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:2px}
+.workout-dose strong{font-size:18px;line-height:1.2;font-weight:700}
+.workout-dose small{font-size:12px;line-height:1.2;color:var(--muted)}
+.workout-timing{display:grid;grid-template-rows:44px 44px;gap:8px}
+.session-focus .timer-value{font-family:Tahoma,sans-serif;font-variant-numeric:tabular-nums;direction:ltr;margin:0;font-size:36px;line-height:44px;letter-spacing:1px;text-align:center;color:var(--accent-ink)}
+.session-focus .timer-controls{display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:12px}
 .session-focus .timer-controls[aria-hidden="true"]{visibility:hidden}
-.session-focus .timer-controls button,.session-focus .player-actions button{min-height:44px;padding:6px 8px;font-size:14px;line-height:1.3}
-.session-focus .player-actions{position:static;margin:0;padding:0;background:transparent;display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:8px}
-.session-focus .player-actions [aria-hidden="true"]{visibility:hidden}
-.session-focus .workout-stop{min-height:44px;padding:8px;font-size:13px}
+.session-focus .timer-controls button{min-height:44px;padding:6px 8px;font-size:14px}
+.session-focus .player-actions{position:static;margin:0;padding:0;background:transparent;display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:12px}
+.session-focus .player-actions button{min-height:48px;padding:8px;font-size:16px;line-height:1.3}
+.session-focus .player-actions .text-btn{font-size:14px}
+.session-focus .workout-stop{min-height:44px;padding:8px;font-size:13px;color:var(--muted)}
 .session-focus button{touch-action:manipulation;transition:transform 120ms ease,filter 120ms ease}
-.session-focus button:not(:disabled):active{transform:scale(.97);filter:brightness(.88)}
-/* Short viewports / zoom retain access to every control through scrolling. */
-@media(min-width:700px) and (min-height:700px){
- .session-focus .player-card .player-body{padding:14px 20px;gap:8px;grid-template-rows:18px 52px minmax(60px,1fr) 52px 28px 110px 48px 30px}
- .session-focus .dose strong{font-size:18px}
+.session-focus button:not(:disabled):active{transform:scale(.97);filter:brightness(.9)}
+/* Rest uses a round, neutral clock instead of the exercise's accent digits. */
+.session-focus.is-rest .player-card{background:var(--soft);border-style:dashed}
+.session-focus .rest-body{grid-template-rows:24px 56px minmax(100px,1fr) 112px 44px 48px}
+.rest-title{text-align:center;font-size:30px;line-height:56px;letter-spacing:0}
+.rest-clock-area{display:flex;align-items:center;justify-content:center;min-height:0}
+.rest-clock{height:min(100%,220px);aspect-ratio:1;max-width:100%;border:3px solid var(--line);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--card)}
+.rest-clock>span{font-size:12px;color:var(--muted)}
+.session-focus .rest-clock .timer-value{font-size:clamp(32px,7vw,48px);line-height:1.2;color:var(--ink);font-weight:400}
+.rest-next{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--card);min-width:0}
+.rest-next>div{flex:1;min-width:0}
+.next-label{display:block;font-size:11px;color:var(--muted);line-height:1.3;margin-bottom:3px}
+.rest-next h2{font-size:16px;line-height:1.2;margin:0 0 3px}
+.next-dose{display:block;font-size:12px;line-height:1.2;color:var(--muted)}
+.session-focus.is-rest .player-actions{grid-template-columns:1fr}
+@media(min-height:740px){
+ .session-focus .player-card .player-body,.session-focus .rest-body{padding:16px;gap:12px}
+ .session-focus .player-card .player-body{grid-template-rows:24px 64px minmax(60px,1fr) 44px 108px 50px}
+ .workout-timing{grid-template-rows:48px 48px;gap:12px}
+ .session-focus .timer-value{line-height:48px;font-size:40px}
+ .session-focus .rest-body{grid-template-rows:24px 64px minmax(100px,1fr) 112px 48px 50px}
 }
 @media(prefers-reduced-motion:reduce){.session-focus button:not(:disabled):active{transform:none}}

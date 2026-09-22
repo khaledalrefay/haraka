@@ -1111,27 +1111,31 @@
     const seq = recordSequence(a), i = seq[a.cursor], e = D.E[i.id];
     const rest = a.mode === "rest";
     const timed = rest || Boolean(i.seconds);
-    const note = rest ? "\u064A\u0645\u0643\u0646\u0643 \u062A\u0645\u062F\u064A\u062F \u0627\u0644\u0631\u0627\u062D\u0629 \u0642\u0628\u0644 \u0627\u0644\u062D\u0631\u0643\u0629 \u0627\u0644\u062A\u0627\u0644\u064A\u0629." : i.side ? "\u062E\u0630 \u0648\u0642\u062A\u0643 \u0639\u0646\u062F \u062A\u0628\u062F\u064A\u0644 \u0627\u0644\u062C\u0647\u0629\u061B \u0627\u0628\u062F\u0623 \u0639\u0646\u062F\u0645\u0627 \u062A\u0643\u0648\u0646 \u062C\u0627\u0647\u0632\u064B\u0627." : i.id === "chest" && i.seconds === 40 ? "\u0623\u0631\u062E\u0650 \u0627\u0644\u0630\u0631\u0627\u0639\u064A\u0646 \u0644\u062D\u0638\u0629 \u0628\u064A\u0646 \u0627\u0644\u0645\u0631\u062A\u064A\u0646." : "\u062A\u062D\u0631\u0651\u0643 \u0628\u0625\u064A\u0642\u0627\u0639 \u0645\u0631\u064A\u062D\u060C \u0628\u062F\u0648\u0646 \u0627\u0633\u062A\u0639\u062C\u0627\u0644.";
-    main.innerHTML = `<div class="session-layout session-focus">
-  <div class="player-head"><button class="text-btn" data-action="pause-home">${icon("pause")} \u062D\u0641\u0638 \u0648\u062E\u0631\u0648\u062C</button><span class="small muted">${recordTitle(a)}</span></div>
-  <div class="session-progress" role="progressbar" aria-label="\u062A\u0642\u062F\u0645 \u0627\u0644\u062C\u0644\u0633\u0629" aria-valuetext="${a.cursor} \u0645\u0646 ${seq.length} \u062E\u0637\u0648\u0627\u062A" aria-valuenow="${a.cursor}" aria-valuemin="0" aria-valuemax="${seq.length}">${seq.map((step, index) => `<span class="${index < a.cursor ? a.results[index] === "skip" ? "skipped" : "complete" : index === a.cursor ? "current" : ""}" aria-hidden="true"></span>`).join("")}</div>
+    const round = i.round && isMain(a.session) ? `\u0627\u0644\u062C\u0648\u0644\u0629 ${i.round} \u0645\u0646 ${a.rounds}` : "";
+    const progress = `<div class="session-progress" role="progressbar" aria-label="\u062A\u0642\u062F\u0645 \u0627\u0644\u062C\u0644\u0633\u0629" aria-valuetext="${a.cursor} \u0645\u0646 ${seq.length} \u062E\u0637\u0648\u0627\u062A" aria-valuenow="${a.cursor}" aria-valuemin="0" aria-valuemax="${seq.length}">${seq.map((step, index) => `<span class="${index < a.cursor ? a.results[index] === "skip" ? "skipped" : "complete" : index === a.cursor ? "current" : ""}" aria-hidden="true"></span>`).join("")}</div>`;
+    const controls = `<div class="timer-controls" ${timed ? "" : 'inert aria-hidden="true"'}>
+  <button class="secondary" data-action="timer" ${timed ? "" : "disabled"}>${icon(a.timer?.running ? "pause" : "play")} ${a.timer?.running ? "\u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A" : "\u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0645\u0624\u0642\u0651\u062A"}</button>
+  <button class="text-btn" data-action="${rest ? "extend" : "reset-timer"}" ${timed ? "" : "disabled"}>${rest ? "+ 15 \u062B\u0627\u0646\u064A\u0629" : "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0648\u0642\u062A"}</button>
+</div>`;
+    main.innerHTML = `<div class="session-layout session-focus ${rest ? "is-rest" : "is-exercise"}">
+  <div class="player-head"><button class="text-btn" data-action="pause-home">${icon("pause")} \u062D\u0641\u0638 \u0648\u062E\u0631\u0648\u062C</button><span>${recordTitle(a)}</span></div>
+  ${progress}
   <section class="card player-card">
-    <div class="player-body">
-      <span class="eyebrow">${rest ? "\u0627\u0633\u062A\u0631\u0627\u062D\u0629 \xB7 \u0627\u0644\u062A\u0627\u0644\u064A: " : ""}${i.phase}${i.round && isMain(a.session) ? ` \xB7 \u0627\u0644\u062C\u0648\u0644\u0629 ${i.round} \u0645\u0646 ${a.rounds}` : ""} \xB7 ${a.cursor + 1} / ${seq.length}</span>
-      <div class="exercise-heading"><h1>${rest ? "\u0627\u0644\u062A\u0627\u0644\u064A: " : ""}${itemName(i)}</h1><button class="icon-btn" data-exercise="${e.id}" aria-label="\u0637\u0631\u064A\u0642\u0629 \u0623\u062F\u0627\u0621 ${e.name}" title="\u0637\u0631\u064A\u0642\u0629 \u0627\u0644\u0623\u062F\u0627\u0621">${icon("info")}</button></div>
+    ${rest ? `<div class="rest-body">
+      <div class="workout-meta"><span class="phase-tag">${icon("coffee")} \u0648\u0642\u062A \u0627\u0644\u0631\u0627\u062D\u0629</span><span>\u0627\u0644\u062A\u0627\u0644\u064A ${a.cursor + 1} \u0645\u0646 ${seq.length}</span></div>
+      <h1 class="rest-title">\u0627\u0633\u062A\u0631\u0627\u062D\u0629</h1>
+      <div class="rest-clock-area"><div class="rest-clock"><span>\u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u062A\u0628\u0642\u064A</span><div id="timer" class="timer-value" aria-label="\u0648\u0642\u062A \u0627\u0644\u0627\u0633\u062A\u0631\u0627\u062D\u0629">${timeText(remaining())}</div></div></div>
+      <div class="rest-next"><div><span class="next-label">\u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0627\u0644\u062A\u0627\u0644\u064A${round ? " \xB7 " + round : ""}</span><h2>${itemName(i)}</h2><span class="next-dose">${i.dose}</span></div><button class="icon-btn" data-exercise="${e.id}" aria-label="\u0637\u0631\u064A\u0642\u0629 \u0623\u062F\u0627\u0621 ${e.name}">${icon("info")}</button></div>
+      ${controls}
+      <div class="player-actions"><button class="primary" data-action="end-rest">\u0627\u0628\u062F\u0623 \u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0627\u0644\u062A\u0627\u0644\u064A ${icon("arrow")}</button></div>
+    </div>` : `<div class="player-body">
+      <div class="workout-meta"><span class="phase-tag">${i.phase}</span><span>${round ? round + " \xB7 " : ""}<bdi>${a.cursor + 1} / ${seq.length}</bdi></span></div>
+      <div class="exercise-heading"><h1>${itemName(i)}</h1><button class="icon-btn" data-exercise="${e.id}" aria-label="\u0637\u0631\u064A\u0642\u0629 \u0623\u062F\u0627\u0621 ${e.name}" title="\u0637\u0631\u064A\u0642\u0629 \u0627\u0644\u0623\u062F\u0627\u0621">${icon("info")}</button></div>
       ${exerciseImage(e)}
-      <div class="dose"><small>${rest ? "\u0647\u062F\u0641 \u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0627\u0644\u062A\u0627\u0644\u064A" : "\u0627\u0644\u0647\u062F\u0641 \u0627\u0644\u0645\u0631\u064A\u062D"}</small><strong>${i.dose}</strong></div>
-      <p class="workout-hint small muted">${note}</p>
-      <div class="workout-timing">
-        ${timed ? `<div class="timer-value" id="timer" aria-label="${rest ? "\u0648\u0642\u062A \u0627\u0644\u0631\u0627\u062D\u0629" : "\u0648\u0642\u062A \u0627\u0644\u062A\u0645\u0631\u064A\u0646"}">${timeText(remaining())}</div>` : '<div class="timer-value" aria-hidden="true"></div>'}
-        <div class="timer-controls" ${timed ? "" : 'inert aria-hidden="true"'}>
-          <button class="secondary" data-action="timer" ${timed ? "" : "disabled"}>${icon(a.timer?.running ? "pause" : "play")} ${a.timer?.running ? "\u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A" : "\u0627\u0628\u062F\u0623 \u0627\u0644\u0645\u0624\u0642\u0651\u062A"}</button>
-          <button class="text-btn" data-action="${rest ? "extend" : "reset-timer"}" ${timed ? "" : "disabled"}>${rest ? "+ 15 \u062B\u0627\u0646\u064A\u0629" : "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0648\u0642\u062A"}</button>
-        </div>
-      </div>
-      <div class="player-actions"><button class="primary" data-action="${rest ? "end-rest" : "done"}">${icon(rest ? "arrow" : "check")} ${rest ? "\u062C\u0627\u0647\u0632\u060C \u0627\u0628\u062F\u0623 \u0627\u0644\u062A\u0645\u0631\u064A\u0646" : i.phase === "\u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646" ? "\u0623\u0646\u0647\u064A\u062A \u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0629" : "\u0623\u0646\u0647\u064A\u062A \u0627\u0644\u062E\u0637\u0648\u0629"}</button><button class="text-btn" data-action="skip" ${rest ? 'disabled aria-hidden="true" tabindex="-1"' : ""}>\u062A\u062E\u0637\u0651\u064A</button></div>
-      <p class="workout-safety small muted">\u0625\u0630\u0627 \u0632\u0627\u062F \u0627\u0644\u0627\u0646\u0632\u0639\u0627\u062C\u060C \u062A\u0648\u0642\u0641. \u064A\u0645\u0643\u0646\u0643 \u0625\u0646\u0647\u0627\u0621 \u0627\u0644\u062E\u0637\u0648\u0629 \u0642\u0628\u0644 \u0627\u0644\u0647\u062F\u0641.</p>
-    </div>
+      <div class="workout-dose"><strong>${i.dose}</strong>${i.id === "chest" && i.seconds === 40 ? "<small>\u0623\u0631\u062E\u0650 \u0627\u0644\u0630\u0631\u0627\u0639\u064A\u0646 \u0628\u064A\u0646 \u0627\u0644\u0645\u0631\u062A\u064A\u0646</small>" : ""}</div>
+      <div class="workout-timing">${timed ? `<div class="timer-value" id="timer" aria-label="\u0648\u0642\u062A \u0627\u0644\u062A\u0645\u0631\u064A\u0646">${timeText(remaining())}</div>` : '<div aria-hidden="true"></div>'}${controls}</div>
+      <div class="player-actions"><button class="primary" data-action="done">${icon("check")} ${i.side ? "\u0623\u0646\u0647\u064A\u062A \u0647\u0630\u0647 \u0627\u0644\u062C\u0647\u0629" : "\u0623\u0646\u0647\u064A\u062A \u0627\u0644\u062A\u0645\u0631\u064A\u0646"}</button><button class="text-btn" data-action="skip">\u062A\u062E\u0637\u0651\u064A</button></div>
+    </div>`}
   </section>
   <button class="text-btn workout-stop" data-action="stop">\u0625\u0646\u0647\u0627\u0621 \u0627\u0644\u062C\u0644\u0633\u0629 \u0645\u0628\u0643\u0631\u064B\u0627</button>
 </div>`;

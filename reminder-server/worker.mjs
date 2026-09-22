@@ -66,7 +66,10 @@ export async function handleRequest(request, env, sender = sendPush) {
 }
       return reply({ accepted: true });
     } catch (error) {
-  console.error('PUSH_EXCEPTION_TYPE', error?.name || 'Unknown');
+  const detail = String(error?.message || 'No details')
+  .replace(/https?:\/\/\S+/g, '[URL]')
+  .replace(/[A-Za-z0-9_-]{32,}/g, '[REDACTED]');
+console.error('PUSH_EXCEPTION', error?.name, detail);
   return reply({ error: 'Push provider unavailable' }, 502);
 }
   }

@@ -1,2 +1,3 @@
-// Set after deploying the reminder server.
-window.HarakaConfig = { reminderApi: '' };
+window.HarakaConfig = {
+  reminderApi: 'https://haraka-reminders.khaled-refay98.workers.dev'
+};

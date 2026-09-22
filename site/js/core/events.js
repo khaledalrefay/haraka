@@ -1,55 +1,58 @@
-import {
-  exportData
-} from '../features/backup.js';
+import { activationDialog, activateReminder, runReminderAction } from '../features/reminders.js';
 import { saveEffort } from '../features/completion.js';
-import {
-  exerciseDetails
-} from '../features/exercises.js';
-import {
-  deletePrompt, deleteRecord, editRecord, saveNote
-} from '../features/history.js';
-import { applyPalette, setPreference } from '../features/preferences.js';
-import { activateReminder, activationDialog, runReminderAction } from '../features/reminders.js';
-import { changeScheduleDay, editSchedule, saveSchedule } from '../features/schedule-settings.js';
-import { guide, setDefaultRounds, settings, theme } from '../features/settings.js';
-import {
-  pauseTimer,
-  prepareSound,
-  remaining,
-  ringTimer,
-  timeText,
-  toggleTimer
-} from '../features/timer.js';
-import {
-  today
-} from '../features/today.js';
-import { advance, chooseSessionRounds, confirmStart, finish, initTimer, renderPlayer, start, stopPrompt } from '../features/workout.js';
-import {
-  dateKey,
-  parseDay
-} from '../shared/dates.js';
-import {
-  $,
-  closeDialog,
-  icon, modal,
-  modalHead,
-  showDialog,
-  toast
-} from '../shared/ui.js';
+import { editSchedule, changeScheduleDay, saveSchedule } from '../features/schedule-settings.js';
 import { reconcileActive } from './reconcile.js';
+import { chooseSessionRounds, confirmStart } from '../features/workout.js';
+import { setDefaultRounds } from '../features/settings.js';
 import {
-  navigate,
-  render,
-  tabs
-} from './router.js';
+prepareSound, ringTimer, pauseTimer, toggleTimer, remaining, timeText
+}
+from '../features/timer.js';
 import {
-  restoreData,
-  save, validate
-} from './storage.js';
+deletePrompt, deleteRecord, editRecord, saveNote
+}
+from '../features/history.js';
 import {
-  KEY,
-  runtime
-} from './store.js';
+exerciseDetails
+}
+from '../features/exercises.js';
+import {
+runtime, KEY
+}
+from './store.js';
+import {
+today
+}
+from '../features/today.js';
+import {
+start, advance, initTimer, renderPlayer, stopPrompt, finish
+}
+from '../features/workout.js';
+import {
+toast, closeDialog, $, icon, modal, showDialog, modalHead
+}
+from '../shared/ui.js';
+import {
+parseDay, dateKey
+}
+from '../shared/dates.js';
+import {
+navigate, tabs, render
+}
+from './router.js';
+import {
+save, validate, restoreData
+}
+from './storage.js';
+import {
+guide, theme, settings
+}
+from '../features/settings.js';
+import {
+exportData
+}
+from '../features/backup.js';
+import { setPreference, applyPalette } from '../features/preferences.js';
 export function actions(event){
 const t=event.target.closest('button');
 if(!t)return;

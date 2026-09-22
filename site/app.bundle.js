@@ -559,19 +559,77 @@
     status = message;
     refreshReminders();
   }
+  var pendingReminderAction = "";
+  var reminderLoadingLabels = {
+    "reminder-save": "\u062C\u0627\u0631\u064D \u062D\u0641\u0638 \u0627\u0644\u0645\u0648\u0639\u062F\u2026",
+    "reminder-test": "\u062C\u0627\u0631\u064D \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u062A\u062C\u0631\u0628\u0629\u2026",
+    "reminder-disable": "\u062C\u0627\u0631\u064D \u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u062A\u0630\u0643\u064A\u0631\u2026"
+  };
+  function refreshReminderControls() {
+    const device = readDevice();
+    const pending = Boolean(pendingReminderAction);
+    const labels = {
+      "reminder-save": "\u062D\u0641\u0638 \u0627\u0644\u0645\u0648\u0639\u062F",
+      "reminder-test": "\u062A\u062C\u0631\u0628\u0629 \u0627\u0644\u0625\u0634\u0639\u0627\u0631",
+      "reminder-enable": device.enabled ? "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u0641\u0639\u064A\u0644" : "\u062A\u0641\u0639\u064A\u0644 \u0627\u0644\u062A\u0630\u0643\u064A\u0631",
+      "reminder-disable": "\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u062A\u0630\u0643\u064A\u0631"
+    };
+    const available = {
+      "reminder-save": configured() && Boolean(device.id),
+      "reminder-test": configured() && Boolean(device.id) && Boolean(device.enabled) && typeof Notification !== "undefined" && Notification.permission === "granted",
+      "reminder-enable": configured(),
+      "reminder-disable": Boolean(device.id) && Boolean(device.enabled)
+    };
+    document.querySelectorAll(".reminder-settings button[data-action]").forEach((button) => {
+      const action = button.dataset.action;
+      if (!(action in labels)) return;
+      const loading = action === pendingReminderAction;
+      button.disabled = pending || !available[action];
+      button.classList.toggle("is-loading", loading);
+      button.setAttribute("aria-busy", String(loading));
+      button.textContent = loading ? reminderLoadingLabels[action] : labels[action];
+    });
+    const timeInput = $("#reminder-time");
+    if (timeInput) timeInput.disabled = pending || !configured();
+  }
+  async function runReminderAction(action) {
+    const tasks = {
+      "reminder-save": saveReminderTime,
+      "reminder-test": testReminder,
+      "reminder-disable": disableReminder
+    };
+    const task = tasks[action];
+    if (!task || pendingReminderAction || busy) return;
+    pendingReminderAction = action;
+    setStatus(reminderLoadingLabels[action]);
+    try {
+      await task();
+    } catch (error) {
+      setStatus(error?.message || "\u062A\u0639\u0630\u0651\u0631 \u062A\u0646\u0641\u064A\u0630 \u0627\u0644\u0639\u0645\u0644\u064A\u0629. \u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u064B\u0627.");
+    } finally {
+      pendingReminderAction = "";
+      refreshReminders();
+    }
+  }
   function reminderSection() {
     const device = readDevice();
-    return `<div class="setting-block"><h3>\u062A\u0630\u0643\u064A\u0631 \u0627\u0644\u062C\u0644\u0633\u0629</h3>
+    return `<div class="setting-block reminder-settings"><h3>\u062A\u0630\u0643\u064A\u0631 \u0627\u0644\u062C\u0644\u0633\u0629</h3>
     <label class="reminder-time-label" for="reminder-time">\u0627\u0644\u0633\u0627\u0639\u0629 \u0641\u064A \u0623\u064A\u0627\u0645 \u0627\u0644\u062A\u062F\u0631\u064A\u0628</label>
     <input id="reminder-time" type="time" value="${/^([01]\d|2[0-3]):[0-5]\d$/.test(device.time) ? device.time : "18:00"}" ${configured() ? "" : "disabled"}>
     <p>\u062D\u0633\u0628 \u062A\u0648\u0642\u064A\u062A \u062C\u0647\u0627\u0632\u0643\u060C \u0628\u0623\u064A\u0627\u0645 \u0627\u0644\u062A\u062F\u0631\u064A\u0628 \u0641\u0642\u0637. \u0644\u0627 \u064A\u064F\u0631\u0633\u0644 \u062A\u0630\u0643\u064A\u0631 \u0625\u0636\u0627\u0641\u064A \u0644\u0644\u062A\u0639\u0648\u064A\u0636.</p>
-    <div class="button-row"><button class="secondary" data-action="reminder-enable" ${configured() ? "" : "disabled"}>${device.enabled ? "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u0641\u0639\u064A\u0644" : "\u062A\u0641\u0639\u064A\u0644 \u0627\u0644\u062A\u0630\u0643\u064A\u0631"}</button>
-    <button class="secondary" data-action="reminder-save" ${device.id ? "" : "disabled"}>\u062D\u0641\u0638 \u0627\u0644\u0645\u0648\u0639\u062F</button></div>
-    ${device.id ? '<div class="button-row" style="margin-top:10px"><button class="text-btn" data-action="reminder-test">\u062A\u062C\u0631\u0628\u0629 \u0627\u0644\u0625\u0634\u0639\u0627\u0631</button><button class="text-btn" data-action="reminder-disable">\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u062A\u0630\u0643\u064A\u0631</button></div>' : ""}
-    <p id="reminder-status" role="status"></p>
+    <div class="reminder-actions">
+      <button type="button" class="primary" data-action="reminder-save" ${device.id && configured() ? "" : "disabled"} ${device.id ? "" : "hidden"}>\u062D\u0641\u0638 \u0627\u0644\u0645\u0648\u0639\u062F</button>
+      <button type="button" class="secondary" data-action="reminder-test" ${device.enabled && configured() ? "" : "disabled"} ${device.id ? "" : "hidden"}>\u062A\u062C\u0631\u0628\u0629 \u0627\u0644\u0625\u0634\u0639\u0627\u0631</button>
+      <div class="reminder-management">
+        <button type="button" class="${device.id ? "text-btn" : "primary"}" data-action="reminder-enable" ${configured() ? "" : "disabled"}>${device.enabled ? "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u0641\u0639\u064A\u0644" : "\u062A\u0641\u0639\u064A\u0644 \u0627\u0644\u062A\u0630\u0643\u064A\u0631"}</button>
+        <button type="button" class="text-btn" data-action="reminder-disable" ${device.enabled ? "" : "disabled"} ${device.id ? "" : "hidden"}>\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u062A\u0630\u0643\u064A\u0631</button>
+      </div>
+    </div>
+    <p id="reminder-status" role="status" aria-live="polite" aria-atomic="true"></p>
   </div>`;
   }
   function refreshReminders() {
+    refreshReminderControls();
     const node = $("#reminder-status");
     if (configured() && typeof Notification !== "undefined" && Notification.permission === "denied") {
       if (node) node.textContent = "\u0625\u0634\u0639\u0627\u0631\u0627\u062A \u0627\u0644\u0645\u0648\u0642\u0639 \u0645\u062D\u0638\u0648\u0631\u0629. \u063A\u064A\u0651\u0631 \u0627\u0644\u0625\u0630\u0646 \u0645\u0646 \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u0645\u062A\u0635\u0641\u062D \u0644\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u0641\u0639\u064A\u0644.";
@@ -1547,13 +1605,9 @@
         void activateReminder();
         break;
       case "reminder-save":
-        void saveReminderTime();
-        break;
       case "reminder-disable":
-        void disableReminder();
-        break;
       case "reminder-test":
-        void testReminder();
+        void runReminderAction(t.dataset.action);
         break;
       case "edit-schedule":
         editSchedule();

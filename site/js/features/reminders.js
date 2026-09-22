@@ -1,9 +1,9 @@
-import { runtime } from '../core/store.js';
 import { REMINDER_API } from '../reminder-config.js';
+import { runtime } from '../core/store.js';
 import { dateKey } from '../shared/dates.js';
+import { scheduleFor, recordOccurrence, performedToday, isMain, weekStart } from './schedule.js';
+import { $, showDialog, modalHead, closeDialog, toast } from '../shared/ui.js';
 import { writeReminderGuard } from '../shared/reminder-db.js';
-import { $, closeDialog, modalHead, showDialog, toast } from '../shared/ui.js';
-import { isMain, performedToday, recordOccurrence, scheduleFor, weekStart } from './schedule.js';
 
 const DEVICE_KEY = 'haraka-reminders-v1';
 let status = '', busy = false, syncing = false, queued = false, timer = null, lastSent = '';

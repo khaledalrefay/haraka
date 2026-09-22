@@ -1,9 +1,9 @@
-import { REMINDER_API } from '../reminder-config.js';
 import { runtime } from '../core/store.js';
+import { REMINDER_API } from '../reminder-config.js';
 import { dateKey } from '../shared/dates.js';
-import { scheduleFor, recordOccurrence, performedToday, isMain, weekStart } from './schedule.js';
-import { $, showDialog, modalHead, closeDialog, toast } from '../shared/ui.js';
 import { writeReminderGuard } from '../shared/reminder-db.js';
+import { $, closeDialog, modalHead, showDialog, toast } from '../shared/ui.js';
+import { isMain, performedToday, recordOccurrence, scheduleFor, weekStart } from './schedule.js';
 
 const DEVICE_KEY = 'haraka-reminders-v1';
 let status = '', busy = false, syncing = false, queued = false, timer = null, lastSent = '';
@@ -34,19 +34,80 @@ async function api(path, token, data, method = 'POST') {
   return response.json();
 }
 function setStatus(message) { status = message; refreshReminders(); }
+
+let pendingReminderAction = '';
+const reminderLoadingLabels = {
+  'reminder-save': 'جارٍ حفظ الموعد…',
+  'reminder-test': 'جارٍ إرسال التجربة…',
+  'reminder-disable': 'جارٍ إيقاف التذكير…'
+};
+function refreshReminderControls() {
+  const device = readDevice();
+  const pending = Boolean(pendingReminderAction);
+  const labels = {
+    'reminder-save': 'حفظ الموعد',
+    'reminder-test': 'تجربة الإشعار',
+    'reminder-enable': device.enabled ? 'إعادة التفعيل' : 'تفعيل التذكير',
+    'reminder-disable': 'إيقاف التذكير'
+  };
+  const available = {
+    'reminder-save': configured() && Boolean(device.id),
+    'reminder-test': configured() && Boolean(device.id) && Boolean(device.enabled) &&
+      typeof Notification !== 'undefined' && Notification.permission === 'granted',
+    'reminder-enable': configured(),
+    'reminder-disable': Boolean(device.id) && Boolean(device.enabled)
+  };
+  document.querySelectorAll('.reminder-settings button[data-action]').forEach(button => {
+    const action = button.dataset.action;
+    if (!(action in labels)) return;
+    const loading = action === pendingReminderAction;
+    button.disabled = pending || !available[action];
+    button.classList.toggle('is-loading', loading);
+    button.setAttribute('aria-busy', String(loading));
+    button.textContent = loading ? reminderLoadingLabels[action] : labels[action];
+  });
+  const timeInput = $('#reminder-time');
+  if (timeInput) timeInput.disabled = pending || !configured();
+}
+export async function runReminderAction(action) {
+  const tasks = {
+    'reminder-save': saveReminderTime,
+    'reminder-test': testReminder,
+    'reminder-disable': disableReminder
+  };
+  const task = tasks[action];
+  if (!task || pendingReminderAction || busy) return;
+  pendingReminderAction = action;
+  setStatus(reminderLoadingLabels[action]);
+  try {
+    await task();
+  } catch (error) {
+    setStatus(error?.message || 'تعذّر تنفيذ العملية. حاول مجددًا.');
+  } finally {
+    pendingReminderAction = '';
+    refreshReminders();
+  }
+}
+
 export function reminderSection() {
   const device = readDevice();
-  return `<div class="setting-block"><h3>تذكير الجلسة</h3>
+  return `<div class="setting-block reminder-settings"><h3>تذكير الجلسة</h3>
     <label class="reminder-time-label" for="reminder-time">الساعة في أيام التدريب</label>
     <input id="reminder-time" type="time" value="${/^([01]\d|2[0-3]):[0-5]\d$/.test(device.time) ? device.time : '18:00'}" ${configured() ? '' : 'disabled'}>
     <p>حسب توقيت جهازك، بأيام التدريب فقط. لا يُرسل تذكير إضافي للتعويض.</p>
-    <div class="button-row"><button class="secondary" data-action="reminder-enable" ${configured() ? '' : 'disabled'}>${device.enabled ? 'إعادة التفعيل' : 'تفعيل التذكير'}</button>
-    <button class="secondary" data-action="reminder-save" ${device.id ? '' : 'disabled'}>حفظ الموعد</button></div>
-    ${device.id ? '<div class="button-row" style="margin-top:10px"><button class="text-btn" data-action="reminder-test">تجربة الإشعار</button><button class="text-btn" data-action="reminder-disable">إيقاف التذكير</button></div>' : ''}
-    <p id="reminder-status" role="status"></p>
+    <div class="reminder-actions">
+      <button type="button" class="primary" data-action="reminder-save" ${device.id && configured() ? '' : 'disabled'} ${device.id ? '' : 'hidden'}>حفظ الموعد</button>
+      <button type="button" class="secondary" data-action="reminder-test" ${device.enabled && configured() ? '' : 'disabled'} ${device.id ? '' : 'hidden'}>تجربة الإشعار</button>
+      <div class="reminder-management">
+        <button type="button" class="${device.id ? 'text-btn' : 'primary'}" data-action="reminder-enable" ${configured() ? '' : 'disabled'}>${device.enabled ? 'إعادة التفعيل' : 'تفعيل التذكير'}</button>
+        <button type="button" class="text-btn" data-action="reminder-disable" ${device.enabled ? '' : 'disabled'} ${device.id ? '' : 'hidden'}>إيقاف التذكير</button>
+      </div>
+    </div>
+    <p id="reminder-status" role="status" aria-live="polite" aria-atomic="true"></p>
   </div>`;
 }
 export function refreshReminders() {
+  refreshReminderControls();
   const node = $('#reminder-status');
   if (configured() && typeof Notification !== 'undefined' && Notification.permission === 'denied') { if (node) node.textContent = 'إشعارات الموقع محظورة. غيّر الإذن من إعدادات المتصفح لإعادة التفعيل.'; return; }
   if (node) node.textContent = !configured() ? 'التذكيرات تحتاج إكمال إعداد خدمة الإرسال. بقية التطبيق يعمل كالمعتاد.' : status || (readDevice().enabled ? 'التذكير مفعّل على هذا الجهاز؛ يحتاج اتصالًا بالإنترنت.' : 'التذكير غير مفعّل.');

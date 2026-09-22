@@ -44,7 +44,7 @@ export async function vapidHeader(endpoint, env, now = Date.now()) {
 }
 export async function sendPush(subscription, payload, env) {
   return fetch(subscription.endpoint, {
-    method: 'POST', redirect: 'error', signal: AbortSignal.timeout(15000),
+    method: 'POST', redirect: 'manual', signal: AbortSignal.timeout(15000),
     headers: { Authorization: await vapidHeader(subscription.endpoint, env), 'Content-Encoding': 'aes128gcm', 'Content-Type': 'application/octet-stream', TTL: '300', Urgency: 'normal' },
     body: await encryptPayload(subscription, payload)
   });

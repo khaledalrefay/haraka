@@ -1,5 +1,5 @@
-import { sendPush, decode } from './push.mjs';
-import { validPrefs, dueReminder, allowedEndpoint } from './rules.mjs';
+import { decode, sendPush } from './push.mjs';
+import { allowedEndpoint, dueReminder, validPrefs } from './rules.mjs';
 const titles = { A: 'قوة أساسية', B: 'توازن وتحكّم', C: 'قوة وتحمّل حركي' };
 export async function hash(value) {
   return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))).map(n => n.toString(16).padStart(2, '0')).join('');
@@ -60,9 +60,15 @@ export async function handleRequest(request, env, sender = sendPush) {
     if (!claim.meta.changes) return reply({ error: 'Wait a minute before another test' }, 429);
     try {
       const result = await sender(JSON.parse(device.subscription), { title: 'تذكير حركة', body: 'وصل إشعار التجربة. إعداد التذكير جاهز.', test: true, expiresAt: now + 300000 }, env);
-      if (!result.ok) return reply({ error: 'Push provider rejected test' }, 502);
+      if (!result.ok) {
+  console.error('PUSH_PROVIDER_STATUS', result.status);
+  return reply({ error: 'Push provider rejected test' }, 502);
+}
       return reply({ accepted: true });
-    } catch { return reply({ error: 'Push provider unavailable' }, 502); }
+    } catch (error) {
+  console.error('PUSH_EXCEPTION_TYPE', error?.name || 'Unknown');
+  return reply({ error: 'Push provider unavailable' }, 502);
+}
   }
   return reply({ error: 'Not found' }, 404);
 }

@@ -1,0 +1,8 @@
+{
+  "name": "haraka-reminders",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "deploy": "wrangler deploy", "dev": "wrangler dev", "keys": "node scripts/generate-keys.mjs" },
+  "devDependencies": { "wrangler": "^4.0.0" }
+}

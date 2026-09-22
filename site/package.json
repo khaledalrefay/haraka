@@ -1,0 +1,10 @@
+{
+  "name": "haraka",
+  "private": true,
+  "scripts": {
+    "build": "esbuild js/app.js --bundle --format=iife --target=es2020 --outfile=app.bundle.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

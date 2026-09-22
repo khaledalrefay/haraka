@@ -1,0 +1,13 @@
+{
+  "name": "haraka-reminders",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-21",
+  "workers_dev": true,
+  "triggers": { "crons": ["* * * * *"] },
+  "vars": {
+    "APP_ORIGIN": "https://haraka.khaled-refay98.workers.dev"
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "haraka-reminders", "database_id": "REPLACE_WITH_CREATED_DATABASE_ID" }
+  ]
+}

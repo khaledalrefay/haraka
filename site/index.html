@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#142333"><meta name="description" content="حركة: برنامج منزلي لطيف، شرح التمارين، مؤقت الراحة ومتابعة يومية محفوظة على جهازك.">
+<title>حركة | برنامجي المنزلي</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml"><link rel="manifest" href="manifest.webmanifest?v=3"><link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/screens.css">
+<script>try{const t=localStorage.getItem('haraka-theme');document.documentElement.dataset.theme=t||((matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light')}catch{}</script>
+<script src="pwa.js" defer></script>
+<script src="config.js" defer></script>
+<script src="app.bundle.js" defer></script>
+</head>
+<body>
+<a href="#main" class="skip-link">انتقل إلى المحتوى</a>
+<div class="shell">
+<header class="app-header"><a class="brand" href="#today" aria-label="حركة، الصفحة الرئيسية"><img class="brand-mark" src="assets/icon.svg" alt="" width="48" height="48"><span>حركة<small>مساحة للحركة اليومية</small></span></a><div class="header-actions"><button id="theme-btn" class="icon-btn" aria-label="تبديل المظهر"></button><button id="settings-btn" class="icon-btn" aria-label="الإعدادات"></button></div></header>
+<div id="storage-warning" class="notice" role="alert" hidden></div>
+<main id="main" tabindex="-1"></main>
+
+</div>
+<nav class="bottom-nav" aria-label="التنقل الرئيسي"><button data-nav="today"></button><button data-nav="library"></button><button data-nav="history"></button></nav>
+<dialog id="modal"><div id="modal-content"></div></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<input id="import-file" type="file" accept="application/json,.json" hidden>
+<noscript><p>فعّل JavaScript لاستخدام المتابعة والمؤقّت.</p></noscript>
+</body></html>

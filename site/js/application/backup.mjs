@@ -32,7 +32,8 @@ function validateBackup(input, content, now = Date.now()) {
     if (r.timer) {
       const step = r.snapshot.steps[r.cursor];
       check(step && (step.type === "rest" || step.unit === "seconds") && Number.isFinite(r.timer.remainingMs) && r.timer.remainingMs >= 0 && typeof r.timer.running === "boolean" && (!r.timer.running || integer(r.timer.startedAt)));
-      r.timer = { remainingMs: remaining(r, now), running: false, startedAt: null };
+      check(r.timer.totalMs === undefined || (Number.isFinite(r.timer.totalMs) && r.timer.totalMs > 0 && r.timer.totalMs >= r.timer.remainingMs));
+      r.timer = { totalMs: r.timer.totalMs ?? Math.max((step.seconds ?? step.target)*1000, r.timer.remainingMs), remainingMs: remaining(r, now), running: false, startedAt: null };
     }
   }
   check(!data.active || !data.history.some((r) => r.dateKey === data.active.dateKey || r.completedDate === data.active.dateKey));

@@ -7,7 +7,7 @@ export interface Settings { schemaVersion: 1; palette: string; sound: string; th
 export interface StepContext { id: string; block: string; set?: number; sets?: number; round?: number; rounds?: number; station?: number; stations?: number; side?: 'right'|'left' }
 export interface WorkStep extends StepContext { type: 'work'; exerciseId: string; target: number; unit: 'seconds'|'reps'|'cycles'; sides: 1|2; sideMode: string; pauseSeconds: number; pace: string|null; prescriptionId: string|null }
 export interface RestStep extends StepContext { type: 'rest'; seconds: number; reason: string }
-export interface Timer { remainingMs: number; running: boolean; startedAt: number|null }
+export interface Timer { totalMs?: number; remainingMs: number; running: boolean; startedAt: number|null }
 export interface Snapshot { contentVersion: string; workout: {id: string; program: Program; session: SessionLetter; level: number; blocks: unknown[]; plannedMinutes: number[]}; exercises: Record<string, unknown>; steps: (WorkStep|RestStep)[] }
 export interface Session { id: string; schemaVersion: 1; revision: number; dateKey: DateKey; scheduledDate: DateKey; completedDate?: DateKey; status: 'active'|'completed'|'stopped'; startedAt: number; finishedAt?: number; endReason?: 'expired'; snapshot: Snapshot; cursor: number; results: {stepId:string; outcome:'done'|'skipped'; at:number}[]; timer:Timer|null; hidden?:boolean }
 export interface RepositoryData {settings:Settings; active:Session|null; history:Session[]}

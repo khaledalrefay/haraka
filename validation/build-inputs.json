@@ -1,22 +1,145 @@
 {
   "inputs": {
-    "js/infrastructure/download.mjs": {
-      "bytes": 386,
-      "imports": [],
-      "format": "esm"
-    },
     "js/presentation/html.mjs": {
       "bytes": 956,
       "imports": [],
       "format": "esm"
     },
     "js/data/program-labels.mjs": {
-      "bytes": 1792,
+      "bytes": 2540,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/domain/schedule.mjs": {
+      "bytes": 3619,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/data/estimates.mjs": {
+      "bytes": 1774,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/presentation/home.mjs": {
+      "bytes": 3575,
+      "imports": [
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./html.mjs"
+        },
+        {
+          "path": "js/data/program-labels.mjs",
+          "kind": "import-statement",
+          "original": "../data/program-labels.mjs"
+        },
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        },
+        {
+          "path": "js/data/estimates.mjs",
+          "kind": "import-statement",
+          "original": "../data/estimates.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/presentation/icons.mjs": {
+      "bytes": 935,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/presentation/history.mjs": {
+      "bytes": 1644,
+      "imports": [
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        },
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./html.mjs"
+        },
+        {
+          "path": "js/data/program-labels.mjs",
+          "kind": "import-statement",
+          "original": "../data/program-labels.mjs"
+        },
+        {
+          "path": "js/presentation/icons.mjs",
+          "kind": "import-statement",
+          "original": "./icons.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/data/sounds.mjs": {
+      "bytes": 211,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/data/version.mjs": {
+      "bytes": 43,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/data/palettes.mjs": {
+      "bytes": 860,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/presentation/settings.mjs": {
+      "bytes": 4921,
+      "imports": [
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./html.mjs"
+        },
+        {
+          "path": "js/presentation/icons.mjs",
+          "kind": "import-statement",
+          "original": "./icons.mjs"
+        },
+        {
+          "path": "js/data/program-labels.mjs",
+          "kind": "import-statement",
+          "original": "../data/program-labels.mjs"
+        },
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        },
+        {
+          "path": "js/data/sounds.mjs",
+          "kind": "import-statement",
+          "original": "../data/sounds.mjs"
+        },
+        {
+          "path": "js/data/version.mjs",
+          "kind": "import-statement",
+          "original": "../data/version.mjs"
+        },
+        {
+          "path": "js/data/palettes.mjs",
+          "kind": "import-statement",
+          "original": "../data/palettes.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/infrastructure/download.mjs": {
+      "bytes": 386,
       "imports": [],
       "format": "esm"
     },
     "js/presentation/player.mjs": {
-      "bytes": 4484,
+      "bytes": 4557,
       "imports": [
         {
           "path": "js/presentation/html.mjs",
@@ -52,38 +175,13 @@
       ],
       "format": "esm"
     },
-    "js/data/version.mjs": {
-      "bytes": 43,
-      "imports": [],
-      "format": "esm"
-    },
-    "js/data/estimates.mjs": {
-      "bytes": 1774,
-      "imports": [],
-      "format": "esm"
-    },
     "js/domain/engine.mjs": {
-      "bytes": 5341,
-      "imports": [],
-      "format": "esm"
-    },
-    "js/domain/schedule.mjs": {
-      "bytes": 3619,
-      "imports": [],
-      "format": "esm"
-    },
-    "js/data/palettes.mjs": {
-      "bytes": 860,
-      "imports": [],
-      "format": "esm"
-    },
-    "js/data/sounds.mjs": {
-      "bytes": 211,
+      "bytes": 5523,
       "imports": [],
       "format": "esm"
     },
     "js/application/backup.mjs": {
-      "bytes": 3829,
+      "bytes": 4071,
       "imports": [
         {
           "path": "js/domain/engine.mjs",
@@ -172,8 +270,28 @@
       "format": "esm"
     },
     "js/app.mjs": {
-      "bytes": 32859,
+      "bytes": 27967,
       "imports": [
+        {
+          "path": "js/presentation/home.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/home.mjs"
+        },
+        {
+          "path": "js/presentation/history.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/history.mjs"
+        },
+        {
+          "path": "js/presentation/settings.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/settings.mjs"
+        },
+        {
+          "path": "js/presentation/icons.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/icons.mjs"
+        },
         {
           "path": "js/infrastructure/download.mjs",
           "kind": "import-statement",
@@ -198,11 +316,6 @@
           "path": "js/presentation/library.mjs",
           "kind": "import-statement",
           "original": "./presentation/library.mjs"
-        },
-        {
-          "path": "js/data/version.mjs",
-          "kind": "import-statement",
-          "original": "./data/version.mjs"
         },
         {
           "path": "js/data/estimates.mjs",
@@ -245,11 +358,6 @@
           "original": "./domain/schedule.mjs"
         },
         {
-          "path": "js/data/palettes.mjs",
-          "kind": "import-statement",
-          "original": "./data/palettes.mjs"
-        },
-        {
           "path": "js/infrastructure/audio.mjs",
           "kind": "import-statement",
           "original": "./infrastructure/audio.mjs"
@@ -264,17 +372,44 @@
       "exports": [],
       "entryPoint": "js/app.mjs",
       "inputs": {
-        "js/infrastructure/download.mjs": {
-          "bytesInOutput": 373
-        },
         "js/presentation/html.mjs": {
           "bytesInOutput": 1364
         },
         "js/data/program-labels.mjs": {
-          "bytesInOutput": 4291
+          "bytesInOutput": 5936
+        },
+        "js/domain/schedule.mjs": {
+          "bytesInOutput": 3910
+        },
+        "js/data/estimates.mjs": {
+          "bytesInOutput": 2129
+        },
+        "js/presentation/home.mjs": {
+          "bytesInOutput": 4547
+        },
+        "js/presentation/icons.mjs": {
+          "bytesInOutput": 966
+        },
+        "js/presentation/history.mjs": {
+          "bytesInOutput": 1935
+        },
+        "js/data/sounds.mjs": {
+          "bytesInOutput": 354
+        },
+        "js/data/version.mjs": {
+          "bytesInOutput": 36
+        },
+        "js/data/palettes.mjs": {
+          "bytesInOutput": 1361
+        },
+        "js/presentation/settings.mjs": {
+          "bytesInOutput": 7110
+        },
+        "js/infrastructure/download.mjs": {
+          "bytesInOutput": 373
         },
         "js/presentation/player.mjs": {
-          "bytesInOutput": 6341
+          "bytesInOutput": 6380
         },
         "js/data/content.mjs": {
           "bytesInOutput": 513808
@@ -282,26 +417,11 @@
         "js/presentation/library.mjs": {
           "bytesInOutput": 5536
         },
-        "js/data/version.mjs": {
-          "bytesInOutput": 36
-        },
-        "js/data/estimates.mjs": {
-          "bytesInOutput": 2129
-        },
         "js/domain/engine.mjs": {
-          "bytesInOutput": 5456
-        },
-        "js/domain/schedule.mjs": {
-          "bytesInOutput": 3910
-        },
-        "js/data/palettes.mjs": {
-          "bytesInOutput": 1361
-        },
-        "js/data/sounds.mjs": {
-          "bytesInOutput": 354
+          "bytesInOutput": 5639
         },
         "js/application/backup.mjs": {
-          "bytesInOutput": 3885
+          "bytesInOutput": 4125
         },
         "js/infrastructure/reminder-config.mjs": {
           "bytesInOutput": 65
@@ -322,10 +442,10 @@
           "bytesInOutput": 1112
         },
         "js/app.mjs": {
-          "bytesInOutput": 43300
+          "bytesInOutput": 34952
         }
       },
-      "bytes": 622975
+      "bytes": 631424
     }
   }
 }

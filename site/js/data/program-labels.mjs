@@ -6,3 +6,13 @@ export {
   levelText,
   names
 };
+
+export const levelName = n => ({1:'أساسي',2:'متوسط',3:'متقدم'}[n] || 'أساسي');
+const sessions = {
+move:['تنشيط الجسم','حركة وتوازن','حركة وتنسيق'],
+foundation:['تأسيس القوة','تأسيس الرجلين والجذع','تأسيس الثبات'],
+strength:['قوة الجسم','قوة الرجلين والثبات','قوة الجسم والجذع'],
+hybrid:['قوة وحركة','قوة الرجلين والخطوات','قوة وتنسيق'],
+circuit:['دائرة الجسم الكامل','دائرة الرجلين والثبات','دائرة الجذع والتنسيق']
+};
+export const sessionName = (program, session) => sessions[program]?.[['A','B','C'].indexOf(session)] || session;

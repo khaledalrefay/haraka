@@ -59,13 +59,13 @@ function reduceSession(session, command, now = Date.now()) {
   const timed = step.type === "rest" || step.unit === "seconds";
   if (command.type === "startTimer") {
     if (!timed || s.timer?.running) return s;
-    s.timer = { remainingMs: s.timer?.remainingMs ?? (step.seconds ?? step.target) * 1e3, running: true, startedAt: now };
+    s.timer = { totalMs: s.timer?.totalMs ?? (step.seconds ?? step.target) * 1e3, remainingMs: s.timer?.remainingMs ?? (step.seconds ?? step.target) * 1e3, running: true, startedAt: now };
   } else if (command.type === "pause") {
     if (!s.timer?.running) return s;
-    s.timer = { remainingMs: remaining(s, now), running: false, startedAt: null };
+    s.timer = { ...s.timer, remainingMs: remaining(s, now), running: false, startedAt: null };
   } else if (command.type === "extendRest" || command.type === "extendTimer") {
     if (!timed || command.type === "extendRest" && step.type !== "rest" || !positive(command.seconds) || command.seconds > 3600) throw Error("Invalid rest extension");
-    s.timer = { remainingMs: (remaining(s, now) ?? (step.seconds ?? step.target) * 1e3) + command.seconds * 1e3, running: s.timer?.running ?? false, startedAt: s.timer?.running ? now : null };
+    s.timer = { totalMs: (s.timer?.totalMs ?? (step.seconds ?? step.target) * 1e3) + command.seconds * 1e3, remainingMs: (remaining(s, now) ?? (step.seconds ?? step.target) * 1e3) + command.seconds * 1e3, running: s.timer?.running ?? false, startedAt: s.timer?.running ? now : null };
   } else if (["done", "skip", "elapsed"].includes(command.type)) {
     if (!command.stepId) throw Error("stepId required");
     if (command.type === "elapsed" && (!s.timer || remaining(s, now) > 0)) return s;
@@ -80,7 +80,7 @@ function reduceSession(session, command, now = Date.now()) {
   } else if (command.type === "stop") {
     s.status = "stopped";
     s.finishedAt = now;
-    if (s.timer) s.timer = { remainingMs: remaining(s, now), running: false, startedAt: null };
+    if (s.timer) s.timer = { ...s.timer, remainingMs: remaining(s, now), running: false, startedAt: null };
   } else throw Error("Unknown command");
   s.revision++;
   return s;

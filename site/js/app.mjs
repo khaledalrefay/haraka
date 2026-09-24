@@ -1,9 +1,12 @@
+import { renderHome } from "./presentation/home.mjs";
+import { renderHistory, executionDate } from "./presentation/history.mjs";
+import { renderSettings } from "./presentation/settings.mjs";
+import { icon } from "./presentation/icons.mjs";
 import { downloadBackup } from "./infrastructure/download.mjs";
 import { esc, button, movementName, goal } from "./presentation/html.mjs";
-import { names, descriptions, levelText } from "./data/program-labels.mjs";
+import { names, descriptions, levelText, levelName, sessionName } from "./data/program-labels.mjs";
 import { renderPlayer } from "./presentation/player.mjs";
 import { library, updateLibrary, searchLibrary } from "./presentation/library.mjs";
-import { APP_VERSION } from "./data/version.mjs";
 import { estimates } from "./data/estimates.mjs";
 import { makeBackup, validateBackup } from "./application/backup.mjs";
 import * as reminders from "./infrastructure/reminders.mjs";
@@ -12,12 +15,11 @@ import { openStorage } from "./infrastructure/workout-repository.mjs";
 import { WorkoutService } from "./application/workout-service.mjs";
 import { remaining, compileWorkout } from "./domain/engine.mjs";
 import { todayKey, shift, weekday, days, planFor, slotFor, opportunity, changePlan, updatePlan, swapScheduleDay } from "./domain/schedule.mjs";
-import { palettes } from "./data/palettes.mjs";
-import { prepareSound, ring, sounds } from "./infrastructure/audio.mjs";
+import { prepareSound, ring } from "./infrastructure/audio.mjs";
 const $ = (s) => document.querySelector(s);
 const exerciseMap = Object.fromEntries(content.exercises.map((e) => [e.id, e]));
 let repo, svc, settings, active, history = [], view = "today", selected = todayKey(), busy = false, onboardingStage = 0, draftProgram = "move", draftLevel = 1, lastFocus, toastTimer, formDraft;
-let pendingBackup = null, observedDay = todayKey();
+let pendingBackup = null, observedDay = todayKey(), historyMonth = todayKey().slice(0,7), settingsPage = "main";
 const changes = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("haraka-v2-change") : null;
 const notifyChange = () => {
   changes?.postMessage("changed");
@@ -35,7 +37,7 @@ function fail(e) {
   $("#error").textContent = e.message === "Session write conflict" ? "تغيرت الجلسة في نافذة أخرى. حدّث الصفحة قبل المتابعة." : `تعذّر إكمال العملية: ${e.message}. لم نتجاهل خطأ الحفظ.`;
 }
 function apply() {
-  document.documentElement.dataset.palette = settings.palette;
+  document.documentElement.dataset.palette = view === "settings" ? (formDraft?.palette ?? settings.palette) : settings.palette;
   document.documentElement.dataset.theme = settings.theme;
 }
 function show(html) {
@@ -61,35 +63,23 @@ function programCards() {
   return Object.keys(names).map((p) => `<button type="button" class="v-program ${p === draftProgram ? "selected" : ""}" data-program="${p}" aria-pressed="${p === draftProgram}"><strong>${names[p]}</strong><span>${descriptions[p]}</span></button>`).join("");
 }
 function levels() {
-  return [1, 2, 3].map((n) => `<button type="button" class="v-program ${n === draftLevel ? "selected" : ""}" data-level="${n}" aria-pressed="${n === draftLevel}"><strong>المستوى ${n}</strong><span>${levelText[draftProgram][n - 1]}</span></button>`).join("");
+  return [1, 2, 3].map((n) => `<button type="button" class="v-program ${n === draftLevel ? "selected" : ""}" data-level="${n}" aria-pressed="${n === draftLevel}"><strong>${levelName(n)}</strong><span>${levelText[draftProgram][n - 1]}</span></button>`).join("");
 }
 function requirement() {
-  return draftProgram === "move" ? "حائط وكرسي ثابت، وبساط في المستويين 2 و3." : "بساط وحائط وكرسي وسطح ثابت مناسب؛ دمبل واحد للسحب في A وC.";
+  return draftProgram === "move" ? "حائط وكرسي ثابت، وبساط في المستويين 2 و3." : "بساط وحائط وكرسي وسطح ثابت مناسب؛ دمبل واحد لجلسات السحب.";
 }
 function onboarding() {
   return `<section class="card v-onboarding"><span class="eyebrow">${onboardingStage === 0 ? "1 — اختر برنامجك" : "2 — اختر مستواك"}</span><h1>${onboardingStage === 0 ? "ما نوع الحركة الذي يناسبك؟" : names[draftProgram]}</h1><p class="muted v-space">${onboardingStage === 0 ? "يمكنك تغيير البرنامج لاحقًا من الإعدادات." : "المستويات خاصة بهذا البرنامج، والاختيار يدوي دون اختبار."}</p><div class="v-choices">${onboardingStage === 0 ? programCards() : levels()}</div>${onboardingStage === 1 ? `<p class="v-space">${requirement()}</p><p class="small muted">تعلم المقاومة يحتاج توجيهًا مؤهلًا لليافعين؛ توقف عند الألم أو فقدان التحكم.</p><div class="v-buttons">${button("رجوع", "onboard-back")}${button("معاينة الجلسات", "preview-plan")}${button("اعتماد اختياري", "onboard-save", "primary")}</div>` : `<div class="v-buttons">${button("التالي", "onboard-next", "primary")}</div>`}</section>`;
 }
 function preview(id) {
   const snap = compileWorkout(content, id);
-  show(`${modalHead(`${names[snap.workout.program]} · ${snap.workout.session} · المستوى ${snap.workout.level}`)}${button("مقارنة مستويات البرنامج", "browse-program", "text-btn", `data-id="${snap.workout.program}"`)}<p class="small muted">المدة المحسوبة ${estimates[id].join("–")} دقيقة؛ التقدير الأصلي ${snap.workout.plannedMinutes.join("–")} دقيقة. يشمل الحساب الراحة، ويختلف حسب سرعة العدّات وتمديدها. لم تُقَس المدة بتجربة فعلية.</p>${["warmup", "main", "strength", "aerobic", "cooldown"].map((block) => {
+  show(`${modalHead(`${names[snap.workout.program]} · ${sessionName(snap.workout.program, snap.workout.session)} · ${levelName(snap.workout.level)}`)}${button("مقارنة مستويات البرنامج", "browse-program", "text-btn", `data-id="${snap.workout.program}"`)}<p class="small muted">المدة المحسوبة ${estimates[id].join("–")} دقيقة؛ التقدير الأصلي ${snap.workout.plannedMinutes.join("–")} دقيقة. يشمل الحساب الراحة، ويختلف حسب سرعة العدّات وتمديدها. لم تُقَس المدة بتجربة فعلية.</p>${["warmup", "main", "strength", "aerobic", "cooldown"].map((block) => {
     const items = snap.steps.filter((s) => s.block === block);
     if (!items.length) return "";
     return `<h3 class="v-space">${{ warmup: "الإحماء", main: "التمارين", strength: "القوة", aerobic: "الهوائي", cooldown: "التهدئة" }[block]}</h3>${items.map((s) => s.type === "rest" ? `<div class="v-preview-rest">راحة · ${s.seconds} ثانية</div>` : `<div class="v-preview-row"><span>${esc(movementName(s, snap.exercises))}</span><small>${goal(s)} ${s.set ? `· مجموعة ${s.set}/${s.sets}` : ""}${s.round ? `· دورة ${s.round}/${s.rounds}` : ""}${s.side ? ` · ${s.side === "right" ? "يمين" : "يسار"}` : ""}${s.pauseSeconds ? ` · توقف ${s.pauseSeconds}ث داخل العدّة` : ""}</small></div>`).join("")}`;
   }).join("")}`);
 }
-function home() {
-  const t = todayKey(), start = shift(selected, -weekday(selected)), current = slotFor(settings, selected), offer = selected === t ? opportunity(settings, history, t) : null, record = history.find((r) => r.dateKey === selected || r.completedDate === selected);
-  const chosen = active && selected === t ? { workoutId: active.snapshot.workout.id, session: active.snapshot.workout.session, program: active.snapshot.workout.program, level: active.snapshot.workout.level } : offer || current;
-  let card;
-  if (active && selected === t) card = `<span class="pill">جلسة محفوظة</span><h2>${names[chosen.program]} · ${chosen.session}</h2><p>المستوى ${chosen.level}</p>${button("أكمل جلستك", "resume", "primary")}`;
-  else if (record) card = `<span class="pill">${record.status === "completed" ? "جلسة منتهية" : "انتهاء مبكر"}</span><h2>${names[record.snapshot.workout.program]} · ${record.snapshot.workout.session}</h2>${record.hidden ? `<p>هذه الجلسة مخفية، وما زال موعدها محجوزًا.</p>${button("حذف الجلسة وإتاحة الموعد", "delete-record", "secondary", `data-id="${esc(record.id)}"`)}` : button("عرض السجل", "record", "primary", `data-id="${esc(record.id)}"`)}`;
-  else if (chosen) card = `<span class="pill">${offer?.kind === "makeup" ? "تعويض جلسة فائتة" : selected === t ? "جلسة اليوم" : "معاينة"}</span><h2>${names[chosen.program]} · الجلسة ${chosen.session}</h2><p>المستوى ${chosen.level}</p><p class="v-space small">${estimates[chosen.workoutId].join("–")} دقيقة تقديريًا</p>${offer ? button("ابدأ الجلسة", "start", "primary", `data-workout="${chosen.workoutId}"`) : ""}${button("معاينة التمارين", "preview", "secondary", `data-workout="${chosen.workoutId}"`)}`;
-  else card = '<span class="pill">يوم راحة</span><h2>مساحة للراحة</h2><p>ستظهر جلستك عند موعدها القادم.</p>';
-  return `<div class="home-content"><h1 class="home-title">برنامجي اليومي</h1><div class="v-browse-link">${button("استعراض جميع البرامج والخطط", "preview-all", "secondary")}</div><section class="weekly-calendar"><div class="v-calendar-head">${button("→", "prev-week", "icon-btn", 'aria-label="الأسبوع السابق"')}<span>${esc(start)} — ${esc(shift(start, 6))}</span>${button("←", "next-week", "icon-btn", 'aria-label="الأسبوع التالي"')}</div><div class="week-strip">${Array.from({ length: 7 }, (_, i) => {
-    const d = shift(start, i);
-    return `<button class="day-button ${d === selected ? "selected" : ""}" data-day="${d}" aria-pressed="${d === selected}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker">${history.some((r) => r.dateKey === d) ? "✓" : slotFor(settings, d) ? "تمرين" : "راحة"}</span></button>`;
-  }).join("")}</div>${selected !== t ? button("العودة لليوم", "today", "text-btn") : ""}</section><section class="session-hero v-hero">${card}</section></div>`;
-}
+function home() { return renderHome({settings, selected, active, history}); }
 function player() {
   if (!active) {
     view = "today";
@@ -99,22 +89,17 @@ function player() {
 }
 function hiddenHistory() {
   const rows = history.filter((r) => r.hidden);
-  return rows.length ? `<details class="v-hidden-records"><summary>جلسات مخفية سابقًا (${rows.length})</summary><p class="small muted">احتفظ الإصدار السابق بمواعيدها. حذفها نهائيًا يزيل حجز الموعد.</p>${rows.map((r) => `<div class="v-hidden-row"><span>${esc(r.dateKey)} · ${names[r.snapshot.workout.program]} ${r.snapshot.workout.session}</span>${button("حذف نهائي", "delete-record", "secondary v-delete", `data-id="${esc(r.id)}"`)}</div>`).join("")}</details>` : "";
+  return rows.length ? `<details class="v-hidden-records"><summary>جلسات مخفية سابقًا (${rows.length})</summary><p class="small muted">احتفظ الإصدار السابق بمواعيدها. حذفها نهائيًا يزيل حجز الموعد.</p>${rows.map((r) => `<div class="v-hidden-row"><span>${esc(r.dateKey)} · ${names[r.snapshot.workout.program]} ${sessionName(r.snapshot.workout.program, r.snapshot.workout.session)}</span>${button("حذف نهائي", "delete-record", "secondary v-delete", `data-id="${esc(r.id)}"`)}</div>`).join("")}</details>` : "";
 }
-function historyView() {
-  return `<h1 class="v-space">سجلّي</h1>${history.some((r) => !r.hidden) ? history.filter((r) => !r.hidden).sort((a, b) => b.finishedAt - a.finishedAt).map((r) => `<article class="card record"><div><small>${esc(r.dateKey)}</small><h3>${names[r.snapshot.workout.program]} · ${r.snapshot.workout.session} · المستوى ${r.snapshot.workout.level}</h3><span class="muted">${r.status === "completed" ? "منتهية" : r.endReason === "expired" ? "انتهت نافذة الاستكمال" : "انتهاء مبكر"}${r.results.some((x) => x.outcome === "skipped") ? " · مع تجاوز" : ""}</span></div><div class="v-record-actions">${button("التفاصيل", "record", "secondary", `data-id="${esc(r.id)}"`)}${button("حذف الجلسة", "delete-record", "secondary v-delete", `data-id="${esc(r.id)}"`)}</div></article>`).join("") : '<section class="card empty"><p>ستظهر جلساتك هنا بعد انتهائها.</p></section>'}${hiddenHistory()}`;
-}
+function historyView() { return renderHistory(history, historyMonth, hiddenHistory()); }
 function recordView(id) {
   const r = history.find((r2) => r2.id === id);
-  show(`${modalHead("تفاصيل الجلسة")}<p>${names[r.snapshot.workout.program]} · ${r.snapshot.workout.session} · المستوى ${r.snapshot.workout.level}</p><p class="muted">${r.dateKey}</p>${r.results.filter((x) => r.snapshot.steps.find((s) => s.id === x.stepId)?.type === "work").map((x) => {
+  show(`${modalHead("تفاصيل الجلسة")}<p>${names[r.snapshot.workout.program]} · ${sessionName(r.snapshot.workout.program, r.snapshot.workout.session)} · ${levelName(r.snapshot.workout.level)}</p><p class="muted">تاريخ التنفيذ: ${executionDate(r)}</p>${r.scheduledDate && r.scheduledDate !== executionDate(r) ? `<p class="small muted">الموعد الأصلي: ${r.scheduledDate}</p>` : ""}${r.results.filter((x) => r.snapshot.steps.find((s) => s.id === x.stepId)?.type === "work").map((x) => {
     const s = r.snapshot.steps.find((s2) => s2.id === x.stepId);
     return `<div class="v-preview-row"><strong>${esc(movementName(s, r.snapshot.exercises))}</strong><small>${goal(s)}${s.side ? ` · ${s.side === "right" ? "يمين" : "يسار"}` : ""}${s.set ? ` · مجموعة ${s.set}/${s.sets}` : ""}${s.round ? ` · دورة ${s.round}/${s.rounds}` : ""} · ${x.outcome === "done" ? "تم" : "تجاوز"}</small></div>`;
   }).join("") || "<p>لم تُسجل خطوات مكتملة.</p>"}${button("حذف من السجل", "delete-record", "text-btn", `data-id="${esc(r.id)}"`)}`);
 }
-function settingsView() {
-  const plan = settings.revisions.at(-1), draft = formDraft || {};
-  return `<section class="card v-settings"><h1>الإعدادات</h1><form id="settings-form"><h2 class="v-space">البرنامج والمستوى</h2><div class="v-choices">${programCards()}</div><div class="v-choices v-levels">${levels()}</div><p>${requirement()}</p><p class="small muted">${active ? "لديك جلسة محفوظة من " + names[active.snapshot.workout.program] + ". ستبقى بمحتواها، ويسري الاختيار الجديد من الغد. يمكنك معاينة البرنامج الجديد الآن." : history.some((r) => r.dateKey === todayKey() || r.completedDate === todayKey()) ? "جلسة اليوم مسجّلة؛ يسري التغيير من الغد. لتغيير جلسة اليوم احذف سجلها أولًا." : "يسري تغيير البرنامج والمستوى والجدول من اليوم عند الحفظ؛ تبقى الجلسات السابقة محفوظة."}</p>${button("معاينة الجلسات", "preview-plan", "text-btn", 'type="button"')}<h2 class="v-space">جدولي الأسبوعي</h2><p class="small muted">اختيار يوم مشغول يبدّل يومي الجلستين تلقائيًا.</p><div class="v-schedule">${["A", "B", "C"].map((letter) => `<label>الجلسة ${letter}<select name="day-${letter}">${days.map((name, i) => `<option value="${i}" ${Number(draft[`day-${letter}`] ?? plan.schedule.find((s) => s.session === letter)?.day) === i ? "selected" : ""}>${name}</option>`).join("")}</select></label>`).join("")}</div><h2 class="v-space">المظهر</h2><label>الألوان<select name="palette">${palettes.map(([id, name]) => `<option value="${id}" ${(draft.palette ?? settings.palette) === id ? "selected" : ""}>${name}</option>`).join("")}</select></label><label>نغمة المؤقت<select name="sound">${sounds.map(([id, name]) => `<option value="${id}" ${(draft.sound ?? settings.sound) === id ? "selected" : ""}>${name}</option>`).join("")}</select></label>${button("استمع للنغمة", "test-sound", "text-btn", 'type="button"')}<button class="primary full v-space" type="submit">حفظ الإعدادات</button></form><hr><section class="v-space"><h2>نسخة احتياطية</h2><p class="muted">احفظ إعداداتك وسجلّك والجلسة الجارية في ملف.</p><div class="v-buttons">${button("تصدير البيانات", "export")}${button("استعادة من ملف", "import")}</div><input id="backup-file" type="file" accept="application/json,.json" hidden></section><hr>${reminders.reminderSection()}<hr><h2 class="v-space">التطبيق</h2>${button("تثبيت حركة", "install-app")}<p id="install-status" class="small muted"></p><p class="small muted v-space">الإصدار ${APP_VERSION} · الصور التوضيحية قيد التجهيز</p></section>`;
-}
+function settingsView() { return renderSettings({settings, formDraft, settingsPage, draftProgram, active, history, programCards, levels, requirement, reminderSection: reminders.reminderSection}); }
 function refreshImages() {
   document.querySelectorAll(".v-exercise-image img").forEach((img) => {
     const frame = img.closest(".v-exercise-image");
@@ -135,8 +120,10 @@ function render() {
   if (view === "session") $("#toast").hidden = true;
   const first = !settings.revisions.length;
   document.body.classList.toggle("training", !first && view === "session");
+  document.body.classList.toggle("home-screen", !first && view === "today");
   $(".bottom-nav").hidden = first || view === "session";
-  $(".header-actions").hidden = first;
+  $(".header-actions").hidden = first || view === "session";
+  $(".header-actions").innerHTML = `${button(icon('programs'), 'preview-all', 'icon-btn', 'title="استعراض البرامج" aria-label="استعراض البرامج"')}${button(icon(settings.theme === 'dark' ? 'sun' : 'moon'), 'theme', 'icon-btn', 'title="تبديل المظهر" aria-label="تبديل المظهر"')}<button class="icon-btn" data-view="settings" aria-label="الإعدادات" title="الإعدادات">${icon('settings')}</button>`;
   $("#main").innerHTML = first ? onboarding() : view === "session" ? player() : view === "library" ? library() : view === "history" ? historyView() : view === "settings" ? settingsView() : home();
   document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
   refreshClock();
@@ -158,6 +145,7 @@ async function navigate(v) {
   view = v;
   if (v === "settings") {
     formDraft = null;
+    settingsPage = "main";
     const p = settings.revisions.at(-1);
     draftProgram = p.program;
     draftLevel = settings.levels?.[p.program] || p.level;
@@ -221,9 +209,9 @@ function refreshClock() {
   const ms = remaining(active) ?? (s.seconds ?? s.target) * 1e3, n = Math.ceil(ms / 1e3), text = $("#timer-text");
   const display = `${String(Math.floor(n / 60)).padStart(2, "0")}:${String(n % 60).padStart(2, "0")}`;
   if (text && text.textContent !== display) text.textContent = display;
-  const ratio = 1 - Math.min(1, ms / ((s.seconds ?? s.target) * 1e3));
+  const ratio = 1 - Math.min(1, ms / (active.timer?.totalMs ?? (s.seconds ?? s.target) * 1e3));
   $("#clock-ring")?.style.setProperty("--progress", `${ratio * 360}deg`);
-  $("#timer-button")?.style.setProperty("--fill", `${ratio * 100}%`);
+  if (s.type !== "rest") $("#timer-button")?.style.setProperty("--fill", `${ratio * 100}%`);
   if (active.timer?.running && ms > 0 && !document.hidden && clockFrame === null) clockFrame = requestAnimationFrame(animateClock);
   if (active.timer?.running && ms === 0 && !busy && !document.hidden) run(async () => {
     ring(settings.sound);
@@ -266,11 +254,16 @@ document.addEventListener("submit", (e) => {
   if (e.target.id !== "settings-form") return;
   e.preventDefault();
   const form = new FormData(e.target);
+  const section = e.target.dataset.section;
   run(async () => {
+    if(section === 'appearance') {
+      await saveSettings({...settings, palette: form.get('palette'), sound: form.get('sound')});
+      formDraft = null; toast('تم حفظ الإعدادات'); render(); return;
+    }
     const plan = { program: draftProgram, level: draftLevel, schedule: ["A", "B", "C"].map((session) => ({ session, day: Number(form.get(`day-${session}`)) })) };
     await refreshState();
     let next = updatePlan(settings, plan, { active, history });
-    next = { ...next, palette: form.get("palette"), sound: form.get("sound"), levels: { ...settings.levels, [draftProgram]: draftLevel } };
+    next = { ...next, levels: { ...settings.levels, [draftProgram]: draftLevel } };
     await saveSettings(next);
     formDraft = null;
     toast("تم حفظ الإعدادات" + (next.revisions.at(-1).effectiveFrom > todayKey() ? " · الخطة الجديدة من الغد" : " · الخطة الحالية جاهزة"));
@@ -310,17 +303,22 @@ document.addEventListener("click", (e) => {
   const a = b.dataset.action;
   if (!a) return;
   if (view === "settings" && $("#settings-form")) formDraft = Object.fromEntries(new FormData($("#settings-form")));
-  if (a === "preview-all") {
+  if (a === 'settings-plan' || a === 'settings-back' || a === 'appearance-cancel') {
+    settingsPage = a === 'settings-plan' ? 'plan' : 'main'; formDraft = null;
+    const plan = settings.revisions.at(-1); draftProgram = plan.program; draftLevel = plan.level;
+    render(); return;
+  }
+  if (a === 'history-prev' || a === 'history-next') {
+    const [y,m] = historyMonth.split('-').map(Number);
+    const date = new Date(Date.UTC(y,m-1+(a === 'history-prev' ? -1 : 1),1));
+    historyMonth = date.toISOString().slice(0,7); render(); return;
+  }
+  if (a === 'preview-all') {
     show(`${modalHead("استعراض البرامج")}<p class="muted">المعاينة لا تغيّر برنامجك أو جدولك.</p><div class="v-choices">${Object.keys(names).map((p) => button(names[p] + " — " + descriptions[p], "browse-program", "v-program", `data-id="${p}"`)).join("")}</div>`);
     return;
   }
   if (a === "browse-program") {
     show(programComparison(b.dataset.id));
-    return;
-  }
-  if (a === "browse-program-old") {
-    const p = b.dataset.id;
-    show(`${modalHead(names[p])}<div class="v-choices">${[1, 2, 3].map((l) => `<section class="v-preview-row"><h3>المستوى ${l}</h3><p>${levelText[p][l - 1]}</p><div class="v-buttons">${["A", "B", "C"].map((a2) => button("الجلسة " + a2, "preview", "secondary", `data-workout="${p}-${a2.toLowerCase()}-${l}"`)).join("")}</div></section>`).join("")}</div>${button("كل البرامج", "preview-all", "text-btn")}`);
     return;
   }
   if (a === "install-app") {
@@ -365,7 +363,7 @@ document.addEventListener("click", (e) => {
     return;
   }
   if (a === "preview-plan") {
-    show(`${modalHead("معاينة جلسات البرنامج")}<div class="v-buttons">${["A", "B", "C"].map((l) => button(`الجلسة ${l}`, "preview", "secondary", `data-workout="${draftProgram}-${l.toLowerCase()}-${draftLevel}"`)).join("")}</div>`);
+    show(`${modalHead("معاينة جلسات البرنامج")}<div class="v-buttons">${["A", "B", "C"].map((l) => button(sessionName(draftProgram, l), "preview", "secondary", `data-workout="${draftProgram}-${l.toLowerCase()}-${draftLevel}"`)).join("")}</div>`);
     return;
   }
   if (a === "leave") {
@@ -448,6 +446,12 @@ document.addEventListener("click", (e) => {
   });
 });
 document.addEventListener("change", (e) => {
+  if(e.target.name === 'palette') {
+    formDraft = Object.fromEntries(new FormData($('#settings-form'))); render();
+    document.querySelector('.v-palette-picker summary')?.focus(); return;
+  }
+  if(e.target.id === 'history-month') {historyMonth = e.target.value || todayKey().slice(0,7); render(); return;}
+
   if (e.target.matches("#settings-form select[name^=day-]")) {
     const session = e.target.name.slice(4), plan = settings.revisions.at(-1);
     const previous = ["A", "B", "C"].map((letter) => ({ session: letter, day: Number(formDraft?.[`day-${letter}`] ?? plan.schedule.find((s) => s.session === letter).day) }));
@@ -467,7 +471,7 @@ document.addEventListener("change", (e) => {
   });
 });
 function programComparison(p) {
-  return `${modalHead(names[p])}<p class="muted">${descriptions[p]}</p><p class="small muted v-space">على الهاتف، اسحب الجدول أفقيًا لمقارنة المستويات.</p>${["A", "B", "C"].map((letter) => `<h3 class="v-space">الجلسة ${letter}</h3><div class="v-comparison" role="region" aria-label="مقارنة مستويات الجلسة ${letter}" tabindex="0"><table><thead><tr>${[1, 2, 3].map((l) => `<th scope="col">المستوى ${l}</th>`).join("")}</tr></thead><tbody><tr>${[1, 2, 3].map((l) => {
+  return `${modalHead(names[p])}<p class="muted">${descriptions[p]}</p><p class="small muted v-space">على الهاتف، اسحب الجدول أفقيًا لمقارنة المستويات.</p>${["A", "B", "C"].map((letter) => `<h3 class="v-space">${sessionName(p, letter)}</h3><div class="v-comparison" role="region" aria-label="مقارنة مستويات ${sessionName(p, letter)}" tabindex="0"><table><thead><tr>${[1, 2, 3].map((l) => `<th scope="col">${levelName(l)}</th>`).join("")}</tr></thead><tbody><tr>${[1, 2, 3].map((l) => {
     const w = content.workouts.find((w2) => w2.id === `${p}-${letter.toLowerCase()}-${l}`);
     return `<td><p class="small muted">${levelText[p][l - 1]}</p>${w.blocks.filter((b) => !["warmup", "cooldown"].includes(b.id)).map((b) => `<p class="pill">${b.kind === "repeat" ? `دورتان` : b.id === "strength" ? "القوة" : "التمارين"}</p>${b.items.filter((x) => x.exercise_id).map((x) => `<div class="v-preview-row"><strong>${esc(exerciseMap[x.exercise_id].name_ar)}</strong><small>${x.target} ${x.unit === "seconds" ? "ثانية" : x.unit === "cycles" ? "دورات" : "عدّات"}${x.sides === 2 ? " لكل جهة" : ""}${x.sets > 1 ? ` · ${x.sets} مجموعات` : ""}${x.pause_seconds ? ` · توقف ${x.pause_seconds}ث` : ""}</small></div>`).join("")}`).join("")}${button("التسلسل الكامل", "preview", "secondary", `data-workout="${w.id}"`)}</td>`;
   }).join("")}</tr></tbody></table></div>`).join("")}${button("كل البرامج", "preview-all", "text-btn")}`;
@@ -482,7 +486,7 @@ async function boot() {
     await refreshState();
     if (settings.revisions.length) reminders.initReminders();
     const requested = location.hash.slice(1);
-    if (["today", "library", "history", "session"].includes(requested)) view = requested;
+    if (["today", "library", "history", "settings", "session"].includes(requested)) view = requested;
     render();
   } catch (e) {
     fail(e);

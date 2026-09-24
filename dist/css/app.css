@@ -1,0 +1,1182 @@
+.home-content,
+.v-onboarding,
+.v-settings {
+  max-width: 760px;
+  margin: auto;
+}
+.home-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.v-space {
+  margin-block: 18px;
+}
+.v-choices {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+.v-program {
+  display: grid;
+  gap: 5px;
+  text-align: right;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--soft);
+  color: var(--ink);
+}
+.v-program strong {
+  font-size: 20px;
+}
+.v-program span {
+  font-size: 15px;
+  color: var(--muted);
+}
+.v-program.selected {
+  border: 2px solid var(--accent);
+  padding: 15px 17px;
+  background: var(--accent-soft);
+}
+.v-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.v-hero {
+  text-align: center;
+  background: var(--navy);
+  display: grid;
+  gap: 10px;
+}
+.v-hero .secondary {
+  width: 100%;
+}
+.v-calendar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.v-search,
+select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  margin: 8px 0 18px;
+}
+.v-schedule {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.v-preview-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 4px;
+}
+.v-preview-row small {
+  color: var(--muted);
+}
+dialog {
+  max-height: 85dvh;
+  overflow: auto;
+}
+body.training {
+  height: 100dvh;
+  overflow: hidden;
+}
+.training .shell {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+.training #main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.v-player {
+  max-width: 720px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.v-player-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.v-segments {
+  display: flex;
+  gap: 2px;
+  height: 5px;
+  flex-shrink: 0;
+}
+.v-segments i {
+  flex: 1;
+  background: var(--line);
+  border-radius: 3px;
+  min-width: 1px;
+}
+.v-segments i.done {
+  background: var(--accent);
+}
+.v-segments i.current {
+  background: var(--primary);
+}
+.v-context {
+  text-align: center;
+}
+.v-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  padding: 18px;
+}
+.v-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.v-title .icon-btn {
+  flex-shrink: 0;
+}
+.v-goal {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent-ink);
+  border-radius: 12px;
+  background: var(--accent-soft);
+  padding: 7px 22px;
+}
+.v-cue {
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 20px;
+}
+.v-stage .timer-value {
+  font-size: clamp(32px, 7vw, 52px);
+  margin: 0;
+  min-height: 0;
+}
+.v-stage .timer-value:empty {
+  display: none;
+}
+.v-controls > .primary {
+  min-height: 52px;
+  font-size: 19px;
+}
+.v-clock {
+  --progress:0deg;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  background: conic-gradient(var(--accent) var(--progress), var(--line) 0);
+  padding: 6px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  flex-shrink: 1;
+  min-height: 0;
+}
+.v-clock:before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--card);
+}
+.v-clock span {
+  position: relative;
+  font-size: clamp(32px, 7vw, 52px);
+  font-family: Tahoma;
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+}
+.v-rest {
+  background: var(--card);
+}
+#timer-button {
+  color: var(--on-primary);
+}
+.library-grid {
+  margin-top: 18px;
+}
+.exercise-card {
+  min-height: 110px;
+}
+.exercise-caption {
+  padding: 18px;
+}
+.record {
+  margin-top: 14px;
+}
+.v-settings form > label {
+  display: block;
+}
+.v-levels {
+  grid-template-columns: repeat(3, 1fr);
+}
+.v-levels .v-program {
+  padding: 10px;
+}
+.v-levels .v-program strong {
+  font-size: 16px;
+}
+.v-levels .v-program span {
+  font-size: 13px;
+}
+button:active {
+  transform: scale(.985);
+}
+button:disabled {
+  cursor: progress;
+}
+@media (max-height: 650px) {
+  .training .app-header {
+    padding: 5px 0;
+  }
+  .training .brand small {
+    display: none;
+  }
+  .v-player {
+    gap: 5px;
+  }
+  .v-stage {
+    gap: 5px;
+    padding: 10px;
+  }
+  .v-clock {
+    width: 130px;
+  }
+  .v-goal {
+    font-size: 20px;
+  }
+  .v-cue {
+    font-size: 12px;
+  }
+  .v-controls {
+    gap: 5px;
+  }
+  .v-controls > .primary {
+    min-height: 44px;
+  }
+}
+@media (max-width: 430px) {
+  .shell {
+    padding-inline: 14px;
+  }
+  .v-schedule {
+    grid-template-columns: 1fr;
+  }
+  .v-levels {
+    grid-template-columns: 1fr;
+  }
+  .day-button {
+    font-size: 11px;
+  }
+  .week-strip {
+    gap: 4px;
+  }
+  .v-calendar-head span {
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  button:active {
+    transform: none;
+  }
+}
+button.is-loading::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: busy-spin .7s linear infinite;
+  margin-inline-end: 7px;
+}
+@keyframes busy-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  button.is-loading::before {
+    animation: none;
+  }
+}
+#timer-button {
+  background: var(--primary);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+#timer-button::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--fill,0%);
+  background: var(--on-primary);
+  opacity: .14;
+  pointer-events: none;
+  z-index: -1;
+}
+.v-hero .pill {
+  justify-self: center;
+}
+.v-clock {
+  --ring-size:clamp(140px,26vh,230px);
+  width: var(--ring-size);
+}
+.v-clock::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  left: calc(50% - 5px);
+  top: calc(50% - 5px);
+  transform: rotate(calc(var(--progress) - 90deg)) translateX(calc(var(--ring-size)/2 - 3px));
+}
+@media (max-height: 650px) {
+  .v-clock {
+    --ring-size:130px;
+  }
+}
+.v-image-placeholder {
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  background: var(--soft);
+  width: min(100%, 420px);
+  min-height: 100px;
+  padding: 18px;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.v-image-placeholder small {
+  font-size: 12px;
+}
+.v-browse-link {
+  text-align: center;
+  margin: 0 0 18px;
+}
+@media (max-height: 700px) {
+  .v-image-placeholder {
+    min-height: 58px;
+    padding: 8px;
+    font-size: 13px;
+  }
+  .v-image-placeholder small {
+    display: none;
+  }
+}
+.v-comparison {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.v-comparison table {
+  width: 100%;
+  min-width: 660px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.v-comparison th,
+.v-comparison td {
+  padding: 12px;
+  vertical-align: top;
+  border-inline-end: 1px solid var(--line);
+}
+.v-comparison th {
+  background: var(--soft);
+}
+.v-comparison td > .secondary {
+  margin-top: 15px;
+}
+.reminder-settings {
+  padding-block: 18px;
+}
+.reminder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+.reminder-management {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+input[type=time],
+input[type=password] {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 10px 0;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: 24px;
+}
+dialog.wide {
+  width: min(960px, calc(100vw - 24px));
+  max-width: 960px;
+}
+.v-preview-rest {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 7px 12px;
+  background: var(--soft);
+  border-radius: 8px;
+  margin-block: 5px;
+}
+.v-library {
+  max-width: 920px;
+  margin: auto;
+}
+.v-library-tools .v-search {
+  margin: 0 0 12px;
+}
+.v-library-filters label {
+  min-width: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.v-library-filters select {
+  margin: 4px 0 0;
+  font-size: 14px;
+  padding: 10px;
+}
+.v-library .library-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.v-library .exercise-card {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  transition: border-color .15s;
+  background: var(--card);
+}
+.v-library .exercise-card:hover {
+  border-color: var(--accent);
+}
+.v-library .exercise-caption {
+  padding: 0;
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+.v-library .exercise-caption strong {
+  font-weight: 700;
+  word-break: normal;
+  overflow-wrap: break-word;
+  text-align: start;
+}
+.v-library .exercise-caption small {
+  font-size: 13px;
+  color: var(--muted);
+}
+.v-library-note {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.v-library-icon {
+  flex: 0 0 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  border-radius: 13px;
+}
+.v-library-arrow {
+  font-size: 26px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.v-library-empty {
+  grid-column: 1/-1;
+  padding: 28px;
+  text-align: center;
+}
+.v-record-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.v-delete {
+  border: 1px solid var(--line);
+  color: var(--accent-ink);
+}
+.v-hidden-records {
+  margin-top: 24px;
+}
+.v-hidden-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 600px) {
+  .v-library .library-grid {
+    grid-template-columns: 1fr;
+  }
+  .record {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 18px;
+  }
+  .v-record-actions > button {
+    flex: 1;
+  }
+  .v-hidden-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+.v-exercise-image {
+  margin: 0;
+  width: 100%;
+  max-width: 520px;
+  flex: 1 1 220px;
+  min-height: 0;
+  max-height: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.v-image-frame {
+  position: relative;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.v-image-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.v-exercise-image figcaption {
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.v-image-fallback {
+  font-size: 13px;
+  padding: 12px;
+  color: #334155;
+}
+.v-exercise-image.is-loading .v-image-frame:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      100deg,
+      #e8ebef 20%,
+      #f8fafb 45%,
+      #e8ebef 70%);
+  background-size: 200% 100%;
+  animation: image-shimmer 1.3s linear infinite;
+}
+.v-player .v-stage:not(.v-rest) {
+  justify-content: center;
+  gap: 9px;
+}
+.v-stage .v-title,
+.v-stage .v-goal,
+.v-stage .v-cue,
+.v-stage .timer-value {
+  flex-shrink: 0;
+}
+.v-cue:empty {
+  display: none;
+}
+.v-context {
+  flex-shrink: 0;
+}
+.v-title h1 {
+  line-height: 1.35;
+}
+.v-player-head {
+  flex-shrink: 0;
+}
+.v-stage:not(.v-rest) .timer-value {
+  font-size: clamp(28px, 6vw, 42px);
+}
+@keyframes image-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (max-height: 700px) {
+  .v-player .v-stage:not(.v-rest) {
+    padding: 10px;
+    gap: 5px;
+  }
+  .v-exercise-image {
+    flex-basis: 140px;
+    max-height: 180px;
+  }
+  .v-goal {
+    padding: 4px 16px;
+    font-size: 20px;
+  }
+  .v-context {
+    min-height: 16px;
+  }
+  .v-stage:not(.v-rest) .timer-value {
+    font-size: 28px;
+  }
+  .training .brand small {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v-exercise-image.is-loading .v-image-frame:after {
+    animation: none;
+  }
+  .v-library .exercise-card {
+    transition: none;
+  }
+}
+.v-player {
+  gap: 8px;
+}
+.v-player .v-stage {
+  margin: 0;
+  gap: 12px;
+  padding: 18px;
+  align-items: stretch;
+  text-align: center;
+  overflow: hidden;
+}
+.v-player .v-stage.v-work {
+  display: grid;
+}
+.v-exercise-heading {
+  min-width: 0;
+}
+.v-phase {
+  font-size: 13px;
+  color: var(--accent-ink);
+  display: block;
+  margin-bottom: 4px;
+}
+.v-title {
+  gap: 8px;
+}
+.v-title h1 {
+  font-size: clamp(19px, 4.8vw, 26px);
+}
+.v-title .icon-btn {
+  border-radius: 11px;
+}
+.v-context {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.45;
+  min-height: 0;
+}
+.v-work .v-exercise-image {
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  gap: 4px;
+  justify-self: center;
+}
+.v-image-frame {
+  background: transparent;
+  border-radius: 10px;
+}
+.v-image-frame img {
+  object-fit: contain;
+}
+.v-work .v-exercise-image figcaption {
+  font-size: 10px;
+  line-height: 1.3;
+}
+.v-dose-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  border: 1px solid var(--line);
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+.v-target,
+.v-timer-readout {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.v-dose-panel .v-goal {
+  font-size: 23px;
+  line-height: 1.3;
+  padding: 0;
+  background: none;
+  color: var(--ink);
+  white-space: normal;
+}
+.v-dose-panel .timer-value {
+  font-size: 30px !important;
+  line-height: 1.2;
+  color: var(--accent-ink);
+}
+.v-dose-panel .v-cue {
+  flex-basis: 100%;
+  font-size: 12px;
+  min-height: 0;
+  line-height: 1.4;
+}
+.v-controls {
+  display: grid;
+  gap: 9px;
+  flex-shrink: 0;
+}
+.v-timer-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.v-timer-actions button {
+  min-height: 42px;
+  padding: 8px;
+  font-size: 15px;
+}
+.v-timer-actions #timer-button {
+  background: var(--soft);
+  border: 1px solid var(--line);
+}
+.v-timer-actions #timer-button:after {
+  background: var(--accent);
+}
+.v-controls > .v-finish {
+  font-size: 18px;
+}
+.v-session-footer {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.v-session-footer button {
+  padding: 8px;
+  font-size: 14px;
+}
+.v-player .v-rest {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.v-rest-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  min-height: 0;
+}
+.v-rest-center .v-clock {
+  flex-shrink: 0;
+  --ring-size:clamp(120px,24dvh,220px);
+}
+.v-rest-center p {
+  line-height: 1.5;
+}
+.v-player-head > .text-btn {
+  min-height: 36px;
+  padding-block: 4px;
+}
+.training .app-header {
+  padding-block: 8px;
+}
+.training .brand small {
+  display: none;
+}
+@media (max-height: 700px) {
+  .v-player {
+    gap: 5px;
+  }
+  .v-player .v-stage.v-work,
+  .v-player .v-stage.v-rest {
+    padding: 10px;
+  }
+  .v-title h1 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  .v-phase {
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+  .v-context {
+    font-size: 11px;
+    margin-top: 3px;
+  }
+  .v-dose-panel {
+    padding: 6px 8px;
+    gap: 3px 12px;
+  }
+  .v-dose-panel .small {
+    font-size: 11px;
+  }
+  .v-dose-panel .v-goal {
+    font-size: 20px;
+  }
+  .v-dose-panel .timer-value {
+    font-size: 25px !important;
+  }
+  .v-dose-panel .v-cue {
+    font-size: 11px;
+  }
+  .v-controls {
+    gap: 6px;
+  }
+  .v-controls > .v-finish {
+    padding: 7px;
+    font-size: 17px;
+  }
+  .v-timer-actions button {
+    min-height: 36px;
+    padding: 6px;
+    font-size: 13px;
+  }
+  .v-session-footer button {
+    font-size: 12px;
+  }
+  .training .app-header {
+    padding-block: 4px;
+  }
+  .v-player-head {
+    font-size: 12px;
+  }
+  .v-player-head > .text-btn {
+    min-height: 30px;
+    font-size: 12px;
+  }
+  .v-rest-center {
+    gap: 8px;
+  }
+  .v-rest-center .v-clock {
+    --ring-size:120px;
+  }
+}
+.v-work .v-image-frame {
+  width: 100%;
+  background: transparent;
+}
+.v-player .v-stage.v-work,
+.v-player .v-stage.v-rest {
+  grid-template-columns: minmax(0, 1fr);
+}
+.v-phase-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: start;
+}
+.v-phase-row .v-phase {
+  margin: 0;
+  flex-shrink: 0;
+}
+.v-position {
+  font-size: 12px;
+  text-align: end;
+}
+.v-work .v-title {
+  justify-content: space-between;
+  text-align: start;
+  width: 100%;
+}
+.v-work .v-title h1 {
+  flex: 1;
+  min-width: 0;
+  text-align: start;
+}
+.v-work .v-context {
+  text-align: start;
+  margin-top: 4px;
+}
+.v-timer-actions #timer-button {
+  border-color: var(--accent);
+  color: var(--ink);
+  font-weight: 700;
+  min-height: 46px;
+}
+.v-timer-actions #timer-button:after {
+  opacity: .3;
+}
+.v-session-footer [data-action=stop] {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.v-controls > .v-finish {
+  width: 100%;
+}
+@media (max-height: 700px) {
+  .v-phase-row {
+    margin-bottom: 5px;
+    gap: 8px;
+  }
+  .v-position {
+    font-size: 11px;
+  }
+  .v-timer-actions #timer-button {
+    min-height: 38px;
+  }
+}
+.v-player .v-stage.v-work,
+.v-player .v-stage.v-rest {
+  flex: 1 1 0;
+  margin: 0;
+  min-height: 0;
+}
+.v-player .v-stage.v-work {
+  grid-template-rows: auto minmax(40px, min(380px, calc((100vw - 66px)*.5581 + 18px))) auto minmax(0, 1fr) auto;
+}
+.v-work .v-controls {
+  grid-row: 5;
+}
+.v-controls {
+  align-self: end;
+}
+.v-controls > .v-finish {
+  height: 48px;
+  min-height: 48px;
+}
+.v-phase-row {
+  align-items: flex-start;
+}
+.v-position {
+  display: grid;
+  gap: 3px;
+  max-width: 75%;
+  line-height: 1.4;
+}
+.v-work .v-position .v-context {
+  margin: 0;
+  min-height: 0;
+  font-size: 11px;
+  text-align: end;
+  line-height: 1.4;
+}
+.v-work .v-exercise-image {
+  height: 100%;
+  min-height: 0;
+  justify-content: flex-start;
+  align-self: start;
+}
+.v-work .v-image-frame {
+  height: auto;
+  aspect-ratio: auto;
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.v-work .v-image-frame img {
+  position: static;
+  inset: auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+}
+.v-work .v-exercise-image figcaption {
+  flex-shrink: 0;
+}
+@media (max-height: 700px) {
+  .v-player .v-stage.v-work {
+    grid-template-rows: auto minmax(40px, calc((100vw - 50px)*.5581 + 18px)) auto minmax(0, 1fr) auto;
+  }
+  .v-position {
+    gap: 2px;
+  }
+  .v-work .v-position .v-context {
+    font-size: 10px;
+  }
+}
+.v-search-label {
+  display: block;
+  font-size: 13px;
+  margin-top: 18px;
+  color: var(--muted);
+}
+.v-library #search {
+  margin: 6px 0 12px;
+  min-height: 48px;
+}
+.v-library-group {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  margin-top: 12px;
+  background: var(--card);
+  overflow: hidden;
+}
+.v-library-group > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 62px;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  font-size: 17px;
+}
+.v-library-group > summary::-webkit-details-marker {
+  display: none;
+}
+.v-library-group > summary > span:first-child {
+  flex: 1;
+}
+.v-group-count {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.v-group-chevron {
+  flex-shrink: 0;
+}
+.v-library-group[open] .v-group-chevron {
+  transform: rotate(180deg);
+}
+.v-library-group .library-grid {
+  margin: 0;
+  padding: 0 10px 10px;
+  gap: 8px;
+}
+.v-library-group .exercise-card {
+  min-height: 80px;
+  padding: 12px;
+  border-radius: 12px;
+}
+.v-library .exercise-caption strong {
+  font-size: 17px;
+  line-height: 1.5;
+}
+.v-library-arrow {
+  display: flex;
+  align-items: center;
+  direction: ltr;
+}
+.v-library-group summary:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.v-title .icon-btn {
+  width: 44px;
+  height: 44px;
+}
+.v-session-footer button {
+  min-height: 44px;
+}
+.v-timer-actions button,
+.v-timer-actions #timer-button {
+  min-height: 44px;
+}
+.v-phase-row {
+  margin-bottom: 6px;
+}
+.v-position,
+.v-work .v-position .v-context {
+  font-size: 12px;
+  line-height: 1.45;
+}
+.v-dose-panel {
+  font-variant-numeric: tabular-nums;
+}
+@media (max-height: 700px) {
+  .v-player .v-stage.v-work,
+  .v-player .v-stage.v-rest {
+    gap: 6px;
+  }
+  .v-title .icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .v-position,
+  .v-work .v-position .v-context {
+    font-size: 11px;
+  }
+  .v-controls > .v-finish {
+    height: 44px;
+    min-height: 44px;
+  }
+  .v-session-footer button {
+    min-height: 44px;
+  }
+  .v-timer-actions button,
+  .v-timer-actions #timer-button {
+    min-height: 44px;
+  }
+}
+.v-library-group {
+  padding: 0;
+}
+.v-library-group > summary:focus-visible {
+  outline-offset: -4px;
+  border-radius: 15px;
+}
+.v-library .page-head {
+  margin-bottom: 12px;
+}
+.v-library .library-intro {
+  margin-bottom: 12px;
+}
+.v-library .v-search-label {
+  margin-top: 12px;
+}

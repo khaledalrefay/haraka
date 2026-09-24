@@ -2,9 +2,16 @@
   "name": "haraka",
   "private": true,
   "scripts": {
-    "build": "esbuild js/app.js --bundle --format=iife --target=es2020 --outfile=app.bundle.js"
+    "build": "python3 ../tools/build-content.py && python3 ../tools/build-preview.py",
+    "test": "node --test tests/vnext/*.test.mjs",
+    "test:pwa": "node tests/offline.cjs && node tests/push-handler.cjs",
+    "test:browser": "node tests/vnext/storage.browser.cjs && node tests/vnext/ui.browser.cjs && node tests/vnext/release.browser.cjs",
+    "check:architecture": "python3 ../tools/check-architecture.py"
   },
   "devDependencies": {
-    "esbuild": "0.28.2"
-  }
+    "esbuild": "0.28.2",
+    "playwright": "1.62.1"
+  },
+  "version": "2.0.0-beta.7",
+  "type": "module"
 }

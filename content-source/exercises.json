@@ -1,0 +1,1815 @@
+{
+  "version": "1.0-editorial",
+  "based_on_spec": "1.1",
+  "status": "text_complete_pending_qualified_review",
+  "count": 50,
+  "exercise_ids_preserved": true,
+  "images_deferred": true,
+  "program_doses_changed": false,
+  "global_guidance": [
+    "الهدف تحكم وحركة مريحة، لا الوصول إلى الألم أو الإنهاك. توقف عند الألم أو الدوخة أو فقدان السيطرة.",
+    "تنفس دون حبس النفس. في الحركات الهوائية حافظ على إيقاع يسمح بالكلام.",
+    "تعلم المقاومة لليافعين يحتاج توجيهًا مؤهلًا؛ هذه التعليمات ليست بديلًا عن تعليم التقنية.",
+    "الحائط للمساندة؛ الكرسي ثابت بلا عجلات؛ سطح الاتكاء يجب أن يتحمل الحمل ولا ينزلق أو ينقلب."
+  ],
+  "exercises": [
+    {
+      "id": "march",
+      "name_ar": "مشي بالمكان: هادئ/متدرج/نشيط/بطيء",
+      "equipment": "لا شيء",
+      "setup": "قف في مساحة خالية وقدماك على الأرض والذراعان مرتخيتان.",
+      "steps": [
+        "ارفع قدمًا ثم الأخرى بخطوات قصيرة في مكانك، وفق الإيقاع المطلوب للجلسة.",
+        "واصل دون قفز، وخفف الإيقاع في التهدئة مع تنفس مريح."
+      ],
+      "common_error": "لا تحوّل المشي إلى ركض أو ترفع الركبتين بالقوة.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-a-1",
+        "move-a-2",
+        "move-a-3",
+        "move-b-1",
+        "move-b-2",
+        "move-b-3",
+        "move-c-1",
+        "move-c-2",
+        "move-c-3",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "shoulder-roll",
+      "name_ar": "لف الكتفين للخلف",
+      "equipment": "لا شيء",
+      "setup": "قف باستقامة مريحة واترك الذراعين قرب الجانبين.",
+      "steps": [
+        "ارفع الكتفين قليلًا ثم حرّكهما للخلف وللأسفل بدائرة مريحة.",
+        "عد لوضع البداية وأكمل اللفات للخلف."
+      ],
+      "common_error": "لا تحرك الرأس مع الكتفين أو تضغطهما بعنف.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-a-1",
+        "move-a-2",
+        "move-a-3",
+        "move-b-1",
+        "move-b-2",
+        "move-b-3",
+        "move-c-1",
+        "move-c-2",
+        "move-c-3",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "neck-turn-seated",
+      "name_ar": "التفات الرقبة جالسًا",
+      "equipment": "كرسي",
+      "setup": "اجلس على كرسي ثابت، والقدمان على الأرض والكتفان مرتخيان.",
+      "steps": [
+        "التفت إلى اليمين ضمن مدى مريح مع بقاء الجذع مواجهًا للأمام.",
+        "عد للوسط ثم كرر يسارًا؛ التوقف داخل الحركة بحسب الوصفة."
+      ],
+      "common_error": "لا تسحب الرأس باليد، وتوقف عند ألم أو دوخة.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "اتجاه الالتفات",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-a-1",
+        "move-a-2",
+        "move-a-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "sit-stand",
+      "name_ar": "جلوس ووقوف",
+      "equipment": "كرسي",
+      "setup": "اجلس على كرسي ثابت غير منزلق، والقدمان بعرض مريح واليدان أمامك دون دفع المقعد.",
+      "steps": [
+        "مل بالجذع قليلًا للأمام وادفع بالقدمين إلى الوقوف.",
+        "ارجع إلى جلوس فعلي بتحكم؛ هذه دورة واحدة."
+      ],
+      "common_error": "لا تسقط على المقعد أو تستخدم كرسيًا بعجلات.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "من الجلوس إلى الوقوف ثم العودة للجلوس عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "move-a-1",
+        "move-c-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "chair-squat",
+      "name_ar": "قرفصاء ملامسة الكرسي",
+      "equipment": "كرسي",
+      "setup": "قف أمام كرسي ثابت خلفك، والقدمان بعرض مريح والذراعان أمامك.",
+      "steps": [
+        "اثن الوركين والركبتين وانزل باتجاه المقعد.",
+        "المس المقعد بخفة ثم قف؛ لا تستقر جالسًا."
+      ],
+      "common_error": "لا ترمِ وزنك على الكرسي أو ترفع الكعبين.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-b-1",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-a-2",
+        "move-c-2",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "squat",
+      "name_ar": "قرفصاء حرة",
+      "equipment": "لا شيء",
+      "setup": "قف وقدماك بعرض مريح والذراعان أمامك للتوازن.",
+      "steps": [
+        "اثن الوركين والركبتين وانزل لعمق تستطيع التحكم فيه.",
+        "قف بتحكم؛ أضف التوقف أسفل الحركة فقط عندما تنص الوصفة عليه."
+      ],
+      "common_error": "لا تفرض عمقًا معينًا أو تدع الركبتين تنهاران للداخل.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-2",
+        "foundation-a-3",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "move-a-3",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "wall-push",
+      "name_ar": "ضغط حائط",
+      "equipment": "حائط",
+      "setup": "ضع راحتيك على حائط ثابت قرب مستوى الكتفين وأبعد القدمين لتكوين ميل مريح.",
+      "steps": [
+        "اثن المرفقين ليقترب الجسم من الحائط كوحدة واحدة.",
+        "ادفع الحائط للعودة مع الزفير."
+      ],
+      "common_error": "لا تهبط بالحوض أو ترفع الكتفين نحو الأذنين.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-c-1",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-a-1",
+        "move-a-2",
+        "move-a-3",
+        "move-c-1",
+        "move-c-3",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "wall-slide",
+      "name_ar": "انزلاق الذراعين بالحائط",
+      "equipment": "حائط",
+      "setup": "قف وظهرك قريب من الحائط وقدماك أمامه قليلًا؛ اثن المرفقين والذراعان بشكل W.",
+      "steps": [
+        "حرّك الذراعين للأعلى ضمن مدى مريح.",
+        "أعدهما لوضع البداية ببطء."
+      ],
+      "common_error": "لا تقوّس أسفل الظهر أو تجبر الرسغين على ملامسة الحائط.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-a-1",
+        "move-c-2",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "cross-march",
+      "name_ar": "مشي نشيط بذراع مقابلة",
+      "equipment": "لا شيء",
+      "setup": "قف في مساحة خالية مع ثني مريح للمرفقين.",
+      "steps": [
+        "ارفع الركبة اليمنى مع تحريك الذراع اليسرى للأمام.",
+        "أنزل القدم وبدّل إلى الركبة اليسرى والذراع اليمنى؛ واصل دون قفز."
+      ],
+      "common_error": "لا تحوّل الحركة إلى لمس الركبة أو لف قوي للجذع.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-2",
+        "circuit-b-2",
+        "foundation-a-2",
+        "foundation-a-3",
+        "hybrid-a-2",
+        "hybrid-b-2",
+        "move-a-2",
+        "move-a-3",
+        "move-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "bridge",
+      "name_ar": "جسر بالقدمين",
+      "equipment": "بساط",
+      "setup": "استلقِ على البساط، والركبتان مثنيتان والقدمان ثابتتان والذراعان قرب الجسم.",
+      "steps": [
+        "ارفع الحوض بتحكم مع بقاء الأضلاع والحوض متوازنين.",
+        "أنزل الحوض بهدوء؛ التوقف أعلى الحركة تحدده الوصفة."
+      ],
+      "common_error": "لا ترفع الحوض بتقويس أسفل الظهر.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "move-a-2",
+        "move-a-3",
+        "move-c-2",
+        "move-c-3",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "heel-slide",
+      "name_ar": "انزلاق الكعب بالتبادل",
+      "equipment": "بساط",
+      "setup": "استلقِ والركبتان مثنيتان والقدمان على البساط.",
+      "steps": [
+        "ازلق كعبًا بعيدًا عن الحوض مع بقاء الكعب ملامسًا للأرض.",
+        "أعد القدم إلى البداية ثم بدّل الرجل."
+      ],
+      "common_error": "لا ترفع القدم عن البساط أو تمد إلى مدى يفقدك ثبات الحوض.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "الرجل المتحركة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-c-1",
+        "foundation-b-1",
+        "hybrid-b-1",
+        "move-a-2",
+        "move-c-2",
+        "move-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "bird-dog",
+      "name_ar": "Bird Dog",
+      "equipment": "بساط",
+      "setup": "ابدأ على اليدين والركبتين، اليدان تحت الكتفين والركبتان تحت الوركين.",
+      "steps": [
+        "مد رجلًا للخلف والذراع المقابلة للأمام دون رفعهما فوق الجذع.",
+        "عد إلى وضع الأربع ثم بدّل؛ التوقف إن وُجد تحدده الوصفة."
+      ],
+      "common_error": "لا تدر الحوض أو ترفع الرأس للأعلى.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "الرجل الممدودة مع الذراع المقابلة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-2",
+        "circuit-b-3",
+        "foundation-c-2",
+        "foundation-c-3",
+        "move-a-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "thoracic-rotation-seated",
+      "name_ar": "دوران صدري جالس",
+      "equipment": "كرسي",
+      "setup": "اجلس وقدماك ثابتتان والحوض مستقر، وضع اليدين على الصدر دون ضغط.",
+      "steps": [
+        "أدر أعلى الجذع بلطف إلى جهة واحدة.",
+        "عد للوسط ثم بدّل الجهة."
+      ],
+      "common_error": "لا تحرك الحوض مع الدوران أو تجذب الجسم باليدين.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "اتجاه الدوران",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-b-1",
+        "move-b-2",
+        "move-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "wall-hinge",
+      "name_ar": "دفع الورك للحائط",
+      "equipment": "حائط",
+      "setup": "قف وظهرك للحائط على مسافة قصيرة، والقدمان بعرض مريح والركبتان مرتخيتان.",
+      "steps": [
+        "ادفع الورك للخلف ليلامس الحائط بخفة مع ميل الجذع من الوركين.",
+        "عد للوقوف بتحكم."
+      ],
+      "common_error": "لا تحول الحركة إلى انحناء من الخصر أو قرفصاء عميقة.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "move-b-1",
+        "move-b-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "supported-side-leg-raise",
+      "name_ar": "رفع رجل جانبًا بمساندة",
+      "equipment": "حائط",
+      "setup": "قف قرب الحائط وضع يدًا عليه، والقدمان للأمام والجذع مستقيم.",
+      "steps": [
+        "ارفع الرجل المطلوبة قليلًا إلى الجانب مع بقاء الحوض مستويًا.",
+        "أعدها للأرض؛ أكمل الجهة قبل التبديل."
+      ],
+      "common_error": "لا تمل بالجذع أو تدور القدم للخارج لتزيد الارتفاع.",
+      "counting": {
+        "unit": "reps",
+        "mode": "sequential",
+        "side_means": "الرجل المتحركة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-b-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "calf-raise",
+      "name_ar": "رفع كعبين بمساندة",
+      "equipment": "حائط",
+      "setup": "قف على أرض مستوية واليدان على الحائط للمساندة.",
+      "steps": [
+        "ارفع الكعبين معًا بتحكم مع بقاء مقدمتي القدمين على الأرض.",
+        "أنزل الكعبين بهدوء."
+      ],
+      "common_error": "لا تنط أو تحمل الوزن على الحافة الخارجية للقدم.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "move-b-1",
+        "move-b-2",
+        "move-b-3",
+        "strength-b-1",
+        "strength-b-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "supported-tandem",
+      "name_ar": "وقوف متدرج بمساندة",
+      "equipment": "حائط",
+      "setup": "قف بجانب الحائط مع مساندة يد، وقدّم القدم المطلوبة أمام الأخرى مع فصل جانبي بسيط.",
+      "steps": [
+        "وزع الوزن بحيث تستطيع الثبات والتنفس براحة.",
+        "بعد زمن الوضعية بدّل القدم الأمامية خلال فاصل التبديل."
+      ],
+      "common_error": "لا تقف على خط ضيق قسري أو تتخل عن المساندة.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "sequential",
+        "side_means": "القدم الأمامية",
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-b-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "side-step",
+      "name_ar": "خطوات جانبية مع ضم القدم",
+      "equipment": "لا شيء",
+      "setup": "قف وقدماك متقاربتان بمسافة مريحة والذراعان مرتخيتان.",
+      "steps": [
+        "اخطُ يمينًا ثم قرّب القدم اليسرى دون تقاطع.",
+        "اخطُ يسارًا وقرّب اليمنى، وواصل بالتبادل."
+      ],
+      "common_error": "لا تقفز أو تتقاطع القدمان.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-b-1",
+        "move-c-1",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "supported-single-balance",
+      "name_ar": "وقوف رجل واحدة بمساندة",
+      "equipment": "حائط",
+      "setup": "قف قرب الحائط مع مساندة اليد، وانقل الوزن إلى الرجل المطلوبة.",
+      "steps": [
+        "اثن ركبة الرجل الحرة قليلًا وارفع قدمها عن الأرض قرب رجل الارتكاز دون إسنادها عليها.",
+        "حافظ على الحوض مستويًا ثم أعد القدم وبدّل بعد الفاصل."
+      ],
+      "common_error": "لا تقفل ركبة الارتكاز بقوة أو تتخل عن الحائط.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "sequential",
+        "side_means": "رجل الارتكاز",
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-b-2",
+        "move-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "cat-cow",
+      "name_ar": "Cat–Cow",
+      "equipment": "بساط",
+      "setup": "ابدأ على اليدين والركبتين مع رقبة مرتاحة.",
+      "steps": [
+        "دوّر الظهر برفق للأعلى ثم انتقل إلى تقوس لطيف ومتحكم في الاتجاه الآخر.",
+        "ارجع إلى الوضعية الأولى لإكمال دورة واحدة."
+      ],
+      "common_error": "لا تدفع الظهر إلى نهايات المدى أو ترمِ الرأس للخلف.",
+      "counting": {
+        "unit": "cycles",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "الانتقال بين وضعيتي Cat–Cow والعودة إلى الأولى دورة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-b-2",
+        "move-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "supported-split",
+      "name_ar": "قرفصاء منقسمة بمساندة الحائط",
+      "equipment": "حائط",
+      "setup": "قف بجانب الحائط مع مساندة يد، قدم أمام الأخرى وفصل جانبي للتوازن.",
+      "steps": [
+        "اثن الركبتين وانزل عموديًا بقدر مريح مع ثبات القدمين.",
+        "ارتفع بتحكم؛ أكمل جهة القدم الأمامية ثم بدّل."
+      ],
+      "common_error": "لا تخطُ للخلف في كل عدّة أو تفرض ملامسة الركبة للأرض.",
+      "counting": {
+        "unit": "reps",
+        "mode": "sequential",
+        "side_means": "القدم الأمامية",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-b-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "neck-tilt-seated",
+      "name_ar": "ميل الرأس الجانبي جالسًا",
+      "equipment": "كرسي",
+      "setup": "اجلس باستقامة مريحة والقدمان ثابتتان والكتفان مرتخيان.",
+      "steps": [
+        "مل الأذن نحو الكتف قليلًا دون رفع الكتف.",
+        "عد للوسط ثم بدّل الجهة، والتوقف بحسب الوصفة."
+      ],
+      "common_error": "لا تسحب الرأس بيدك أو تكمل عند ألم أو دوخة.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "اتجاه الميل",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-c-1",
+        "move-c-2",
+        "move-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "side-squat",
+      "name_ar": "خطوة جانبية إلى قرفصاء",
+      "equipment": "لا شيء",
+      "setup": "قف وقدماك بمسافة مريحة والذراعان أمامك.",
+      "steps": [
+        "اخطُ إلى الجانب ثم نفّذ قرفصاء متحكمة على القدمين.",
+        "قف وأعد القدم إلى البداية ثم بدّل اتجاه الخطوة."
+      ],
+      "common_error": "لا تجمع اتجاهين في عدّة واحدة أو تقفز للعودة.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "اتجاه الخطوة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "chest-open",
+      "name_ar": "فتح صدر لطيف ثابت",
+      "equipment": "لا شيء",
+      "setup": "قف باستقامة مريحة والذراعان منخفضتان قرب الجانبين.",
+      "steps": [
+        "افتح الذراعين قليلًا للخلف ووجّه راحتي اليدين للأمام دون شد.",
+        "ابقَ في الوضع المريح مع تنفس طبيعي طوال زمن الثبات."
+      ],
+      "common_error": "لا تدفع الصدر للأمام بتقويس الظهر أو تشبك اليدين وتسحب بقوة.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "move-c-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "heel-touch",
+      "name_ar": "لمس الكعب للأمام",
+      "equipment": "لا شيء",
+      "setup": "قف والركبتان مرتخيتان والذراعان قرب الجانبين.",
+      "steps": [
+        "مد قدمًا قليلًا للأمام والمس الأرض بالكعب مع ارتفاع مقدم القدم.",
+        "أعد القدم وبدّل الجهة باستمرار."
+      ],
+      "common_error": "لا تنقل كامل الوزن إلى القدم الأمامية أو تقفز.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-1",
+        "hybrid-a-1",
+        "hybrid-b-1",
+        "hybrid-c-1",
+        "move-c-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "step-jack",
+      "name_ar": "فتح جانبي دون قفز مع الذراعين",
+      "equipment": "لا شيء",
+      "setup": "قف والذراعان قرب الجانبين.",
+      "steps": [
+        "اخطُ بقدم إلى الجانب مع رفع الذراعين جانبًا إلى مستوى الكتفين.",
+        "أعد القدم والذراعين ثم بدّل الجهة دون قفز."
+      ],
+      "common_error": "لا ترفع الذراعين فوق المستوى المحدد أو توسع الخطوة قسرًا.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-2",
+        "circuit-a-3",
+        "foundation-b-2",
+        "foundation-b-3",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-c-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "cross-knee",
+      "name_ar": "رفع ركبة ولمس باليد المقابلة",
+      "equipment": "لا شيء",
+      "setup": "قف باستقامة مريحة في مساحة خالية.",
+      "steps": [
+        "ارفع ركبة وقرب منها اليد المقابلة للمس مريح.",
+        "أنزل القدم وبدّل الركبة واليد."
+      ],
+      "common_error": "لا تنحنِ أو تلوِ الجذع بالقوة للوصول إلى الركبة.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-3",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-3",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "supported-row",
+      "name_ar": "سحب دمبل مسنود",
+      "equipment": "دمبل واحد وسطح ثابت",
+      "setup": "قف بقدمين متباعدتين إحداهما أمام الأخرى، ومل من الوركين؛ أسند اليد غير الحاملة على سطح ثابت، والقدمان على الأرض.",
+      "steps": [
+        "اسحب الدمبل باليد الأخرى نحو جانب الخصر مع اقتراب المرفق من الجذع.",
+        "أنزل الدمبل بتحكم؛ الجهة باسم اليد الحاملة."
+      ],
+      "common_error": "لا تلف الجذع أو تنفض الوزن؛ استخدم حملًا تستطيع التحكم به دون حبس النفس.",
+      "counting": {
+        "unit": "reps",
+        "mode": "sequential",
+        "side_means": "اليد الحاملة للدمبل",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "incline-push",
+      "name_ar": "ضغط مائل",
+      "equipment": "سطح ثابت قرب الخصر",
+      "setup": "ضع اليدين على سطح ثابت مناسب قرب ارتفاع الخصر، والقدمان للخلف والجسم مستقيم.",
+      "steps": [
+        "اثن المرفقين ليقترب الصدر من السطح.",
+        "ادفع للعودة مع الزفير."
+      ],
+      "common_error": "لا تستخدم سطحًا ينزلق أو ينقلب أو تسمح بهبوط الحوض.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-2",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-3",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-1",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "strength-a-1",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "forearm-knee-plank",
+      "name_ar": "بلانك ساعدين وركبتين",
+      "equipment": "بساط",
+      "setup": "ضع الساعدين على البساط والمرفقين تحت الكتفين، والركبتين خلف الوركين قليلًا.",
+      "steps": [
+        "ارفع الحوض ليصبح الجذع والفخذان على امتداد مريح من الرأس إلى الركبتين.",
+        "تنفس أثناء الثبات ثم أنزل الحوض بتحكم."
+      ],
+      "common_error": "لا تجعل الوركين فوق الركبتين مباشرة أو تدع أسفل الظهر يهبط.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "foundation-a-1",
+        "foundation-a-2",
+        "hybrid-a-1",
+        "strength-a-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "forearm-plank",
+      "name_ar": "بلانك ساعدين وقدمين",
+      "equipment": "بساط",
+      "setup": "ضع الساعدين على البساط والمرفقين تحت الكتفين، ومد الرجلين وارتكز على مقدمتي القدمين.",
+      "steps": [
+        "ارفع الجسم مع بقاء الرأس والجذع والحوض على امتداد واحد.",
+        "تنفس أثناء الثبات ثم أنزل الركبتين بتحكم."
+      ],
+      "common_error": "لا ترفع الحوض كثيرًا أو تتركه يهبط أو تحبس النفس.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-3",
+        "foundation-a-3",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "strength-a-2",
+        "strength-a-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "heel-tap",
+      "name_ar": "لمس الكعب للأرض من ركبتين مرفوعتين مثنيتين",
+      "equipment": "بساط",
+      "setup": "استلقِ وارفع الرجلين مع ثني الركبتين، والفخذان باتجاه الأعلى والذراعان قرب الجسم.",
+      "steps": [
+        "أنزل كعبًا نحو الأرض مع الحفاظ على ثني الركبة وثبات الحوض.",
+        "المس الأرض بلطف ثم عد وبدّل الرجل."
+      ],
+      "common_error": "لا تفرد الركبة كأنها انزلاق كعب أو توسع المدى مع تقوس الظهر.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "الرجل المتحركة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "foundation-b-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "dead-bug",
+      "name_ar": "Dead Bug",
+      "equipment": "بساط",
+      "setup": "استلقِ والذراعان باتجاه السقف والفخذان مرفوعان والركبتان مثنيتان.",
+      "steps": [
+        "مد ذراعًا خلف الرأس والرجل المقابلة للأمام ضمن مدى متحكم.",
+        "عد إلى البداية ثم بدّل الطرفين."
+      ],
+      "common_error": "لا تفرض لمس القدم للأرض أو تفقد ثبات الحوض.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "الرجل الممدودة مع الذراع المقابلة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-b-3",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "split-squat",
+      "name_ar": "قرفصاء منقسمة دون مساندة",
+      "equipment": "لا شيء",
+      "setup": "قف وقدم أمام الأخرى مع فصل جانبي للتوازن، واليدان على الوركين دون مساندة.",
+      "steps": [
+        "اثن الركبتين وانزل عموديًا ضمن مدى متحكم، والقدمان ثابتتان.",
+        "عد للارتفاع وأكمل جهة القدم الأمامية قبل التبديل."
+      ],
+      "common_error": "لا تجمع القدمين على خط ضيق أو تحوّلها إلى خطوة اندفاع متكررة.",
+      "counting": {
+        "unit": "reps",
+        "mode": "sequential",
+        "side_means": "القدم الأمامية",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-2",
+        "foundation-c-3",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-2",
+        "strength-b-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "quadruped-leg",
+      "name_ar": "مد رجل من اليدين والركبتين",
+      "equipment": "بساط",
+      "setup": "ابدأ على اليدين والركبتين، والظهر محايد واليدان ثابتتان.",
+      "steps": [
+        "مد رجلًا واحدة للخلف حتى تبتعد القدم عن البساط، دون رفعها فوق مستوى الجذع.",
+        "أعد الركبة إلى موضعها ثم بدّل الرجل، والذراعان ثابتتان."
+      ],
+      "common_error": "لا ترفع ذراعًا أو تدور الحوض أو تقوّس الظهر لرفع القدم.",
+      "counting": {
+        "unit": "reps",
+        "mode": "alternating",
+        "side_means": "الرجل الممدودة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. كل جهة تُحسب منفردة؛ يمين ثم يسار بالتبادل، دون راحة لكل عدّة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-1",
+        "foundation-c-1"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "knee-side-plank",
+      "name_ar": "بلانك جانبي على الركبتين",
+      "equipment": "بساط",
+      "setup": "استلقِ على الجانب مع ثني الركبتين وإرجاع القدمين خلفك، والساعد تحت الكتف.",
+      "steps": [
+        "ارفع الحوض مرتكزًا على الساعد وجانب الركبة السفلى، والجذع والفخذان على امتداد واحد.",
+        "تنفس أثناء الثبات ثم أنزل الحوض وبدّل الجهة بعد الفاصل."
+      ],
+      "common_error": "لا ترتكز على القدمين بدل الركبتين أو تدع الكتف ينهار.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "sequential",
+        "side_means": "الجانب السفلي المرتكز",
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-c-1",
+        "circuit-c-2",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "strength-b-1",
+        "strength-b-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "floor-push",
+      "name_ar": "ضغط أرضي كامل",
+      "equipment": "بساط",
+      "setup": "ابدأ مرتكزًا على اليدين ومقدمتي القدمين، واليدان بعرض مريح قرب الكتفين.",
+      "steps": [
+        "اثن المرفقين وانزل بالجسم كوحدة واحدة ضمن مدى متحكم.",
+        "ادفع الأرض للعودة مع الزفير."
+      ],
+      "common_error": "لا تهبط بالحوض أو تمد الرأس إلى الأرض بدل خفض الجسم.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-3",
+        "circuit-c-3",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "reverse-lunge",
+      "name_ar": "اندفاع خلفي",
+      "equipment": "لا شيء",
+      "setup": "قف دون حمل واليدان على الوركين، وحدد جهة القدم التي ستبقى أمامًا.",
+      "steps": [
+        "اخطُ بالرجل الأخرى للخلف واثن الركبتين لنزول متحكم.",
+        "ادفع بالقدم الأمامية وأعد الخلفية للوقوف؛ أكمل الجهة ثم بدّل."
+      ],
+      "common_error": "لا تبدّل معنى الجهة إلى الرجل الراجعة أو ترتطم الركبة بالأرض.",
+      "counting": {
+        "unit": "reps",
+        "mode": "sequential",
+        "side_means": "القدم الأمامية الثابتة",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-3",
+        "hybrid-c-3",
+        "strength-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "single-bridge",
+      "name_ar": "جسر برجل واحدة",
+      "equipment": "بساط",
+      "setup": "استلقِ مع قدم الارتكاز على الأرض وركبتها مثنية؛ ارفع الرجل الحرة مع بقاء ركبتها مثنية والفخذ نحو الجذع دون جذب باليد.",
+      "steps": [
+        "ارفع الحوض بقدم الارتكاز مع بقاء الرجل الحرة في وضعها.",
+        "أنزل الحوض بتحكم وأكمل جهة قدم الارتكاز قبل التبديل."
+      ],
+      "common_error": "لا تدور الحوض أو تدفع بالرجل الحرة أو تمدها ركلةً للأمام.",
+      "counting": {
+        "unit": "reps",
+        "mode": "sequential",
+        "side_means": "قدم الارتكاز",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-3",
+        "hybrid-b-3",
+        "strength-b-2",
+        "strength-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "single-calf",
+      "name_ar": "رفع كعب رجل واحدة بمساندة",
+      "equipment": "حائط",
+      "setup": "قف قرب الحائط مع مساندة اليدين، وانقل الوزن إلى القدم المطلوبة؛ اثن الركبة الحرة وارفع قدمها دون الاتكاء بها.",
+      "steps": [
+        "ارفع كعب قدم الارتكاز على أرض مستوية.",
+        "أنزل الكعب بتحكم وأكمل الجهة ثم بدّل."
+      ],
+      "common_error": "لا تستخدم حافة درجة أو تدفع بالرجل الحرة.",
+      "counting": {
+        "unit": "reps",
+        "mode": "sequential",
+        "side_means": "قدم الارتكاز",
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "strength-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "full-side-plank",
+      "name_ar": "بلانك جانبي كامل بقدمين متدرجتين",
+      "equipment": "بساط",
+      "setup": "استلقِ على الجانب والساعد تحت الكتف والرجلان ممدودتان؛ ضع القدم العليا أمام السفلى قليلًا بحيث تلامسان الأرض.",
+      "steps": [
+        "ارفع الحوض مع الارتكاز على الساعد والقدمين المتدرجتين.",
+        "تنفس أثناء الثبات ثم أنزل الحوض وبدّل الجانب."
+      ],
+      "common_error": "لا تكدس القدمين أو تدع الحوض يهبط أو يلتف للأمام.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "sequential",
+        "side_means": "الجانب السفلي المرتكز",
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات. أكمل هدف اليمين ثم فاصل تبديل الجهة المحدد في الجلسة ثم هدف اليسار؛ الجهتان معًا مجموعة واحدة أو محطة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-c-3",
+        "hybrid-c-3",
+        "strength-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "partial-crunch",
+      "name_ar": "كرنش جزئي",
+      "equipment": "بساط",
+      "setup": "استلقِ والركبتان مثنيتان والقدمان على الأرض، والذراعان ممدودتان باتجاه الركبتين.",
+      "steps": [
+        "ازفر وارفع الرأس ولوحي الكتفين مسافة صغيرة مع رقبة مريحة.",
+        "عد للبساط ببطء."
+      ],
+      "common_error": "لا تتحول إلى جلوس كامل أو تسحب الرقبة باليدين.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "strength-c-1",
+        "strength-c-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "reverse-crunch",
+      "name_ar": "كرنش عكسي",
+      "equipment": "بساط",
+      "setup": "استلقِ والركبتان مثنيتان ومرفوعتان والذراعان قرب الجسم.",
+      "steps": [
+        "ازفر ولف الحوض قليلًا ليرتفع عن البساط دون تأرجح.",
+        "أعد الحوض ببطء مع بقاء الركبتين مثنيتين."
+      ],
+      "common_error": "لا تقذف الرجلين نحو الرأس أو تحمل الوزن على الرقبة.",
+      "counting": {
+        "unit": "reps",
+        "mode": "bilateral",
+        "side_means": null,
+        "rule_ar": "إتمام الحركة والعودة إلى البداية عدّة واحدة."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "lateral-double",
+      "name_ar": "خطوتان جانبيتان ثم العودة",
+      "equipment": "لا شيء",
+      "setup": "قف في مساحة خالية والذراعان مرتخيتان.",
+      "steps": [
+        "اخطُ يمينًا وقرّب اليسرى، ثم كرر خطوة وضمًا إلى اليمين.",
+        "نفّذ خطوتين مع الضم للعودة يسارًا وواصل."
+      ],
+      "common_error": "لا تقاطع القدمين أو تضف قفزة.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-c-2",
+        "hybrid-a-2",
+        "hybrid-c-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "lateral-double-arms",
+      "name_ar": "خطوتان جانبيتان مع تحريك الذراعين",
+      "equipment": "لا شيء",
+      "setup": "قف والمرفقان مثنيان والذراعان قرب الجانبين.",
+      "steps": [
+        "نفّذ خطوتين جانبيتين مع الضم؛ حرّك الساعدين معًا للأمام عند كل خطوة جانبية، وأعدهما عند ضم القدم.",
+        "ارجع بخطوتين للجهة الأخرى مع التنسيق نفسه واليدين دون مستوى الكتفين."
+      ],
+      "common_error": "لا ترفع الذراعين فوق الرأس أو تجعل حركتهما تسبب دوران الجذع.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-c-3",
+        "hybrid-a-3",
+        "hybrid-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "heel-touch-arm",
+      "name_ar": "لمس الكعب للأمام مع مد الذراع المقابلة",
+      "equipment": "لا شيء",
+      "setup": "قف والذراعان قرب الجانبين والركبتان مرتخيتان.",
+      "steps": [
+        "المس الأرض بكعب قدم أمامًا ومد الذراع المقابلة للأمام دون تجاوز مستوى الكتف.",
+        "أعد القدم والذراع ثم بدّل الطرفين."
+      ],
+      "common_error": "لا تمد ذراع الجهة نفسها أو تنحنِ للوصول إلى القدم.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-2",
+        "circuit-b-3",
+        "hybrid-b-2",
+        "hybrid-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "hamstring-curl",
+      "name_ar": "ثني ركبة ورفع كعب للخلف بالتبادل",
+      "equipment": "لا شيء",
+      "setup": "قف باستقامة مريحة والذراعان قرب الجانبين.",
+      "steps": [
+        "اثن ركبة وارفع الكعب للخلف نحو الجسم ضمن مدى مريح مع بقاء الفخذ قريبًا من وضع الوقوف.",
+        "أعد القدم وبدّل الرجل دون قفز."
+      ],
+      "common_error": "لا تقوّس الظهر أو تدفع الركبة للأمام بقوة.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "hybrid-b-1",
+        "hybrid-b-2"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "hamstring-curl-arms",
+      "name_ar": "ثني ركبة للخلف مع تحريك الذراعين",
+      "equipment": "لا شيء",
+      "setup": "قف والمرفقان مثنيان والذراعان قرب الجانبين.",
+      "steps": [
+        "اثن ركبة وارفع كعبها للخلف مع تحريك الذراع المقابلة للأمام والذراع الأخرى للخلف حركة قصيرة.",
+        "أعد القدم ثم بدّل الرجل والذراعين دون قفز."
+      ],
+      "common_error": "لا ترفع الذراعين عاليًا أو تلف الجذع لمتابعتهما.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "hybrid-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "new_detail_documented",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "forward-back",
+      "name_ar": "خطوتان للأمام ثم خطوتان للخلف",
+      "equipment": "لا شيء",
+      "setup": "قف في مساحة خالية تكفي لخطوات قصيرة أمامك وخلفك.",
+      "steps": [
+        "اخطُ خطوتين قصيرتين للأمام ثم خطوتين للخلف للعودة، مع بقاء الوجه للأمام.",
+        "واصل التسلسل بإيقاع متحكم والذراعان تتحركان طبيعيًا."
+      ],
+      "common_error": "لا تدُر أثناء العودة أو ترجع بخطوات طويلة لا ترى مجالها.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-b-3",
+        "hybrid-b-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    },
+    {
+      "id": "seated-breath",
+      "name_ar": "تنفس طبيعي جالسًا",
+      "equipment": "كرسي",
+      "setup": "اجلس على كرسي ثابت والقدمان على الأرض واليدان مرتاحتان على الفخذين.",
+      "steps": [
+        "أرخِ الكتفين وتنفس بإيقاعك الطبيعي.",
+        "دع النفس يهدأ دون توقيت للشهيق والزفير."
+      ],
+      "common_error": "لا تحبس النفس أو تجبره على العمق أو السرعة.",
+      "counting": {
+        "unit": "seconds",
+        "mode": "continuous",
+        "side_means": null,
+        "rule_ar": "يحدد المؤقت المدة؛ لا يطلب عدّ الحركات."
+      },
+      "dose_source": "workout_prescription_only",
+      "pause_source": "workout_prescription_only",
+      "used_by": [
+        "circuit-a-1",
+        "circuit-a-2",
+        "circuit-a-3",
+        "circuit-b-1",
+        "circuit-b-2",
+        "circuit-b-3",
+        "circuit-c-1",
+        "circuit-c-2",
+        "circuit-c-3",
+        "foundation-a-1",
+        "foundation-a-2",
+        "foundation-a-3",
+        "foundation-b-1",
+        "foundation-b-2",
+        "foundation-b-3",
+        "foundation-c-1",
+        "foundation-c-2",
+        "foundation-c-3",
+        "hybrid-a-1",
+        "hybrid-a-2",
+        "hybrid-a-3",
+        "hybrid-b-1",
+        "hybrid-b-2",
+        "hybrid-b-3",
+        "hybrid-c-1",
+        "hybrid-c-2",
+        "hybrid-c-3",
+        "move-a-1",
+        "move-a-2",
+        "move-a-3",
+        "move-b-1",
+        "move-b-2",
+        "move-b-3",
+        "move-c-1",
+        "move-c-2",
+        "move-c-3",
+        "strength-a-1",
+        "strength-a-2",
+        "strength-a-3",
+        "strength-b-1",
+        "strength-b-2",
+        "strength-b-3",
+        "strength-c-1",
+        "strength-c-2",
+        "strength-c-3"
+      ],
+      "image": null,
+      "image_status": "deferred_by_user",
+      "editorial_status": "expanded_from_spec",
+      "qualified_review": "pending"
+    }
+  ]
+}

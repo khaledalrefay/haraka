@@ -1,0 +1,331 @@
+{
+  "inputs": {
+    "js/infrastructure/download.mjs": {
+      "bytes": 386,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/presentation/html.mjs": {
+      "bytes": 956,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/data/program-labels.mjs": {
+      "bytes": 1792,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/presentation/player.mjs": {
+      "bytes": 4484,
+      "imports": [
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./html.mjs"
+        },
+        {
+          "path": "js/data/program-labels.mjs",
+          "kind": "import-statement",
+          "original": "../data/program-labels.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/data/content.mjs": {
+      "bytes": 416401,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/presentation/library.mjs": {
+      "bytes": 4447,
+      "imports": [
+        {
+          "path": "js/data/content.mjs",
+          "kind": "import-statement",
+          "original": "../data/content.mjs"
+        },
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./html.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/data/version.mjs": {
+      "bytes": 43,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/data/estimates.mjs": {
+      "bytes": 1774,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/domain/engine.mjs": {
+      "bytes": 5341,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/domain/schedule.mjs": {
+      "bytes": 3619,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/data/palettes.mjs": {
+      "bytes": 860,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/data/sounds.mjs": {
+      "bytes": 211,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/application/backup.mjs": {
+      "bytes": 3829,
+      "imports": [
+        {
+          "path": "js/domain/engine.mjs",
+          "kind": "import-statement",
+          "original": "../domain/engine.mjs"
+        },
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        },
+        {
+          "path": "js/data/palettes.mjs",
+          "kind": "import-statement",
+          "original": "../data/palettes.mjs"
+        },
+        {
+          "path": "js/data/sounds.mjs",
+          "kind": "import-statement",
+          "original": "../data/sounds.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/infrastructure/reminder-config.mjs": {
+      "bytes": 92,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/infrastructure/reminder-guard.mjs": {
+      "bytes": 747,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/infrastructure/reminders.mjs": {
+      "bytes": 15614,
+      "imports": [
+        {
+          "path": "js/infrastructure/reminder-config.mjs",
+          "kind": "import-statement",
+          "original": "./reminder-config.mjs"
+        },
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        },
+        {
+          "path": "js/infrastructure/reminder-guard.mjs",
+          "kind": "import-statement",
+          "original": "./reminder-guard.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/infrastructure/workout-repository.mjs": {
+      "bytes": 5076,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/application/workout-service.mjs": {
+      "bytes": 1393,
+      "imports": [
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        },
+        {
+          "path": "js/domain/engine.mjs",
+          "kind": "import-statement",
+          "original": "../domain/engine.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/infrastructure/audio.mjs": {
+      "bytes": 1141,
+      "imports": [
+        {
+          "path": "js/data/sounds.mjs",
+          "kind": "import-statement",
+          "original": "../data/sounds.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/app.mjs": {
+      "bytes": 32859,
+      "imports": [
+        {
+          "path": "js/infrastructure/download.mjs",
+          "kind": "import-statement",
+          "original": "./infrastructure/download.mjs"
+        },
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/html.mjs"
+        },
+        {
+          "path": "js/data/program-labels.mjs",
+          "kind": "import-statement",
+          "original": "./data/program-labels.mjs"
+        },
+        {
+          "path": "js/presentation/player.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/player.mjs"
+        },
+        {
+          "path": "js/presentation/library.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/library.mjs"
+        },
+        {
+          "path": "js/data/version.mjs",
+          "kind": "import-statement",
+          "original": "./data/version.mjs"
+        },
+        {
+          "path": "js/data/estimates.mjs",
+          "kind": "import-statement",
+          "original": "./data/estimates.mjs"
+        },
+        {
+          "path": "js/application/backup.mjs",
+          "kind": "import-statement",
+          "original": "./application/backup.mjs"
+        },
+        {
+          "path": "js/infrastructure/reminders.mjs",
+          "kind": "import-statement",
+          "original": "./infrastructure/reminders.mjs"
+        },
+        {
+          "path": "js/data/content.mjs",
+          "kind": "import-statement",
+          "original": "./data/content.mjs"
+        },
+        {
+          "path": "js/infrastructure/workout-repository.mjs",
+          "kind": "import-statement",
+          "original": "./infrastructure/workout-repository.mjs"
+        },
+        {
+          "path": "js/application/workout-service.mjs",
+          "kind": "import-statement",
+          "original": "./application/workout-service.mjs"
+        },
+        {
+          "path": "js/domain/engine.mjs",
+          "kind": "import-statement",
+          "original": "./domain/engine.mjs"
+        },
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "./domain/schedule.mjs"
+        },
+        {
+          "path": "js/data/palettes.mjs",
+          "kind": "import-statement",
+          "original": "./data/palettes.mjs"
+        },
+        {
+          "path": "js/infrastructure/audio.mjs",
+          "kind": "import-statement",
+          "original": "./infrastructure/audio.mjs"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "app.bundle.js": {
+      "imports": [],
+      "exports": [],
+      "entryPoint": "js/app.mjs",
+      "inputs": {
+        "js/infrastructure/download.mjs": {
+          "bytesInOutput": 373
+        },
+        "js/presentation/html.mjs": {
+          "bytesInOutput": 1364
+        },
+        "js/data/program-labels.mjs": {
+          "bytesInOutput": 4291
+        },
+        "js/presentation/player.mjs": {
+          "bytesInOutput": 6341
+        },
+        "js/data/content.mjs": {
+          "bytesInOutput": 513808
+        },
+        "js/presentation/library.mjs": {
+          "bytesInOutput": 5536
+        },
+        "js/data/version.mjs": {
+          "bytesInOutput": 36
+        },
+        "js/data/estimates.mjs": {
+          "bytesInOutput": 2129
+        },
+        "js/domain/engine.mjs": {
+          "bytesInOutput": 5456
+        },
+        "js/domain/schedule.mjs": {
+          "bytesInOutput": 3910
+        },
+        "js/data/palettes.mjs": {
+          "bytesInOutput": 1361
+        },
+        "js/data/sounds.mjs": {
+          "bytesInOutput": 354
+        },
+        "js/application/backup.mjs": {
+          "bytesInOutput": 3885
+        },
+        "js/infrastructure/reminder-config.mjs": {
+          "bytesInOutput": 65
+        },
+        "js/infrastructure/reminder-guard.mjs": {
+          "bytesInOutput": 769
+        },
+        "js/infrastructure/reminders.mjs": {
+          "bytesInOutput": 21699
+        },
+        "js/infrastructure/workout-repository.mjs": {
+          "bytesInOutput": 5226
+        },
+        "js/application/workout-service.mjs": {
+          "bytesInOutput": 1294
+        },
+        "js/infrastructure/audio.mjs": {
+          "bytesInOutput": 1112
+        },
+        "js/app.mjs": {
+          "bytesInOutput": 43300
+        }
+      },
+      "bytes": 622975
+    }
+  }
+}

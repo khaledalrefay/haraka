@@ -5,13 +5,19 @@
       "imports": [],
       "format": "esm"
     },
-    "js/data/program-labels.mjs": {
-      "bytes": 2540,
-      "imports": [],
+    "js/presentation/page-heading.mjs": {
+      "bytes": 158,
+      "imports": [
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./html.mjs"
+        }
+      ],
       "format": "esm"
     },
-    "js/domain/schedule.mjs": {
-      "bytes": 3619,
+    "js/data/program-labels.mjs": {
+      "bytes": 2540,
       "imports": [],
       "format": "esm"
     },
@@ -20,9 +26,45 @@
       "imports": [],
       "format": "esm"
     },
-    "js/presentation/home.mjs": {
-      "bytes": 3575,
+    "js/presentation/session-preview.mjs": {
+      "bytes": 3905,
       "imports": [
+        {
+          "path": "js/presentation/html.mjs",
+          "kind": "import-statement",
+          "original": "./html.mjs"
+        },
+        {
+          "path": "js/presentation/page-heading.mjs",
+          "kind": "import-statement",
+          "original": "./page-heading.mjs"
+        },
+        {
+          "path": "js/data/program-labels.mjs",
+          "kind": "import-statement",
+          "original": "../data/program-labels.mjs"
+        },
+        {
+          "path": "js/data/estimates.mjs",
+          "kind": "import-statement",
+          "original": "../data/estimates.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "js/domain/schedule.mjs": {
+      "bytes": 3619,
+      "imports": [],
+      "format": "esm"
+    },
+    "js/presentation/home.mjs": {
+      "bytes": 3615,
+      "imports": [
+        {
+          "path": "js/presentation/page-heading.mjs",
+          "kind": "import-statement",
+          "original": "./page-heading.mjs"
+        },
         {
           "path": "js/presentation/html.mjs",
           "kind": "import-statement",
@@ -52,8 +94,13 @@
       "format": "esm"
     },
     "js/presentation/history.mjs": {
-      "bytes": 1644,
+      "bytes": 1815,
       "imports": [
+        {
+          "path": "js/presentation/page-heading.mjs",
+          "kind": "import-statement",
+          "original": "./page-heading.mjs"
+        },
         {
           "path": "js/domain/schedule.mjs",
           "kind": "import-statement",
@@ -88,13 +135,18 @@
       "format": "esm"
     },
     "js/data/palettes.mjs": {
-      "bytes": 860,
+      "bytes": 1193,
       "imports": [],
       "format": "esm"
     },
     "js/presentation/settings.mjs": {
-      "bytes": 4921,
+      "bytes": 4964,
       "imports": [
+        {
+          "path": "js/presentation/page-heading.mjs",
+          "kind": "import-statement",
+          "original": "./page-heading.mjs"
+        },
         {
           "path": "js/presentation/html.mjs",
           "kind": "import-statement",
@@ -160,8 +212,13 @@
       "format": "esm"
     },
     "js/presentation/library.mjs": {
-      "bytes": 4447,
+      "bytes": 4481,
       "imports": [
+        {
+          "path": "js/presentation/page-heading.mjs",
+          "kind": "import-statement",
+          "original": "./page-heading.mjs"
+        },
         {
           "path": "js/data/content.mjs",
           "kind": "import-statement",
@@ -270,8 +327,13 @@
       "format": "esm"
     },
     "js/app.mjs": {
-      "bytes": 27967,
+      "bytes": 28175,
       "imports": [
+        {
+          "path": "js/presentation/session-preview.mjs",
+          "kind": "import-statement",
+          "original": "./presentation/session-preview.mjs"
+        },
         {
           "path": "js/presentation/home.mjs",
           "kind": "import-statement",
@@ -375,23 +437,29 @@
         "js/presentation/html.mjs": {
           "bytesInOutput": 1364
         },
+        "js/presentation/page-heading.mjs": {
+          "bytesInOutput": 117
+        },
         "js/data/program-labels.mjs": {
           "bytesInOutput": 5936
-        },
-        "js/domain/schedule.mjs": {
-          "bytesInOutput": 3910
         },
         "js/data/estimates.mjs": {
           "bytesInOutput": 2129
         },
+        "js/presentation/session-preview.mjs": {
+          "bytesInOutput": 5917
+        },
+        "js/domain/schedule.mjs": {
+          "bytesInOutput": 3910
+        },
         "js/presentation/home.mjs": {
-          "bytesInOutput": 4547
+          "bytesInOutput": 4537
         },
         "js/presentation/icons.mjs": {
           "bytesInOutput": 966
         },
         "js/presentation/history.mjs": {
-          "bytesInOutput": 1935
+          "bytesInOutput": 2059
         },
         "js/data/sounds.mjs": {
           "bytesInOutput": 354
@@ -400,10 +468,10 @@
           "bytesInOutput": 36
         },
         "js/data/palettes.mjs": {
-          "bytesInOutput": 1361
+          "bytesInOutput": 1688
         },
         "js/presentation/settings.mjs": {
-          "bytesInOutput": 7110
+          "bytesInOutput": 6949
         },
         "js/infrastructure/download.mjs": {
           "bytesInOutput": 373
@@ -415,7 +483,7 @@
           "bytesInOutput": 513808
         },
         "js/presentation/library.mjs": {
-          "bytesInOutput": 5536
+          "bytesInOutput": 5520
         },
         "js/domain/engine.mjs": {
           "bytesInOutput": 5639
@@ -442,10 +510,10 @@
           "bytesInOutput": 1112
         },
         "js/app.mjs": {
-          "bytesInOutput": 34952
+          "bytesInOutput": 34552
         }
       },
-      "bytes": 631424
+      "bytes": 637403
     }
   }
 }

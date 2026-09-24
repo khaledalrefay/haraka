@@ -12,6 +12,9 @@
     return `${s.target} ${s.unit === "seconds" ? "\u062B\u0627\u0646\u064A\u0629" : s.unit === "cycles" ? "\u062F\u0648\u0631\u0627\u062A" : "\u0639\u062F\u0651\u0627\u062A"}${s.sides === 2 ? " \u0644\u0643\u0644 \u062C\u0647\u0629" : ""}`;
   }
 
+  // js/presentation/page-heading.mjs
+  var pageHeading = (title, extra = "") => `<header class="v-page-heading"><h1>${esc(title)}</h1>${extra}</header>`;
+
   // js/data/program-labels.mjs
   var names = { move: "Move", foundation: "Foundation", strength: "Strength", hybrid: "Hybrid", circuit: "Circuit" };
   var descriptions = { move: "\u062D\u0631\u0643\u0629 \u0642\u0635\u064A\u0631\u0629 \u0648\u062E\u0641\u064A\u0641\u0629\u060C \u0645\u0639 \u0627\u0647\u062A\u0645\u0627\u0645 \u0628\u0627\u0644\u0631\u0642\u0628\u0629 \u0648\u0627\u0644\u0643\u062A\u0641\u064A\u0646 \u0648\u0627\u0644\u0638\u0647\u0631.", foundation: "\u062A\u0623\u0633\u064A\u0633 \u0627\u0644\u062D\u0631\u0643\u0627\u062A \u0648\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0627\u062A \u0628\u0648\u0632\u0646 \u0627\u0644\u062C\u0633\u0645\u060C \u062B\u0645 \u0627\u0633\u062A\u0642\u0644\u0627\u0644 \u0648\u062A\u062D\u0643\u0645 \u0623\u0643\u0628\u0631.", strength: "\u0642\u0648\u0629 \u0628\u0645\u062C\u0645\u0648\u0639\u0627\u062A \u0645\u0633\u062A\u0642\u0644\u0629\u061B \u0623\u0643\u0645\u0644 \u0645\u062C\u0645\u0648\u0639\u0627\u062A \u0627\u0644\u062D\u0631\u0643\u0629 \u0642\u0628\u0644 \u0627\u0644\u0627\u0646\u062A\u0642\u0627\u0644.", hybrid: "\u0642\u0633\u0645 \u0642\u0648\u0629 \u0645\u0633\u062A\u0642\u0644 \u064A\u062A\u0628\u0639\u0647 \u062A\u0633\u0644\u0633\u0644 \u0647\u0648\u0627\u0626\u064A \u0645\u062A\u0643\u0631\u0631.", circuit: "\u0645\u062D\u0637\u0627\u062A \u0645\u0642\u0627\u0648\u0645\u0629 \u0648\u062D\u0631\u0643\u0629 \u0645\u062A\u062F\u0627\u062E\u0644\u0629 \u0636\u0645\u0646 \u062F\u0648\u0631\u062A\u064A\u0646." };
@@ -25,56 +28,6 @@
     circuit: ["\u062F\u0627\u0626\u0631\u0629 \u0627\u0644\u062C\u0633\u0645 \u0627\u0644\u0643\u0627\u0645\u0644", "\u062F\u0627\u0626\u0631\u0629 \u0627\u0644\u0631\u062C\u0644\u064A\u0646 \u0648\u0627\u0644\u062B\u0628\u0627\u062A", "\u062F\u0627\u0626\u0631\u0629 \u0627\u0644\u062C\u0630\u0639 \u0648\u0627\u0644\u062A\u0646\u0633\u064A\u0642"]
   };
   var sessionName = (program, session) => sessions[program]?.[["A", "B", "C"].indexOf(session)] || session;
-
-  // js/domain/schedule.mjs
-  var days = ["\u0627\u0644\u0623\u062D\u062F", "\u0627\u0644\u0625\u062B\u0646\u064A\u0646", "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621", "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621", "\u0627\u0644\u062E\u0645\u064A\u0633", "\u0627\u0644\u062C\u0645\u0639\u0629", "\u0627\u0644\u0633\u0628\u062A"];
-  function todayKey(now = /* @__PURE__ */ new Date()) {
-    return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Damascus", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
-  }
-  function shift(day, n) {
-    const d = /* @__PURE__ */ new Date(day + "T12:00:00Z");
-    d.setUTCDate(d.getUTCDate() + n);
-    return d.toISOString().slice(0, 10);
-  }
-  var weekday = (day) => (/* @__PURE__ */ new Date(day + "T12:00:00Z")).getUTCDay();
-  function planFor(settings2, day) {
-    return [...settings2.revisions].reverse().find((r) => r.effectiveFrom <= day) || null;
-  }
-  function slotFor(settings2, day) {
-    const p = planFor(settings2, day);
-    const entry = p?.schedule.find((e) => e.day === weekday(day));
-    return entry ? { date: day, session: entry.session, workoutId: `${p.program}-${entry.session.toLowerCase()}-${p.level}`, program: p.program, level: p.level } : null;
-  }
-  function opportunity(settings2, history2, day = todayKey()) {
-    if (history2.some((r) => r.dateKey === day || r.completedDate === day)) return null;
-    const slot = slotFor(settings2, day) || slotFor(settings2, shift(day, -1));
-    if (!slot || history2.some((r) => (r.scheduledDate || r.dateKey) === slot.date)) return null;
-    return { ...slot, kind: slot.date === day ? "scheduled" : "makeup" };
-  }
-  function validPlan(p) {
-    return ["move", "foundation", "strength", "hybrid", "circuit"].includes(p.program) && [1, 2, 3].includes(p.level) && Array.isArray(p.schedule) && p.schedule.length === 3 && new Set(p.schedule.map((e) => e.day)).size === 3 && new Set(p.schedule.map((e) => e.session)).size === 3 && p.schedule.every((e) => Number.isInteger(e.day) && e.day >= 0 && e.day <= 6 && ["A", "B", "C"].includes(e.session));
-  }
-  function changePlan(settings2, plan, day = todayKey(), { applyToday = false } = {}) {
-    if (!validPlan(plan)) throw Error("\u0627\u062E\u062A\u0631 \u062B\u0644\u0627\u062B\u0629 \u0623\u064A\u0627\u0645 \u0645\u062E\u062A\u0644\u0641\u0629 \u0648\u062C\u0644\u0633\u0627\u062A A \u0648B \u0648C \u062F\u0648\u0646 \u062A\u0643\u0631\u0627\u0631.");
-    const effectiveFrom = settings2.revisions.length && !applyToday ? shift(day, 1) : day;
-    return { ...settings2, revisions: [...settings2.revisions.filter((r) => r.effectiveFrom < effectiveFrom), { ...plan, effectiveFrom }] };
-  }
-  function activeExpired(settings2, session, day = todayKey()) {
-    const scheduled = session.scheduledDate || session.dateKey;
-    return day > scheduled && (day > shift(scheduled, 1) || Boolean(slotFor(settings2, day)));
-  }
-  function updatePlan(settings2, plan, { active: active2 = null, history: history2 = [], day = todayKey() } = {}) {
-    const old = settings2.revisions.at(-1);
-    const protectedDay = Boolean(active2) || history2.some((r) => r.dateKey === day || r.completedDate === day);
-    if (old && (old.effectiveFrom <= day || protectedDay) && old.program === plan.program && old.level === plan.level && old.schedule.every((a) => plan.schedule.some((b) => a.session === b.session && a.day === b.day))) return settings2;
-    return changePlan(settings2, plan, day, { applyToday: !protectedDay });
-  }
-  function swapScheduleDay(schedule, session, day) {
-    const selected2 = schedule.find((s) => s.session === session);
-    if (!selected2 || !Number.isInteger(day) || day < 0 || day > 6) throw Error("Invalid schedule choice");
-    const other = schedule.find((s) => s.session !== session && s.day === day);
-    return schedule.map((s) => ({ ...s, day: s.session === session ? day : s.session === other?.session ? selected2.day : s.day }));
-  }
 
   // js/data/estimates.mjs
   var estimates = {
@@ -260,6 +213,86 @@
     ]
   };
 
+  // js/presentation/session-preview.mjs
+  var phases = { warmup: ["\u0627\u0644\u0625\u062D\u0645\u0627\u0621", "\u0628\u062F\u0627\u064A\u0629 \u0647\u0627\u062F\u0626\u0629 \u0648\u062A\u062C\u0647\u064A\u0632 \u0644\u0644\u062D\u0631\u0643\u0629"], main: ["\u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646", "\u0627\u0644\u0642\u0633\u0645 \u0627\u0644\u0631\u0626\u064A\u0633\u064A \u0645\u0646 \u0627\u0644\u062C\u0644\u0633\u0629"], strength: ["\u0627\u0644\u0642\u0648\u0629", "\u0645\u062C\u0645\u0648\u0639\u0627\u062A \u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646 \u0628\u0627\u0644\u062A\u0631\u062A\u064A\u0628"], aerobic: ["\u0627\u0644\u062D\u0631\u0643\u0629 \u0627\u0644\u0647\u0648\u0627\u0626\u064A\u0629", "\u062A\u0633\u0644\u0633\u0644 \u0627\u0644\u062D\u0631\u0643\u0629 \u0648\u0627\u0644\u0625\u064A\u0642\u0627\u0639"], cooldown: ["\u0627\u0644\u062A\u0647\u062F\u0626\u0629", "\u062E\u062A\u0627\u0645 \u0647\u0627\u062F\u0626 \u0644\u0644\u062C\u0644\u0633\u0629"] };
+  var pace = { gentle: "\u0625\u064A\u0642\u0627\u0639 \u0647\u0627\u062F\u0626", progressive: "\u0627\u0631\u0641\u0639 \u0627\u0644\u0625\u064A\u0642\u0627\u0639 \u062A\u062F\u0631\u064A\u062C\u064A\u064B\u0627", active: "\u0625\u064A\u0642\u0627\u0639 \u0646\u0634\u064A\u0637 \u064A\u0633\u0645\u062D \u0628\u0627\u0644\u0643\u0644\u0627\u0645", slow: "\u0625\u064A\u0642\u0627\u0639 \u0628\u0637\u064A\u0621", decelerating: "\u062E\u0641\u0651\u0641 \u0627\u0644\u0625\u064A\u0642\u0627\u0639 \u062A\u062F\u0631\u064A\u062C\u064A\u064B\u0627" };
+  var clock = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  function renderSessionPreview(snapshot) {
+    const w = snapshot.workout, work = snapshot.steps.filter((s) => s.type === "work");
+    const blocks = [];
+    for (const step of snapshot.steps) {
+      if (blocks.at(-1)?.id !== step.block) blocks.push({ id: step.block, steps: [] });
+      blocks.at(-1).steps.push(step);
+    }
+    let number = 0;
+    const type = { move: "\u062D\u0631\u0643\u0629 \u0645\u062A\u0646\u0648\u0639\u0629", foundation: "\u062A\u0645\u0627\u0631\u064A\u0646 \u0628\u0645\u062C\u0645\u0648\u0639\u0627\u062A", strength: "\u0642\u0648\u0629 \u0628\u0645\u062C\u0645\u0648\u0639\u0627\u062A", hybrid: "\u0642\u0648\u0629 \u062B\u0645 \u062D\u0631\u0643\u0629 \u0647\u0648\u0627\u0626\u064A\u0629", circuit: "\u0645\u062D\u0637\u0627\u062A \u0636\u0645\u0646 \u062F\u0648\u0631\u062A\u064A\u0646" }[w.program];
+    return `<section class="v-session-preview">${pageHeading("\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u062C\u0644\u0633\u0629", button("\u0631\u062C\u0648\u0639", "preview-back", "text-btn"))}<div class="v-preview-intro"><span class="eyebrow">${names[w.program]} \xB7 ${levelName(w.level)}</span><h2>${esc(sessionName(w.program, w.session))}</h2><div class="v-preview-stats"><span>${estimates[w.id].join("\u2013")} \u062F\u0642\u064A\u0642\u0629 \u062A\u0642\u062F\u064A\u0631\u064A\u064B\u0627</span><span>${new Set(work.map((s) => s.exerciseId)).size} \u062A\u0645\u0627\u0631\u064A\u0646 \u0645\u062E\u062A\u0644\u0641\u0629</span><span>${type}</span></div><p class="small muted">\u0627\u0644\u0645\u062F\u0629 \u062A\u0634\u0645\u0644 \u0627\u0644\u0627\u0633\u062A\u0631\u0627\u062D\u0627\u062A \u0648\u062A\u062A\u063A\u064A\u0631 \u062D\u0633\u0628 \u0633\u0631\u0639\u0629 \u0627\u0644\u0623\u062F\u0627\u0621 \u0648\u062A\u0645\u062F\u064A\u062F \u0627\u0644\u0648\u0642\u062A.</p></div><div class="v-flow">${blocks.map((block, index) => {
+      const [title, description] = phases[block.id] || phases.main;
+      let round = 0;
+      return `<section class="v-flow-phase phase-${block.id}"><header class="v-flow-phase-head"><span class="v-phase-number">${String(index + 1).padStart(2, "0")}</span><div><h2>${title}</h2><p>${description}</p></div></header><ol class="v-flow-steps">${block.steps.map((s) => {
+        if (s.type === "rest") return `<li class="v-flow-rest" data-step-id="${esc(s.id)}"><span class="v-flow-dot" aria-hidden="true"></span><span>${clock}\u0631\u0627\u062D\u0629 \xB7 ${s.seconds} \u062B\u0627\u0646\u064A\u0629${s.reason === "side_switch" ? " \xB7 \u062A\u0628\u062F\u064A\u0644 \u0627\u0644\u062C\u0647\u0629" : ""}</span></li>`;
+        const e = snapshot.exercises[s.exerciseId];
+        let divider = "";
+        if (s.round && s.round !== round) {
+          round = s.round;
+          divider = `<li class="v-flow-divider">\u0627\u0644\u062F\u0648\u0631\u0629 ${s.round} \u0645\u0646 ${s.rounds}</li>`;
+        }
+        const notes = [s.side ? `${e.counting.side_means || "\u0627\u0644\u062C\u0647\u0629"}: ${s.side === "right" ? "\u064A\u0645\u064A\u0646" : "\u064A\u0633\u0627\u0631"}` : "", s.sides === 2 ? "\u0628\u0627\u0644\u062A\u0628\u0627\u062F\u0644 \xB7 \u0643\u0644 \u062C\u0647\u0629 \u062A\u064F\u062D\u0633\u0628 \u0645\u0646\u0641\u0631\u062F\u0629" : "", s.pauseSeconds ? `\u062A\u0648\u0642\u0641 ${s.pauseSeconds} \u062B\u0627\u0646\u064A\u0629 \u062F\u0627\u062E\u0644 \u0643\u0644 \u0639\u062F\u0651\u0629` : "", pace[s.pace] || ""].filter(Boolean);
+        return `${divider}<li class="v-flow-work" data-step-id="${esc(s.id)}"><span class="v-flow-node" aria-hidden="true">${++number}</span><article><div class="v-flow-meta">${s.round ? `\u0627\u0644\u0645\u062D\u0637\u0629 ${s.station} \u0645\u0646 ${s.stations}` : s.set ? `\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0629 ${s.set} \u0645\u0646 ${s.sets}` : "\u062A\u0645\u0631\u064A\u0646"}</div><h3>${esc(movementName(s, snapshot.exercises))}</h3><span class="v-flow-goal">${goal(s)}</span>${notes.length ? `<p class="v-flow-notes">${notes.map(esc).join(" \xB7 ")}</p>` : ""}</article></li>`;
+      }).join("")}</ol></section>`;
+    }).join("")}<div class="v-flow-end"><span aria-hidden="true">\u2713</span><strong>\u0646\u0647\u0627\u064A\u0629 \u0627\u0644\u062C\u0644\u0633\u0629</strong></div></div></section>`;
+  }
+
+  // js/domain/schedule.mjs
+  var days = ["\u0627\u0644\u0623\u062D\u062F", "\u0627\u0644\u0625\u062B\u0646\u064A\u0646", "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621", "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621", "\u0627\u0644\u062E\u0645\u064A\u0633", "\u0627\u0644\u062C\u0645\u0639\u0629", "\u0627\u0644\u0633\u0628\u062A"];
+  function todayKey(now = /* @__PURE__ */ new Date()) {
+    return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Damascus", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  }
+  function shift(day, n) {
+    const d = /* @__PURE__ */ new Date(day + "T12:00:00Z");
+    d.setUTCDate(d.getUTCDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+  var weekday = (day) => (/* @__PURE__ */ new Date(day + "T12:00:00Z")).getUTCDay();
+  function planFor(settings2, day) {
+    return [...settings2.revisions].reverse().find((r) => r.effectiveFrom <= day) || null;
+  }
+  function slotFor(settings2, day) {
+    const p = planFor(settings2, day);
+    const entry = p?.schedule.find((e) => e.day === weekday(day));
+    return entry ? { date: day, session: entry.session, workoutId: `${p.program}-${entry.session.toLowerCase()}-${p.level}`, program: p.program, level: p.level } : null;
+  }
+  function opportunity(settings2, history2, day = todayKey()) {
+    if (history2.some((r) => r.dateKey === day || r.completedDate === day)) return null;
+    const slot = slotFor(settings2, day) || slotFor(settings2, shift(day, -1));
+    if (!slot || history2.some((r) => (r.scheduledDate || r.dateKey) === slot.date)) return null;
+    return { ...slot, kind: slot.date === day ? "scheduled" : "makeup" };
+  }
+  function validPlan(p) {
+    return ["move", "foundation", "strength", "hybrid", "circuit"].includes(p.program) && [1, 2, 3].includes(p.level) && Array.isArray(p.schedule) && p.schedule.length === 3 && new Set(p.schedule.map((e) => e.day)).size === 3 && new Set(p.schedule.map((e) => e.session)).size === 3 && p.schedule.every((e) => Number.isInteger(e.day) && e.day >= 0 && e.day <= 6 && ["A", "B", "C"].includes(e.session));
+  }
+  function changePlan(settings2, plan, day = todayKey(), { applyToday = false } = {}) {
+    if (!validPlan(plan)) throw Error("\u0627\u062E\u062A\u0631 \u062B\u0644\u0627\u062B\u0629 \u0623\u064A\u0627\u0645 \u0645\u062E\u062A\u0644\u0641\u0629 \u0648\u062C\u0644\u0633\u0627\u062A A \u0648B \u0648C \u062F\u0648\u0646 \u062A\u0643\u0631\u0627\u0631.");
+    const effectiveFrom = settings2.revisions.length && !applyToday ? shift(day, 1) : day;
+    return { ...settings2, revisions: [...settings2.revisions.filter((r) => r.effectiveFrom < effectiveFrom), { ...plan, effectiveFrom }] };
+  }
+  function activeExpired(settings2, session, day = todayKey()) {
+    const scheduled = session.scheduledDate || session.dateKey;
+    return day > scheduled && (day > shift(scheduled, 1) || Boolean(slotFor(settings2, day)));
+  }
+  function updatePlan(settings2, plan, { active: active2 = null, history: history2 = [], day = todayKey() } = {}) {
+    const old = settings2.revisions.at(-1);
+    const protectedDay = Boolean(active2) || history2.some((r) => r.dateKey === day || r.completedDate === day);
+    if (old && (old.effectiveFrom <= day || protectedDay) && old.program === plan.program && old.level === plan.level && old.schedule.every((a) => plan.schedule.some((b) => a.session === b.session && a.day === b.day))) return settings2;
+    return changePlan(settings2, plan, day, { applyToday: !protectedDay });
+  }
+  function swapScheduleDay(schedule, session, day) {
+    const selected2 = schedule.find((s) => s.session === session);
+    if (!selected2 || !Number.isInteger(day) || day < 0 || day > 6) throw Error("Invalid schedule choice");
+    const other = schedule.find((s) => s.session !== session && s.day === day);
+    return schedule.map((s) => ({ ...s, day: s.session === session ? day : s.session === other?.session ? selected2.day : s.day }));
+  }
+
   // js/presentation/home.mjs
   function renderHome({ settings: settings2, selected: selected2, active: active2, history: history2 }) {
     const t = todayKey(), start = shift(selected2, -weekday(selected2)), current = slotFor(settings2, selected2), offer = selected2 === t ? opportunity(settings2, history2, t) : null, record = history2.find((r) => r.dateKey === selected2 || r.completedDate === selected2);
@@ -269,7 +302,7 @@
     else if (record) card = `<span class="pill">${record.status === "completed" ? "\u062C\u0644\u0633\u0629 \u0645\u0646\u062A\u0647\u064A\u0629" : "\u0627\u0646\u062A\u0647\u0627\u0621 \u0645\u0628\u0643\u0631"}</span><h2>${sessionName(record.snapshot.workout.program, record.snapshot.workout.session)}</h2><p>${names[record.snapshot.workout.program]} \xB7 ${levelName(record.snapshot.workout.level)}</p>${record.hidden ? `<p>\u0647\u0630\u0647 \u0627\u0644\u062C\u0644\u0633\u0629 \u0645\u062E\u0641\u064A\u0629\u060C \u0648\u0645\u0627 \u0632\u0627\u0644 \u0645\u0648\u0639\u062F\u0647\u0627 \u0645\u062D\u062C\u0648\u0632\u064B\u0627.</p>${button("\u062D\u0630\u0641 \u0627\u0644\u062C\u0644\u0633\u0629 \u0648\u0625\u062A\u0627\u062D\u0629 \u0627\u0644\u0645\u0648\u0639\u062F", "delete-record", "secondary", `data-id="${esc(record.id)}"`)}` : button("\u0639\u0631\u0636 \u0627\u0644\u0633\u062C\u0644", "record", "primary", `data-id="${esc(record.id)}"`)}`;
     else if (chosen) card = `<span class="pill">${offer?.kind === "makeup" ? "\u062A\u0639\u0648\u064A\u0636 \u062C\u0644\u0633\u0629 \u0641\u0627\u0626\u062A\u0629" : selected2 === t ? "\u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645" : "\u0645\u0639\u0627\u064A\u0646\u0629"}</span><h2>${sessionName(chosen.program, chosen.session)}</h2><p>${names[chosen.program]} \xB7 ${levelName(chosen.level)}</p><p class="v-space small">${estimates[chosen.workoutId].join("\u2013")} \u062F\u0642\u064A\u0642\u0629 \u062A\u0642\u062F\u064A\u0631\u064A\u064B\u0627</p>${offer ? button("\u0627\u0628\u062F\u0623 \u0627\u0644\u062C\u0644\u0633\u0629", "start", "primary", `data-workout="${chosen.workoutId}"`) : ""}${button("\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646", "preview", "secondary", `data-workout="${chosen.workoutId}"`)}`;
     else card = '<span class="pill">\u064A\u0648\u0645 \u0631\u0627\u062D\u0629</span><h2>\u0645\u0633\u0627\u062D\u0629 \u0644\u0644\u0631\u0627\u062D\u0629</h2><p>\u0633\u062A\u0638\u0647\u0631 \u062C\u0644\u0633\u062A\u0643 \u0639\u0646\u062F \u0645\u0648\u0639\u062F\u0647\u0627 \u0627\u0644\u0642\u0627\u062F\u0645.</p>';
-    return `<div class="home-content"><h1 class="home-title">\u0628\u0631\u0646\u0627\u0645\u062C\u064A \u0627\u0644\u064A\u0648\u0645\u064A</h1><section class="weekly-calendar"><div class="v-calendar-head">${button("\u2192", "prev-week", "icon-btn", 'aria-label="\u0627\u0644\u0623\u0633\u0628\u0648\u0639 \u0627\u0644\u0633\u0627\u0628\u0642"')}${selected2 !== t ? button("\u0627\u0644\u0639\u0648\u062F\u0629 \u0644\u0644\u064A\u0648\u0645", "today", "text-btn") : `<span>${esc(start)} \u2014 ${esc(shift(start, 6))}</span>`}${button("\u2190", "next-week", "icon-btn", 'aria-label="\u0627\u0644\u0623\u0633\u0628\u0648\u0639 \u0627\u0644\u062A\u0627\u0644\u064A"')}</div><div class="week-strip">${Array.from({ length: 7 }, (_, i) => {
+    return `<div class="home-content">${pageHeading("\u0628\u0631\u0646\u0627\u0645\u062C\u064A \u0627\u0644\u064A\u0648\u0645\u064A")}<section class="weekly-calendar"><div class="v-calendar-head">${button("\u2192", "prev-week", "icon-btn", 'aria-label="\u0627\u0644\u0623\u0633\u0628\u0648\u0639 \u0627\u0644\u0633\u0627\u0628\u0642"')}${selected2 !== t ? button("\u0627\u0644\u0639\u0648\u062F\u0629 \u0644\u0644\u064A\u0648\u0645", "today", "text-btn") : `<span>${esc(start)} \u2014 ${esc(shift(start, 6))}</span>`}${button("\u2190", "next-week", "icon-btn", 'aria-label="\u0627\u0644\u0623\u0633\u0628\u0648\u0639 \u0627\u0644\u062A\u0627\u0644\u064A"')}</div><div class="week-strip">${Array.from({ length: 7 }, (_, i) => {
       const d = shift(start, i);
       return `<button class="day-button ${d === selected2 ? "selected" : ""}" data-day="${d}" aria-label="${days[i]} ${d} \u2014 ${history2.some((r) => r.dateKey === d) ? "\u062C\u0644\u0633\u0629 \u0645\u0633\u062C\u0644\u0629" : slotFor(settings2, d) ? "\u062A\u0645\u0631\u064A\u0646" : "\u0631\u0627\u062D\u0629"}" aria-pressed="${d === selected2}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker">${history2.some((r) => r.dateKey === d) ? "\u2713" : slotFor(settings2, d) ? "\u25CF" : "\xB7"}</span></button>`;
     }).join("")}</div></section><section class="session-hero v-hero">${card}</section></div>`;
@@ -291,7 +324,7 @@
   var executionDate = (r) => r.completedDate || (r.finishedAt ? todayKey(new Date(r.finishedAt)) : r.dateKey);
   function renderHistory(history2, month, hidden) {
     const rows = history2.filter((r) => !r.hidden && executionDate(r).startsWith(month)).sort((a, b) => b.finishedAt - a.finishedAt);
-    return `<h1 class="v-space">\u0633\u062C\u0644\u0651\u064A</h1><div class="v-month-nav">${button("\u2192", "history-prev", "icon-btn", 'aria-label="\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0633\u0627\u0628\u0642"')}<label>\u0627\u0644\u0634\u0647\u0631<input type="month" id="history-month" value="${month}"></label>${button("\u2190", "history-next", "icon-btn", 'aria-label="\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u062A\u0627\u0644\u064A"')}</div><p class="small muted v-space">${rows.length} \u062C\u0644\u0633\u0629 \u0647\u0630\u0627 \u0627\u0644\u0634\u0647\u0631</p>${rows.length ? rows.map((r) => {
+    return `${pageHeading("\u0633\u062C\u0644\u0651\u064A")}<div class="v-month-nav">${button("\u2192", "history-prev", "icon-btn", 'aria-label="\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0633\u0627\u0628\u0642"')}<label class="v-month-picker"><span>${new Intl.DateTimeFormat("ar", { month: "long", year: "numeric", timeZone: "UTC", numberingSystem: "latn" }).format(/* @__PURE__ */ new Date(month + "-01T12:00:00Z"))}</span><input aria-label="\u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0634\u0647\u0631" type="month" id="history-month" value="${month}"></label>${button("\u2190", "history-next", "icon-btn", 'aria-label="\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u062A\u0627\u0644\u064A"')}</div>${rows.length ? rows.map((r) => {
       const w = r.snapshot.workout;
       return `<article class="card record v-compact-record"><div><h3>${esc(sessionName(w.program, w.session))}</h3><small>${executionDate(r)}</small><p class="small muted">${names[w.program]} \xB7 ${levelName(w.level)} \xB7 ${r.status === "completed" ? "\u0645\u0643\u062A\u0645\u0644\u0629" : "\u0627\u0646\u062A\u0647\u0627\u0621 \u0645\u0628\u0643\u0631"}</p></div><div class="v-record-actions">${button(icon("info"), "record", "icon-btn", `data-id="${esc(r.id)}" aria-label="\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062C\u0644\u0633\u0629"`)}${button(icon("trash"), "delete-record", "icon-btn v-delete", `data-id="${esc(r.id)}" aria-label="\u062D\u0630\u0641 \u0627\u0644\u062C\u0644\u0633\u0629"`)}</div></article>`;
     }).join("") : '<section class="card empty"><p>\u0644\u0627 \u062A\u0648\u062C\u062F \u062C\u0644\u0633\u0627\u062A \u0645\u0633\u062C\u0651\u0644\u0629 \u0641\u064A \u0647\u0630\u0627 \u0627\u0644\u0634\u0647\u0631.</p></section>'}${hidden}`;
@@ -301,7 +334,7 @@
   var sounds = [["chime", "\u0631\u0646\u064A\u0646 \u0645\u062A\u062F\u0631\u0651\u062C"], ["bell", "\u062C\u0631\u0633"], ["pulse", "\u0646\u0628\u0636\u062A\u0627\u0646"], ["soft", "\u0646\u063A\u0645\u0629 \u0647\u0627\u062F\u0626\u0629"], ["rise", "\u0625\u0634\u0631\u0627\u0642\u0629"], ["silent", "\u0628\u062F\u0648\u0646 \u0635\u0648\u062A"]];
 
   // js/data/version.mjs
-  var APP_VERSION = "2.0.0-beta.8";
+  var APP_VERSION = "2.0.0-beta.9";
 
   // js/data/palettes.mjs
   var palettes = [
@@ -361,17 +394,18 @@
     ]
   ];
   var paletteIds = palettes.map((p) => p[0]);
+  var paletteBackgrounds = { "classic": ["#F5F7FA", "#121C29"], "ocean": ["#F1F7F7", "#101F24"], "forest": ["#F3F7F3", "#121F1A"], "slate": ["#F4F6F7", "#171C20"], "ink": ["#FAF7EF", "#19191F"], "earth": ["#F8F3EC", "#211A17"], "olive": ["#F7F6EE", "#1C2016"], "rose": ["#FAF5F3", "#23171C"], "plum": ["#F5F5FC", "#191A2C"] };
 
   // js/presentation/settings.mjs
-  var swatches = (p) => `<span class="v-swatches" aria-hidden="true"><i style="background:${p[2]}"></i><i style="background:${p[3]}"></i><i class="v-swatch-bg"></i></span>`;
+  var swatches = (p) => `<span class="v-swatches" aria-hidden="true"><i style="background:${p[2]}"></i><i style="background:${p[3]}"></i><i style="background:${paletteBackgrounds[p[0]][0]}"></i><i style="background:${paletteBackgrounds[p[0]][1]}"></i></span>`;
   function palettePicker(value) {
     const selected2 = palettes.find((p) => p[0] === value) || palettes[0];
-    return `<label id="palette-label">\u0623\u0644\u0648\u0627\u0646 \u0627\u0644\u062A\u0637\u0628\u064A\u0642</label><details class="v-palette-picker"><summary aria-labelledby="palette-label palette-value"><span id="palette-value">${selected2[1]}</span>${swatches(selected2)}<span aria-hidden="true">\u2304</span></summary><div class="v-palette-options">${palettes.map((p) => `<label><input type="radio" name="palette" value="${p[0]}" ${p[0] === selected2[0] ? "checked" : ""}><span>${p[1]}</span>${swatches(p)}</label>`).join("")}</div></details><div class="v-theme-preview"><span>\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0623\u0644\u0648\u0627\u0646</span><strong>\u062D\u0631\u0643\u0629</strong><span class="v-preview-chip">\u0627\u0628\u062F\u0623 \u0627\u0644\u062C\u0644\u0633\u0629</span></div>`;
+    return `<label id="palette-label">\u0623\u0644\u0648\u0627\u0646 \u0627\u0644\u062A\u0637\u0628\u064A\u0642</label><details class="v-palette-picker"><summary aria-labelledby="palette-label palette-value"><span id="palette-value">${selected2[1]}</span>${swatches(selected2)}<span aria-hidden="true">\u2304</span></summary><div class="v-palette-options">${palettes.map((p) => `<label><input type="radio" name="palette" value="${p[0]}" ${p[0] === selected2[0] ? "checked" : ""}><span>${p[1]}</span>${swatches(p)}</label>`).join("")}</div></details>`;
   }
   function renderSettings({ settings: settings2, formDraft: formDraft2, settingsPage: settingsPage2, draftProgram: draftProgram2, active: active2, history: history2, programCards: programCards2, levels: levels2, requirement: requirement2, reminderSection: reminderSection2 }) {
     const plan = settings2.revisions.at(-1), draft = formDraft2 || {};
-    if (settingsPage2 === "plan") return `<section class="card v-settings">${button("\u0631\u062C\u0648\u0639 \u0644\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A", "settings-back", "text-btn")}<h1>\u0628\u0631\u0646\u0627\u0645\u062C\u064A</h1><form id="settings-form" data-section="plan"><h2 class="v-space">\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u0645\u0633\u062A\u0648\u0649</h2><div class="v-choices">${programCards2()}</div><div class="v-choices v-levels">${levels2()}</div><p>${requirement2()}</p><p class="small muted">${active2 ? "\u0644\u062F\u064A\u0643 \u062C\u0644\u0633\u0629 \u0645\u062D\u0641\u0648\u0638\u0629 \u0645\u0646 " + names[active2.snapshot.workout.program] + ". \u0633\u062A\u0628\u0642\u0649 \u0628\u0645\u062D\u062A\u0648\u0627\u0647\u0627\u060C \u0648\u064A\u0633\u0631\u064A \u0627\u0644\u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u062C\u062F\u064A\u062F \u0645\u0646 \u0627\u0644\u063A\u062F. \u064A\u0645\u0643\u0646\u0643 \u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0627\u0644\u062C\u062F\u064A\u062F \u0627\u0644\u0622\u0646." : history2.some((r) => r.dateKey === todayKey() || r.completedDate === todayKey()) ? "\u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645 \u0645\u0633\u062C\u0651\u0644\u0629\u061B \u064A\u0633\u0631\u064A \u0627\u0644\u062A\u063A\u064A\u064A\u0631 \u0645\u0646 \u0627\u0644\u063A\u062F. \u0644\u062A\u063A\u064A\u064A\u0631 \u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645 \u0627\u062D\u0630\u0641 \u0633\u062C\u0644\u0647\u0627 \u0623\u0648\u0644\u064B\u0627." : "\u064A\u0633\u0631\u064A \u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u0645\u0633\u062A\u0648\u0649 \u0648\u0627\u0644\u062C\u062F\u0648\u0644 \u0645\u0646 \u0627\u0644\u064A\u0648\u0645 \u0639\u0646\u062F \u0627\u0644\u062D\u0641\u0638\u061B \u062A\u0628\u0642\u0649 \u0627\u0644\u062C\u0644\u0633\u0627\u062A \u0627\u0644\u0633\u0627\u0628\u0642\u0629 \u0645\u062D\u0641\u0648\u0638\u0629."}</p>${button("\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u062C\u0644\u0633\u0627\u062A", "preview-plan", "text-btn", 'type="button"')}<h2 class="v-space">\u062C\u062F\u0648\u0644\u064A \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064A</h2><p class="small muted">\u0627\u062E\u062A\u064A\u0627\u0631 \u064A\u0648\u0645 \u0645\u0634\u063A\u0648\u0644 \u064A\u0628\u062F\u0651\u0644 \u064A\u0648\u0645\u064A \u0627\u0644\u062C\u0644\u0633\u062A\u064A\u0646 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627.</p><div class="v-schedule">${["A", "B", "C"].map((letter) => `<label>${sessionName(draftProgram2, letter)}<select name="day-${letter}">${days.map((name, i) => `<option value="${i}" ${Number(draft[`day-${letter}`] ?? plan.schedule.find((s) => s.session === letter)?.day) === i ? "selected" : ""}>${name}</option>`).join("")}</select></label>`).join("")}</div><button class="primary full v-space" type="submit">\u0627\u0639\u062A\u0645\u0627\u062F \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u062C\u062F\u0648\u0644</button></form></section>`;
-    return `<section class="card v-settings"><h1>\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A</h1>${button(`<span><strong>\u0628\u0631\u0646\u0627\u0645\u062C\u064A</strong><small>${names[plan.program]} \xB7 ${levelName(plan.level)}</small></span><span aria-hidden="true">\u2190</span>`, "settings-plan", "v-settings-link")}<form id="settings-form" data-section="appearance"><h2 class="v-space">\u0627\u0644\u0645\u0638\u0647\u0631 \u0648\u0627\u0644\u0635\u0648\u062A</h2>${palettePicker(draft.palette ?? settings2.palette)}<label>\u0646\u063A\u0645\u0629 \u0627\u0644\u0645\u0624\u0642\u062A<div class="v-sound-picker"><select name="sound">${sounds.map(([id, name]) => `<option value="${id}" ${(draft.sound ?? settings2.sound) === id ? "selected" : ""}>${name}</option>`).join("")}</select>${button(icon("play"), "test-sound", "icon-btn", 'type="button" aria-label="\u0627\u0633\u062A\u0645\u0639 \u0644\u0644\u0646\u063A\u0645\u0629" title="\u0627\u0633\u062A\u0645\u0639 \u0644\u0644\u0646\u063A\u0645\u0629"')}</div></label><div class="v-buttons v-space"><button class="primary" type="submit">\u062D\u0641\u0638 \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A</button>${button("\u0625\u0644\u063A\u0627\u0621 \u0627\u0644\u062A\u063A\u064A\u064A\u0631\u0627\u062A", "appearance-cancel", "secondary", 'type="button"')}</div></form><hr><section class="v-space"><h2>\u0646\u0633\u062E\u0629 \u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629</h2><p class="muted">\u0627\u062D\u0641\u0638 \u0625\u0639\u062F\u0627\u062F\u0627\u062A\u0643 \u0648\u0633\u062C\u0644\u0651\u0643 \u0648\u0627\u0644\u062C\u0644\u0633\u0629 \u0627\u0644\u062C\u0627\u0631\u064A\u0629 \u0641\u064A \u0645\u0644\u0641.</p><div class="v-buttons">${button("\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A", "export")}${button("\u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0645\u0646 \u0645\u0644\u0641", "import")}</div><input id="backup-file" type="file" accept="application/json,.json" hidden></section><hr>${reminderSection2()}<hr><h2 class="v-space">\u0627\u0644\u062A\u0637\u0628\u064A\u0642</h2>${button("\u062A\u062B\u0628\u064A\u062A \u062D\u0631\u0643\u0629", "install-app")}<p id="install-status" class="small muted"></p><p class="small muted v-space">\u0627\u0644\u0625\u0635\u062F\u0627\u0631 ${APP_VERSION} \xB7 \u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u062A\u0648\u0636\u064A\u062D\u064A\u0629 \u0642\u064A\u062F \u0627\u0644\u062A\u062C\u0647\u064A\u0632</p></section>`;
+    if (settingsPage2 === "plan") return `<section class="v-settings">${pageHeading("\u0628\u0631\u0646\u0627\u0645\u062C\u064A", button("\u0631\u062C\u0648\u0639", "settings-back", "text-btn"))}<form id="settings-form" data-section="plan"><h2 class="v-space">\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u0645\u0633\u062A\u0648\u0649</h2><div class="v-choices">${programCards2()}</div><div class="v-choices v-levels">${levels2()}</div><p>${requirement2()}</p><p class="small muted">${active2 ? "\u0644\u062F\u064A\u0643 \u062C\u0644\u0633\u0629 \u0645\u062D\u0641\u0648\u0638\u0629 \u0645\u0646 " + names[active2.snapshot.workout.program] + ". \u0633\u062A\u0628\u0642\u0649 \u0628\u0645\u062D\u062A\u0648\u0627\u0647\u0627\u060C \u0648\u064A\u0633\u0631\u064A \u0627\u0644\u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u062C\u062F\u064A\u062F \u0645\u0646 \u0627\u0644\u063A\u062F. \u064A\u0645\u0643\u0646\u0643 \u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0627\u0644\u062C\u062F\u064A\u062F \u0627\u0644\u0622\u0646." : history2.some((r) => r.dateKey === todayKey() || r.completedDate === todayKey()) ? "\u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645 \u0645\u0633\u062C\u0651\u0644\u0629\u061B \u064A\u0633\u0631\u064A \u0627\u0644\u062A\u063A\u064A\u064A\u0631 \u0645\u0646 \u0627\u0644\u063A\u062F. \u0644\u062A\u063A\u064A\u064A\u0631 \u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645 \u0627\u062D\u0630\u0641 \u0633\u062C\u0644\u0647\u0627 \u0623\u0648\u0644\u064B\u0627." : "\u064A\u0633\u0631\u064A \u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u0645\u0633\u062A\u0648\u0649 \u0648\u0627\u0644\u062C\u062F\u0648\u0644 \u0645\u0646 \u0627\u0644\u064A\u0648\u0645 \u0639\u0646\u062F \u0627\u0644\u062D\u0641\u0638\u061B \u062A\u0628\u0642\u0649 \u0627\u0644\u062C\u0644\u0633\u0627\u062A \u0627\u0644\u0633\u0627\u0628\u0642\u0629 \u0645\u062D\u0641\u0648\u0638\u0629."}</p>${button("\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u062C\u0644\u0633\u0627\u062A", "preview-plan", "text-btn", 'type="button"')}<h2 class="v-space">\u062C\u062F\u0648\u0644\u064A \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064A</h2><p class="small muted">\u0627\u062E\u062A\u064A\u0627\u0631 \u064A\u0648\u0645 \u0645\u0634\u063A\u0648\u0644 \u064A\u0628\u062F\u0651\u0644 \u064A\u0648\u0645\u064A \u0627\u0644\u062C\u0644\u0633\u062A\u064A\u0646 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627.</p><div class="v-schedule">${["A", "B", "C"].map((letter) => `<label><span>${sessionName(draftProgram2, letter)}</span><select name="day-${letter}">${days.map((name, i) => `<option value="${i}" ${Number(draft[`day-${letter}`] ?? plan.schedule.find((s) => s.session === letter)?.day) === i ? "selected" : ""}>${name}</option>`).join("")}</select></label>`).join("")}</div><button class="primary full v-space" type="submit">\u0627\u0639\u062A\u0645\u0627\u062F \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u062C\u062F\u0648\u0644</button></form></section>`;
+    return `<section class="v-settings">${pageHeading("\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A")}${button(`<span><strong>\u0628\u0631\u0646\u0627\u0645\u062C\u064A</strong><small>${names[plan.program]} \xB7 ${levelName(plan.level)}</small></span><span aria-hidden="true">\u2190</span>`, "settings-plan", "v-settings-link")}<form id="settings-form" class="v-appearance-card" data-section="appearance"><h2 class="v-space">\u0627\u0644\u0645\u0638\u0647\u0631 \u0648\u0627\u0644\u0635\u0648\u062A</h2>${palettePicker(draft.palette ?? settings2.palette)}<label>\u0646\u063A\u0645\u0629 \u0627\u0644\u0645\u0624\u0642\u062A<div class="v-sound-picker"><select name="sound">${sounds.map(([id, name]) => `<option value="${id}" ${(draft.sound ?? settings2.sound) === id ? "selected" : ""}>${name}</option>`).join("")}</select>${button(icon("play"), "test-sound", "icon-btn", 'type="button" aria-label="\u0627\u0633\u062A\u0645\u0639 \u0644\u0644\u0646\u063A\u0645\u0629" title="\u0627\u0633\u062A\u0645\u0639 \u0644\u0644\u0646\u063A\u0645\u0629"')}</div></label><div class="v-buttons v-space"><button class="primary" type="submit">\u062D\u0641\u0638 \u0627\u0644\u0645\u0638\u0647\u0631 \u0648\u0627\u0644\u0635\u0648\u062A</button>${button("\u0625\u0644\u063A\u0627\u0621 \u0627\u0644\u062A\u063A\u064A\u064A\u0631\u0627\u062A", "appearance-cancel", "secondary", 'type="button"')}</div></form><hr><section class="v-space"><h2>\u0646\u0633\u062E\u0629 \u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629</h2><p class="muted">\u0627\u062D\u0641\u0638 \u0625\u0639\u062F\u0627\u062F\u0627\u062A\u0643 \u0648\u0633\u062C\u0644\u0651\u0643 \u0648\u0627\u0644\u062C\u0644\u0633\u0629 \u0627\u0644\u062C\u0627\u0631\u064A\u0629 \u0641\u064A \u0645\u0644\u0641.</p><div class="v-backup-actions">${button("\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A", "export")}${button("\u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0645\u0646 \u0645\u0644\u0641", "import")}</div><input id="backup-file" type="file" accept="application/json,.json" hidden></section><hr>${reminderSection2()}<hr><h2 class="v-space">\u0627\u0644\u062A\u0637\u0628\u064A\u0642</h2>${button("\u062A\u062B\u0628\u064A\u062A \u062D\u0631\u0643\u0629", "install-app")}<p id="install-status" class="small muted"></p><p class="small muted v-space">\u0627\u0644\u0625\u0635\u062F\u0627\u0631 ${APP_VERSION} \xB7 \u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u062A\u0648\u0636\u064A\u062D\u064A\u0629 \u0642\u064A\u062F \u0627\u0644\u062A\u062C\u0647\u064A\u0632</p></section>`;
   }
 
   // js/infrastructure/download.mjs
@@ -14499,7 +14533,7 @@
     ["balance", "\u0627\u0644\u062A\u0648\u0627\u0632\u0646", "supported-tandem supported-single-balance"]
   ].map(([id, name, ids]) => ({ id, name, ids: ids.split(" ") }));
   function library() {
-    return `<section class="v-library"><div class="page-head"><h1>\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646</h1><span class="pill">${content.exercises.length} \u062D\u0631\u0643\u0629</span></div><p class="library-intro">\u0627\u062E\u062A\u0631 \u0641\u0626\u0629\u060C \u062B\u0645 \u0627\u0641\u062A\u062D \u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0644\u0642\u0631\u0627\u0621\u0629 \u0643\u064A\u0641\u064A\u0629 \u0627\u0644\u0623\u062F\u0627\u0621.</p><label class="v-search-label" for="search">\u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u062A\u0645\u0631\u064A\u0646</label><input class="v-search" id="search" type="search" value="${esc(libraryQuery)}" placeholder="\u0627\u0633\u0645 \u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0623\u0648 \u0627\u0644\u0623\u062F\u0627\u0629 \u0623\u0648 \u0627\u0644\u0641\u0626\u0629"><p id="library-count" class="small muted" role="status"></p><div id="library-list">${libraryRows()}</div></section>`;
+    return `<section class="v-library">${pageHeading("\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646", `<span class="pill">${content.exercises.length} \u062D\u0631\u0643\u0629</span>`)}<p class="library-intro">\u0627\u062E\u062A\u0631 \u0641\u0626\u0629\u060C \u062B\u0645 \u0627\u0641\u062A\u062D \u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0644\u0642\u0631\u0627\u0621\u0629 \u0643\u064A\u0641\u064A\u0629 \u0627\u0644\u0623\u062F\u0627\u0621.</p><label class="v-search-label" for="search">\u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u062A\u0645\u0631\u064A\u0646</label><input class="v-search" id="search" type="search" value="${esc(libraryQuery)}" placeholder="\u0627\u0633\u0645 \u0627\u0644\u062A\u0645\u0631\u064A\u0646 \u0623\u0648 \u0627\u0644\u0623\u062F\u0627\u0629 \u0623\u0648 \u0627\u0644\u0641\u0626\u0629"><p id="library-count" class="small muted" role="status"></p><div id="library-list">${libraryRows()}</div></section>`;
   }
   function filteredExercises() {
     const q = normalizeSearch(libraryQuery.trim());
@@ -15251,13 +15285,24 @@
   function onboarding() {
     return `<section class="card v-onboarding"><span class="eyebrow">${onboardingStage === 0 ? "1 \u2014 \u0627\u062E\u062A\u0631 \u0628\u0631\u0646\u0627\u0645\u062C\u0643" : "2 \u2014 \u0627\u062E\u062A\u0631 \u0645\u0633\u062A\u0648\u0627\u0643"}</span><h1>${onboardingStage === 0 ? "\u0645\u0627 \u0646\u0648\u0639 \u0627\u0644\u062D\u0631\u0643\u0629 \u0627\u0644\u0630\u064A \u064A\u0646\u0627\u0633\u0628\u0643\u061F" : names[draftProgram]}</h1><p class="muted v-space">${onboardingStage === 0 ? "\u064A\u0645\u0643\u0646\u0643 \u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0644\u0627\u062D\u0642\u064B\u0627 \u0645\u0646 \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A." : "\u0627\u0644\u0645\u0633\u062A\u0648\u064A\u0627\u062A \u062E\u0627\u0635\u0629 \u0628\u0647\u0630\u0627 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C\u060C \u0648\u0627\u0644\u0627\u062E\u062A\u064A\u0627\u0631 \u064A\u062F\u0648\u064A \u062F\u0648\u0646 \u0627\u062E\u062A\u0628\u0627\u0631."}</p><div class="v-choices">${onboardingStage === 0 ? programCards() : levels()}</div>${onboardingStage === 1 ? `<p class="v-space">${requirement()}</p><p class="small muted">\u062A\u0639\u0644\u0645 \u0627\u0644\u0645\u0642\u0627\u0648\u0645\u0629 \u064A\u062D\u062A\u0627\u062C \u062A\u0648\u062C\u064A\u0647\u064B\u0627 \u0645\u0624\u0647\u0644\u064B\u0627 \u0644\u0644\u064A\u0627\u0641\u0639\u064A\u0646\u061B \u062A\u0648\u0642\u0641 \u0639\u0646\u062F \u0627\u0644\u0623\u0644\u0645 \u0623\u0648 \u0641\u0642\u062F\u0627\u0646 \u0627\u0644\u062A\u062D\u0643\u0645.</p><div class="v-buttons">${button("\u0631\u062C\u0648\u0639", "onboard-back")}${button("\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u062C\u0644\u0633\u0627\u062A", "preview-plan")}${button("\u0627\u0639\u062A\u0645\u0627\u062F \u0627\u062E\u062A\u064A\u0627\u0631\u064A", "onboard-save", "primary")}</div>` : `<div class="v-buttons">${button("\u0627\u0644\u062A\u0627\u0644\u064A", "onboard-next", "primary")}</div>`}</section>`;
   }
+  var previewSnapshot = null;
+  var previewReturn = null;
   function preview(id) {
-    const snap = compileWorkout(content, id);
-    show(`${modalHead2(`${names[snap.workout.program]} \xB7 ${sessionName(snap.workout.program, snap.workout.session)} \xB7 ${levelName(snap.workout.level)}`)}${button("\u0645\u0642\u0627\u0631\u0646\u0629 \u0645\u0633\u062A\u0648\u064A\u0627\u062A \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C", "browse-program", "text-btn", `data-id="${snap.workout.program}"`)}<p class="small muted">\u0627\u0644\u0645\u062F\u0629 \u0627\u0644\u0645\u062D\u0633\u0648\u0628\u0629 ${estimates[id].join("\u2013")} \u062F\u0642\u064A\u0642\u0629\u061B \u0627\u0644\u062A\u0642\u062F\u064A\u0631 \u0627\u0644\u0623\u0635\u0644\u064A ${snap.workout.plannedMinutes.join("\u2013")} \u062F\u0642\u064A\u0642\u0629. \u064A\u0634\u0645\u0644 \u0627\u0644\u062D\u0633\u0627\u0628 \u0627\u0644\u0631\u0627\u062D\u0629\u060C \u0648\u064A\u062E\u062A\u0644\u0641 \u062D\u0633\u0628 \u0633\u0631\u0639\u0629 \u0627\u0644\u0639\u062F\u0651\u0627\u062A \u0648\u062A\u0645\u062F\u064A\u062F\u0647\u0627. \u0644\u0645 \u062A\u064F\u0642\u064E\u0633 \u0627\u0644\u0645\u062F\u0629 \u0628\u062A\u062C\u0631\u0628\u0629 \u0641\u0639\u0644\u064A\u0629.</p>${["warmup", "main", "strength", "aerobic", "cooldown"].map((block) => {
-      const items = snap.steps.filter((s) => s.block === block);
-      if (!items.length) return "";
-      return `<h3 class="v-space">${{ warmup: "\u0627\u0644\u0625\u062D\u0645\u0627\u0621", main: "\u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646", strength: "\u0627\u0644\u0642\u0648\u0629", aerobic: "\u0627\u0644\u0647\u0648\u0627\u0626\u064A", cooldown: "\u0627\u0644\u062A\u0647\u062F\u0626\u0629" }[block]}</h3>${items.map((s) => s.type === "rest" ? `<div class="v-preview-rest">\u0631\u0627\u062D\u0629 \xB7 ${s.seconds} \u062B\u0627\u0646\u064A\u0629</div>` : `<div class="v-preview-row"><span>${esc(movementName(s, snap.exercises))}</span><small>${goal(s)} ${s.set ? `\xB7 \u0645\u062C\u0645\u0648\u0639\u0629 ${s.set}/${s.sets}` : ""}${s.round ? `\xB7 \u062F\u0648\u0631\u0629 ${s.round}/${s.rounds}` : ""}${s.side ? ` \xB7 ${s.side === "right" ? "\u064A\u0645\u064A\u0646" : "\u064A\u0633\u0627\u0631"}` : ""}${s.pauseSeconds ? ` \xB7 \u062A\u0648\u0642\u0641 ${s.pauseSeconds}\u062B \u062F\u0627\u062E\u0644 \u0627\u0644\u0639\u062F\u0651\u0629` : ""}</small></div>`).join("")}`;
-    }).join("")}`);
+    previewSnapshot = compileWorkout(content, id);
+    previewReturn = { view, scroll: window.scrollY, modal: $3("#modal").open ? $3("#modal-content").innerHTML : null };
+    if ($3("#modal").open) close();
+    view = "preview";
+    window.history.pushState(null, "", "#preview-" + id);
+    render();
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+  function returnFromPreview() {
+    const target = previewReturn;
+    previewReturn = null;
+    view = target?.view || "today";
+    render();
+    if (target?.modal) show(target.modal);
+    window.scrollTo({ top: target?.scroll || 0, behavior: "instant" });
   }
   function home() {
     return renderHome({ settings, selected, active, history });
@@ -15307,10 +15352,10 @@
     const first = !settings.revisions.length;
     document.body.classList.toggle("training", !first && view === "session");
     document.body.classList.toggle("home-screen", !first && view === "today");
-    $3(".bottom-nav").hidden = first || view === "session";
-    $3(".header-actions").hidden = first || view === "session";
+    $3(".bottom-nav").hidden = first || view === "session" || view === "preview";
+    $3(".header-actions").hidden = first || view === "session" || view === "preview";
     $3(".header-actions").innerHTML = `${button(icon("programs"), "preview-all", "icon-btn", 'title="\u0627\u0633\u062A\u0639\u0631\u0627\u0636 \u0627\u0644\u0628\u0631\u0627\u0645\u062C" aria-label="\u0627\u0633\u062A\u0639\u0631\u0627\u0636 \u0627\u0644\u0628\u0631\u0627\u0645\u062C"')}${button(icon(settings.theme === "dark" ? "sun" : "moon"), "theme", "icon-btn", 'title="\u062A\u0628\u062F\u064A\u0644 \u0627\u0644\u0645\u0638\u0647\u0631" aria-label="\u062A\u0628\u062F\u064A\u0644 \u0627\u0644\u0645\u0638\u0647\u0631"')}<button class="icon-btn" data-view="settings" aria-label="\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A" title="\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A">${icon("settings")}</button>`;
-    $3("#main").innerHTML = first ? onboarding() : view === "session" ? player() : view === "library" ? library() : view === "history" ? historyView() : view === "settings" ? settingsView() : home();
+    $3("#main").innerHTML = view === "preview" && previewSnapshot ? renderSessionPreview(previewSnapshot) : first ? onboarding() : view === "session" ? player() : view === "library" ? library() : view === "history" ? historyView() : view === "settings" ? settingsView() : home();
     document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
     refreshClock();
     if (view === "library") updateLibrary();
@@ -15339,6 +15384,7 @@
     location.hash = v;
     await refreshState();
     render();
+    window.scrollTo({ top: 0, behavior: "instant" });
     $3("#main").focus({ preventScroll: true });
   }
   async function saveSettings(value) {
@@ -15429,6 +15475,17 @@
   });
   window.addEventListener("hashchange", () => {
     const next = location.hash.slice(1);
+    if (view === "preview" && !next.startsWith("preview-")) {
+      returnFromPreview();
+      return;
+    }
+    if (next.startsWith("preview-") && content.workouts.some((w) => w.id === next.slice(8))) {
+      previewSnapshot = compileWorkout(content, next.slice(8));
+      view = "preview";
+      render();
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
     if (["today", "library", "history", "settings", "session"].includes(next) && next !== view) run(() => navigate(next));
   });
   document.addEventListener("input", (e) => {
@@ -15455,8 +15512,12 @@
       next = { ...next, levels: { ...settings.levels, [draftProgram]: draftLevel } };
       await saveSettings(next);
       formDraft = null;
+      settingsPage = "main";
+      window.scrollTo({ top: 0, behavior: "instant" });
       toast2("\u062A\u0645 \u062D\u0641\u0638 \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A" + (next.revisions.at(-1).effectiveFrom > todayKey() ? " \xB7 \u0627\u0644\u062E\u0637\u0629 \u0627\u0644\u062C\u062F\u064A\u062F\u0629 \u0645\u0646 \u0627\u0644\u063A\u062F" : " \xB7 \u0627\u0644\u062E\u0637\u0629 \u0627\u0644\u062D\u0627\u0644\u064A\u0629 \u062C\u0627\u0647\u0632\u0629"));
       render();
+      window.scrollTo({ top: 0, behavior: "instant" });
+      $3("#main").focus({ preventScroll: true });
     });
   });
   document.addEventListener("click", (e) => {
@@ -15492,6 +15553,14 @@
     const a = b.dataset.action;
     if (!a) return;
     if (view === "settings" && $3("#settings-form")) formDraft = Object.fromEntries(new FormData($3("#settings-form")));
+    if (a === "preview-back") {
+      if (previewReturn) window.history.back();
+      else {
+        window.history.replaceState(null, "", "#today");
+        returnFromPreview();
+      }
+      return;
+    }
     if (a === "settings-plan" || a === "settings-back" || a === "appearance-cancel") {
       settingsPage = a === "settings-plan" ? "plan" : "main";
       formDraft = null;
@@ -15673,8 +15742,8 @@
   function programComparison(p) {
     return `${modalHead2(names[p])}<p class="muted">${descriptions[p]}</p><p class="small muted v-space">\u0639\u0644\u0649 \u0627\u0644\u0647\u0627\u062A\u0641\u060C \u0627\u0633\u062D\u0628 \u0627\u0644\u062C\u062F\u0648\u0644 \u0623\u0641\u0642\u064A\u064B\u0627 \u0644\u0645\u0642\u0627\u0631\u0646\u0629 \u0627\u0644\u0645\u0633\u062A\u0648\u064A\u0627\u062A.</p>${["A", "B", "C"].map((letter) => `<h3 class="v-space">${sessionName(p, letter)}</h3><div class="v-comparison" role="region" aria-label="\u0645\u0642\u0627\u0631\u0646\u0629 \u0645\u0633\u062A\u0648\u064A\u0627\u062A ${sessionName(p, letter)}" tabindex="0"><table><thead><tr>${[1, 2, 3].map((l) => `<th scope="col">${levelName(l)}</th>`).join("")}</tr></thead><tbody><tr>${[1, 2, 3].map((l) => {
       const w = content.workouts.find((w2) => w2.id === `${p}-${letter.toLowerCase()}-${l}`);
-      return `<td><p class="small muted">${levelText[p][l - 1]}</p>${w.blocks.filter((b) => !["warmup", "cooldown"].includes(b.id)).map((b) => `<p class="pill">${b.kind === "repeat" ? `\u062F\u0648\u0631\u062A\u0627\u0646` : b.id === "strength" ? "\u0627\u0644\u0642\u0648\u0629" : "\u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646"}</p>${b.items.filter((x) => x.exercise_id).map((x) => `<div class="v-preview-row"><strong>${esc(exerciseMap[x.exercise_id].name_ar)}</strong><small>${x.target} ${x.unit === "seconds" ? "\u062B\u0627\u0646\u064A\u0629" : x.unit === "cycles" ? "\u062F\u0648\u0631\u0627\u062A" : "\u0639\u062F\u0651\u0627\u062A"}${x.sides === 2 ? " \u0644\u0643\u0644 \u062C\u0647\u0629" : ""}${x.sets > 1 ? ` \xB7 ${x.sets} \u0645\u062C\u0645\u0648\u0639\u0627\u062A` : ""}${x.pause_seconds ? ` \xB7 \u062A\u0648\u0642\u0641 ${x.pause_seconds}\u062B` : ""}</small></div>`).join("")}`).join("")}${button("\u0627\u0644\u062A\u0633\u0644\u0633\u0644 \u0627\u0644\u0643\u0627\u0645\u0644", "preview", "secondary", `data-workout="${w.id}"`)}</td>`;
-    }).join("")}</tr></tbody></table></div>`).join("")}${button("\u0643\u0644 \u0627\u0644\u0628\u0631\u0627\u0645\u062C", "preview-all", "text-btn")}`;
+      return `<td><p class="small muted">${levelText[p][l - 1]}</p>${w.blocks.filter((b) => !["warmup", "cooldown"].includes(b.id)).map((b) => `<p class="pill">${b.kind === "repeat" ? `\u062F\u0648\u0631\u062A\u0627\u0646` : b.id === "strength" ? "\u0627\u0644\u0642\u0648\u0629" : "\u0627\u0644\u062A\u0645\u0627\u0631\u064A\u0646"}</p>${b.items.filter((x) => x.exercise_id).map((x) => `<div class="v-preview-row"><strong>${esc(exerciseMap[x.exercise_id].name_ar)}</strong><small>${x.target} ${x.unit === "seconds" ? "\u062B\u0627\u0646\u064A\u0629" : x.unit === "cycles" ? "\u062F\u0648\u0631\u0627\u062A" : "\u0639\u062F\u0651\u0627\u062A"}${x.sides === 2 ? " \u0644\u0643\u0644 \u062C\u0647\u0629" : ""}${x.sets > 1 ? ` \xB7 ${x.sets} \u0645\u062C\u0645\u0648\u0639\u0627\u062A` : ""}${x.pause_seconds ? ` \xB7 \u062A\u0648\u0642\u0641 ${x.pause_seconds}\u062B` : ""}</small></div>`).join("")}`).join("")}</td>`;
+    }).join("")}</tr><tr class="v-comparison-actions">${[1, 2, 3].map((l) => `<td>${button("\u0627\u0644\u062A\u0633\u0644\u0633\u0644 \u0627\u0644\u0643\u0627\u0645\u0644", "preview", "secondary", `data-workout="${p}-${letter.toLowerCase()}-${l}"`)}</td>`).join("")}</tr></tbody></table></div>`).join("")}${button("\u0643\u0644 \u0627\u0644\u0628\u0631\u0627\u0645\u062C", "preview-all", "text-btn")}`;
   }
   async function boot() {
     try {
@@ -15686,6 +15755,10 @@
       await refreshState();
       if (settings.revisions.length) initReminders();
       const requested = location.hash.slice(1);
+      if (requested.startsWith("preview-") && content.workouts.some((w) => w.id === requested.slice(8))) {
+        previewSnapshot = compileWorkout(content, requested.slice(8));
+        view = "preview";
+      }
       if (["today", "library", "history", "settings", "session"].includes(requested)) view = requested;
       render();
     } catch (e) {

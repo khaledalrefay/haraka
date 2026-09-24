@@ -1,0 +1,30 @@
+const {chromium}=require('playwright'),http=require('node:http'),fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'../..'),shots=path.resolve(root,'../validation/current');
+(async()=>{const server=http.createServer((req,res)=>{const pathname=new URL(req.url,'http://local').pathname;const file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));if(!file.startsWith(root+path.sep)){res.writeHead(403);return res.end();}try{res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.svg':'image/svg+xml'})[path.extname(file)]||'application/octet-stream');res.end(fs.readFileSync(file));}catch{res.writeHead(404);res.end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
+try{browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});const ctx=await browser.newContext({viewport:{width:393,height:852},serviceWorkers:'block'}),page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.clock.setFixedTime(new Date('2026-09-24T12:00Z'));const url=`http://127.0.0.1:${server.address().port}/`;await page.goto(url);await page.locator('[data-action="onboard-next"]').click();await page.locator('[data-action="onboard-save"]').click();
+
+await page.locator('[data-action="preview-all"]').click();await page.locator('[data-action="browse-program"][data-id="hybrid"]').click();
+const positions=await page.locator('.v-comparison').evaluateAll(tables=>tables.map(t=>[...t.querySelectorAll('[data-action="preview"]')].map(b=>b.getBoundingClientRect().top)));
+assert.ok(positions.every(v=>Math.max(...v)-Math.min(...v)<1));
+await page.locator('[data-action="preview"][data-workout="hybrid-c-3"]').click();await page.locator('.v-session-preview').waitFor();
+assert.equal(await page.locator('.v-session-preview details').count(),0);
+assert.equal(await page.locator('.v-session-preview button').count(),1);
+assert.equal(await page.locator('.phase-strength').count(),1);assert.equal(await page.locator('.phase-aerobic').count(),1);
+const audit=await page.evaluate(async()=>{const {content}=await import('/js/data/content.mjs');const {compileWorkout}=await import('/js/domain/engine.mjs');const {renderSessionPreview}=await import('/js/presentation/session-preview.mjs');return content.workouts.every(w=>{const snap=compileWorkout(content,w.id),doc=new DOMParser().parseFromString(renderSessionPreview(snap),'text/html');return JSON.stringify([...doc.querySelectorAll('[data-step-id]')].map(e=>e.dataset.stepId))===JSON.stringify(snap.steps.map(s=>s.id));});});assert.ok(audit,'all 45 previews preserve exact step sequence');
+for(const theme of ['light','dark']) for(const width of [320,393,768]) {await page.setViewportSize({width,height:852});await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:path.join(shots,`flow-${theme}-${width}.png`)});}
+await page.evaluate(()=>document.querySelector('.v-flow-end').scrollIntoView());await page.screenshot({path:path.join(shots,'flow-end.png')});
+await page.locator('[data-action="preview-back"]').click();await page.locator('#modal[open]').waitFor();assert.equal(await page.locator('.v-comparison table').count(),3);await page.locator('[data-action="close"]').click();
+await page.setViewportSize({width:393,height:852});
+const headings=[];
+for(const view of ['today','library','history','settings']){await page.locator(`[data-view="${view}"]`).click();await page.waitForFunction(v=>location.hash==='#'+v && !document.querySelector(`[data-view="${v}"]`).disabled,view);await page.evaluate(()=>scrollTo(0,0));headings.push(await page.locator('.v-page-heading h1').evaluate(e=>({y:e.getBoundingClientRect().top,right:e.getBoundingClientRect().right,font:getComputedStyle(e).fontSize})));}
+assert.ok(headings.every(h=>Math.abs(h.y-headings[0].y)<1&&h.right===headings[0].right&&h.font===headings[0].font),JSON.stringify(headings));
+assert.equal(await page.locator('.v-theme-preview').count(),0);assert.equal(await page.locator('.v-palette-picker summary .v-swatches i').count(),4);
+const backup=await page.locator('.v-backup-actions button').evaluateAll(bs=>bs.map(b=>b.getBoundingClientRect().top));assert.equal(backup[0],backup[1]);
+await page.screenshot({path:path.join(shots,'settings-beta9.png')});
+await page.locator('[data-action="settings-plan"]').click();await page.locator('[data-program="hybrid"]').click();
+const rows=await page.locator('.v-schedule label').evaluateAll(ls=>ls.map(l=>({name:l.querySelector('span').getBoundingClientRect().right,day:l.querySelector('select').getBoundingClientRect().left})));assert.ok(rows.every(r=>r.name===rows[0].name&&r.day===rows[0].day));
+await page.locator('.v-schedule').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(shots,'schedule-beta9.png')});
+await page.locator('button[type="submit"]').click();await page.locator('.v-settings-link').waitFor();assert.match(await page.locator('.v-settings-link').innerText(),/Hybrid/);assert.equal(await page.evaluate(()=>scrollY),0);
+await page.locator('[data-view="history"]').click();assert.equal(await page.locator('.v-month-picker span').innerText(),'سبتمبر 2026');assert.ok(!(await page.locator('#main').innerText()).includes('جلسة هذا الشهر'));await page.locator('#history-month').fill('2026-08');await page.locator('.v-month-picker span').filter({hasText:'أغسطس'}).waitFor();await page.screenshot({path:path.join(shots,'history-beta9.png')});
+assert.deepEqual(errors,[]);console.log('PASS beta9: all 45 flows exact sequence, no collapsed/interactive content, responsive light/dark flow, return to comparison, aligned comparison buttons, shared headings, four swatches, backup row, schedule alignment, save return, Arabic month picker.');
+}finally{if(browser)await browser.close();server.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

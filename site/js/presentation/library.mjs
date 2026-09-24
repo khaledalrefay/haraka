@@ -1,3 +1,4 @@
+import { pageHeading } from './page-heading.mjs';
 import { content } from "../data/content.mjs";
 import { esc } from "./html.mjs";
 const $ = (s) => document.querySelector(s);
@@ -14,7 +15,7 @@ const libraryGroups = [
   ["balance", "التوازن", "supported-tandem supported-single-balance"]
 ].map(([id, name, ids]) => ({ id, name, ids: ids.split(" ") }));
 function library() {
-  return `<section class="v-library"><div class="page-head"><h1>مكتبة التمارين</h1><span class="pill">${content.exercises.length} حركة</span></div><p class="library-intro">اختر فئة، ثم افتح التمرين لقراءة كيفية الأداء.</p><label class="v-search-label" for="search">البحث عن تمرين</label><input class="v-search" id="search" type="search" value="${esc(libraryQuery)}" placeholder="اسم التمرين أو الأداة أو الفئة"><p id="library-count" class="small muted" role="status"></p><div id="library-list">${libraryRows()}</div></section>`;
+  return `<section class="v-library">${pageHeading("مكتبة التمارين", `<span class="pill">${content.exercises.length} حركة</span>`)}<p class="library-intro">اختر فئة، ثم افتح التمرين لقراءة كيفية الأداء.</p><label class="v-search-label" for="search">البحث عن تمرين</label><input class="v-search" id="search" type="search" value="${esc(libraryQuery)}" placeholder="اسم التمرين أو الأداة أو الفئة"><p id="library-count" class="small muted" role="status"></p><div id="library-list">${libraryRows()}</div></section>`;
 }
 function filteredExercises() {
   const q = normalizeSearch(libraryQuery.trim());

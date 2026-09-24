@@ -1,3 +1,4 @@
+import { renderSessionPreview } from "./presentation/session-preview.mjs";
 import { renderHome } from "./presentation/home.mjs";
 import { renderHistory, executionDate } from "./presentation/history.mjs";
 import { renderSettings } from "./presentation/settings.mjs";
@@ -71,13 +72,17 @@ function requirement() {
 function onboarding() {
   return `<section class="card v-onboarding"><span class="eyebrow">${onboardingStage === 0 ? "1 — اختر برنامجك" : "2 — اختر مستواك"}</span><h1>${onboardingStage === 0 ? "ما نوع الحركة الذي يناسبك؟" : names[draftProgram]}</h1><p class="muted v-space">${onboardingStage === 0 ? "يمكنك تغيير البرنامج لاحقًا من الإعدادات." : "المستويات خاصة بهذا البرنامج، والاختيار يدوي دون اختبار."}</p><div class="v-choices">${onboardingStage === 0 ? programCards() : levels()}</div>${onboardingStage === 1 ? `<p class="v-space">${requirement()}</p><p class="small muted">تعلم المقاومة يحتاج توجيهًا مؤهلًا لليافعين؛ توقف عند الألم أو فقدان التحكم.</p><div class="v-buttons">${button("رجوع", "onboard-back")}${button("معاينة الجلسات", "preview-plan")}${button("اعتماد اختياري", "onboard-save", "primary")}</div>` : `<div class="v-buttons">${button("التالي", "onboard-next", "primary")}</div>`}</section>`;
 }
+let previewSnapshot = null, previewReturn = null;
 function preview(id) {
-  const snap = compileWorkout(content, id);
-  show(`${modalHead(`${names[snap.workout.program]} · ${sessionName(snap.workout.program, snap.workout.session)} · ${levelName(snap.workout.level)}`)}${button("مقارنة مستويات البرنامج", "browse-program", "text-btn", `data-id="${snap.workout.program}"`)}<p class="small muted">المدة المحسوبة ${estimates[id].join("–")} دقيقة؛ التقدير الأصلي ${snap.workout.plannedMinutes.join("–")} دقيقة. يشمل الحساب الراحة، ويختلف حسب سرعة العدّات وتمديدها. لم تُقَس المدة بتجربة فعلية.</p>${["warmup", "main", "strength", "aerobic", "cooldown"].map((block) => {
-    const items = snap.steps.filter((s) => s.block === block);
-    if (!items.length) return "";
-    return `<h3 class="v-space">${{ warmup: "الإحماء", main: "التمارين", strength: "القوة", aerobic: "الهوائي", cooldown: "التهدئة" }[block]}</h3>${items.map((s) => s.type === "rest" ? `<div class="v-preview-rest">راحة · ${s.seconds} ثانية</div>` : `<div class="v-preview-row"><span>${esc(movementName(s, snap.exercises))}</span><small>${goal(s)} ${s.set ? `· مجموعة ${s.set}/${s.sets}` : ""}${s.round ? `· دورة ${s.round}/${s.rounds}` : ""}${s.side ? ` · ${s.side === "right" ? "يمين" : "يسار"}` : ""}${s.pauseSeconds ? ` · توقف ${s.pauseSeconds}ث داخل العدّة` : ""}</small></div>`).join("")}`;
-  }).join("")}`);
+ previewSnapshot = compileWorkout(content,id);
+ previewReturn = {view, scroll:window.scrollY, modal:$('#modal').open ? $('#modal-content').innerHTML : null};
+ if($('#modal').open) close();
+ view='preview'; window.history.pushState(null,'','#preview-'+id); render(); window.scrollTo({top:0,behavior:'instant'});
+}
+function returnFromPreview() {
+ const target=previewReturn;previewReturn=null;view=target?.view||'today';render();
+ if(target?.modal)show(target.modal);
+ window.scrollTo({top:target?.scroll||0,behavior:'instant'});
 }
 function home() { return renderHome({settings, selected, active, history}); }
 function player() {
@@ -121,10 +126,10 @@ function render() {
   const first = !settings.revisions.length;
   document.body.classList.toggle("training", !first && view === "session");
   document.body.classList.toggle("home-screen", !first && view === "today");
-  $(".bottom-nav").hidden = first || view === "session";
-  $(".header-actions").hidden = first || view === "session";
+  $(".bottom-nav").hidden = first || view === "session" || view === "preview";
+  $(".header-actions").hidden = first || view === "session" || view === "preview";
   $(".header-actions").innerHTML = `${button(icon('programs'), 'preview-all', 'icon-btn', 'title="استعراض البرامج" aria-label="استعراض البرامج"')}${button(icon(settings.theme === 'dark' ? 'sun' : 'moon'), 'theme', 'icon-btn', 'title="تبديل المظهر" aria-label="تبديل المظهر"')}<button class="icon-btn" data-view="settings" aria-label="الإعدادات" title="الإعدادات">${icon('settings')}</button>`;
-  $("#main").innerHTML = first ? onboarding() : view === "session" ? player() : view === "library" ? library() : view === "history" ? historyView() : view === "settings" ? settingsView() : home();
+  $("#main").innerHTML = view === "preview" && previewSnapshot ? renderSessionPreview(previewSnapshot) : first ? onboarding() : view === "session" ? player() : view === "library" ? library() : view === "history" ? historyView() : view === "settings" ? settingsView() : home();
   document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
   refreshClock();
   if (view === "library") updateLibrary();
@@ -153,6 +158,7 @@ async function navigate(v) {
   location.hash = v;
   await refreshState();
   render();
+  window.scrollTo({top:0,behavior:"instant"});
   $("#main").focus({ preventScroll: true });
 }
 async function saveSettings(value) {
@@ -243,6 +249,8 @@ document.addEventListener("visibilitychange", () => {
 });
 window.addEventListener("hashchange", () => {
   const next = location.hash.slice(1);
+  if(view === 'preview' && !next.startsWith('preview-')) {returnFromPreview();return;}
+  if(next.startsWith('preview-') && content.workouts.some(w=>w.id===next.slice(8))) {previewSnapshot=compileWorkout(content,next.slice(8));view='preview';render();window.scrollTo({top:0,behavior:'instant'});return;}
   if (["today", "library", "history", "settings", "session"].includes(next) && next !== view) run(() => navigate(next));
 });
 document.addEventListener("input", (e) => {
@@ -266,8 +274,12 @@ document.addEventListener("submit", (e) => {
     next = { ...next, levels: { ...settings.levels, [draftProgram]: draftLevel } };
     await saveSettings(next);
     formDraft = null;
+    settingsPage = "main";
+    window.scrollTo({top:0,behavior:'instant'});
     toast("تم حفظ الإعدادات" + (next.revisions.at(-1).effectiveFrom > todayKey() ? " · الخطة الجديدة من الغد" : " · الخطة الحالية جاهزة"));
     render();
+    window.scrollTo({top:0,behavior:"instant"});
+    $("#main").focus({preventScroll:true});
   });
 });
 document.addEventListener("click", (e) => {
@@ -303,6 +315,7 @@ document.addEventListener("click", (e) => {
   const a = b.dataset.action;
   if (!a) return;
   if (view === "settings" && $("#settings-form")) formDraft = Object.fromEntries(new FormData($("#settings-form")));
+  if(a === 'preview-back') {if(previewReturn) window.history.back(); else {window.history.replaceState(null,'','#today');returnFromPreview();}return;}
   if (a === 'settings-plan' || a === 'settings-back' || a === 'appearance-cancel') {
     settingsPage = a === 'settings-plan' ? 'plan' : 'main'; formDraft = null;
     const plan = settings.revisions.at(-1); draftProgram = plan.program; draftLevel = plan.level;
@@ -473,8 +486,8 @@ document.addEventListener("change", (e) => {
 function programComparison(p) {
   return `${modalHead(names[p])}<p class="muted">${descriptions[p]}</p><p class="small muted v-space">على الهاتف، اسحب الجدول أفقيًا لمقارنة المستويات.</p>${["A", "B", "C"].map((letter) => `<h3 class="v-space">${sessionName(p, letter)}</h3><div class="v-comparison" role="region" aria-label="مقارنة مستويات ${sessionName(p, letter)}" tabindex="0"><table><thead><tr>${[1, 2, 3].map((l) => `<th scope="col">${levelName(l)}</th>`).join("")}</tr></thead><tbody><tr>${[1, 2, 3].map((l) => {
     const w = content.workouts.find((w2) => w2.id === `${p}-${letter.toLowerCase()}-${l}`);
-    return `<td><p class="small muted">${levelText[p][l - 1]}</p>${w.blocks.filter((b) => !["warmup", "cooldown"].includes(b.id)).map((b) => `<p class="pill">${b.kind === "repeat" ? `دورتان` : b.id === "strength" ? "القوة" : "التمارين"}</p>${b.items.filter((x) => x.exercise_id).map((x) => `<div class="v-preview-row"><strong>${esc(exerciseMap[x.exercise_id].name_ar)}</strong><small>${x.target} ${x.unit === "seconds" ? "ثانية" : x.unit === "cycles" ? "دورات" : "عدّات"}${x.sides === 2 ? " لكل جهة" : ""}${x.sets > 1 ? ` · ${x.sets} مجموعات` : ""}${x.pause_seconds ? ` · توقف ${x.pause_seconds}ث` : ""}</small></div>`).join("")}`).join("")}${button("التسلسل الكامل", "preview", "secondary", `data-workout="${w.id}"`)}</td>`;
-  }).join("")}</tr></tbody></table></div>`).join("")}${button("كل البرامج", "preview-all", "text-btn")}`;
+    return `<td><p class="small muted">${levelText[p][l - 1]}</p>${w.blocks.filter((b) => !["warmup", "cooldown"].includes(b.id)).map((b) => `<p class="pill">${b.kind === "repeat" ? `دورتان` : b.id === "strength" ? "القوة" : "التمارين"}</p>${b.items.filter((x) => x.exercise_id).map((x) => `<div class="v-preview-row"><strong>${esc(exerciseMap[x.exercise_id].name_ar)}</strong><small>${x.target} ${x.unit === "seconds" ? "ثانية" : x.unit === "cycles" ? "دورات" : "عدّات"}${x.sides === 2 ? " لكل جهة" : ""}${x.sets > 1 ? ` · ${x.sets} مجموعات` : ""}${x.pause_seconds ? ` · توقف ${x.pause_seconds}ث` : ""}</small></div>`).join("")}`).join("")}</td>`;
+  }).join("")}</tr><tr class="v-comparison-actions">${[1,2,3].map(l=>`<td>${button("التسلسل الكامل", "preview", "secondary", `data-workout="${p}-${letter.toLowerCase()}-${l}"`)}</td>`).join('')}</tr></tbody></table></div>`).join("")}${button("كل البرامج", "preview-all", "text-btn")}`;
 }
 async function boot() {
   try {
@@ -486,6 +499,7 @@ async function boot() {
     await refreshState();
     if (settings.revisions.length) reminders.initReminders();
     const requested = location.hash.slice(1);
+    if(requested.startsWith('preview-') && content.workouts.some(w=>w.id===requested.slice(8))) {previewSnapshot=compileWorkout(content,requested.slice(8));view='preview';}
     if (["today", "library", "history", "settings", "session"].includes(requested)) view = requested;
     render();
   } catch (e) {

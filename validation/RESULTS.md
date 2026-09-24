@@ -1,11 +1,11 @@
-# beta8 validation — 2026-09-24
-PASS: 17 Node domain/integration tests, including 45 audited workout compilations and all session completions.
-PASS: architecture boundaries and reachability for 24 runtime modules.
-PASS: Chromium IndexedDB persistence, concurrency, duplicate actions and session expiry.
-PASS: UI regression suite: 24 long-name/side-context layouts at 320×568, 360×640 and 393×852; stable controls, image loading/error, timer animation/pause, plan changes and calendar swaps.
-PASS: redesign suite: home at 320×568, 360×640, 393×852 and 768×1024; all 15 session titles at 320×568; palette preview/cancel/save/reload; isolated appearance/plan saves; descriptive labels; month navigation/details/deletion; exercise/rest progress separation; no JS errors.
-PASS: real browser offline reload, comparison, backup/restore, mocked reminder transport, service-worker waiting/activation and standalone HTML preview.
-PASS: precache asset validation and push-handler tests.
-Screenshots under current/ were inspected for home, exercise, rest, settings and history.
-The release test now derives its simulated cache generation independently of the release version.
-No production deployment or physical-phone push/install test was performed.
+# beta9 validation — 2026-09-24
+PASS: 17 domain/integration tests and all 45 compiled workout audits.
+PASS: architecture dependency/reachability check: 26 modules.
+PASS: Chromium storage, concurrency and double-action regression suite.
+PASS: existing responsive player/library/plan changes UI regression suite.
+PASS: backup/restore, real offline reload, service-worker update and standalone preview release suite.
+PASS: beta8 redesign regression: compact home at four sizes and all 15 names at 320px, independent saves, timer indicators and monthly history.
+PASS: beta9 flow suite: exact sequence for every step of all 45 workouts; no hidden/collapsed preview content; light/dark at 320, 393 and 768px; return to source comparison; aligned comparison buttons; identical page heading position/style; four palette samples; backup buttons on one row; schedule alignment; successful save returns to top; Arabic month selection.
+PASS: PWA precache/push-handler checks.
+Visual inspection: flow light/dark, settings, weekly schedule and existing home/player screenshots.
+No production deployment or physical-phone verification was performed.

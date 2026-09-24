@@ -1,7 +1,7 @@
 /* Bump VERSION when deploying a changed offline shell. */
 'use strict';
 importScripts('./push-handler.js');
-const VERSION = 'release-2.0.0-beta.8-d7f0a4940214';
+const VERSION = 'release-2.0.0-beta.9-c7d4bdc7ff6b';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'haraka-pwa-' + BASE.pathname + '-';
 const CACHE = PREFIX + VERSION;

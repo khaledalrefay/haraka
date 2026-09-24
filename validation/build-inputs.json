@@ -52,14 +52,29 @@
       ],
       "format": "esm"
     },
+    "js/presentation/icons.mjs": {
+      "bytes": 1127,
+      "imports": [],
+      "format": "esm"
+    },
     "js/domain/schedule.mjs": {
-      "bytes": 3619,
+      "bytes": 3921,
       "imports": [],
       "format": "esm"
     },
     "js/presentation/home.mjs": {
-      "bytes": 3615,
+      "bytes": 3849,
       "imports": [
+        {
+          "path": "js/presentation/icons.mjs",
+          "kind": "import-statement",
+          "original": "./icons.mjs"
+        },
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        },
         {
           "path": "js/presentation/page-heading.mjs",
           "kind": "import-statement",
@@ -88,13 +103,8 @@
       ],
       "format": "esm"
     },
-    "js/presentation/icons.mjs": {
-      "bytes": 935,
-      "imports": [],
-      "format": "esm"
-    },
     "js/presentation/history.mjs": {
-      "bytes": 1815,
+      "bytes": 1904,
       "imports": [
         {
           "path": "js/presentation/page-heading.mjs",
@@ -130,7 +140,7 @@
       "format": "esm"
     },
     "js/data/version.mjs": {
-      "bytes": 43,
+      "bytes": 44,
       "imports": [],
       "format": "esm"
     },
@@ -140,7 +150,7 @@
       "format": "esm"
     },
     "js/presentation/settings.mjs": {
-      "bytes": 4964,
+      "bytes": 4604,
       "imports": [
         {
           "path": "js/presentation/page-heading.mjs",
@@ -191,7 +201,7 @@
       "format": "esm"
     },
     "js/presentation/player.mjs": {
-      "bytes": 4557,
+      "bytes": 4797,
       "imports": [
         {
           "path": "js/presentation/html.mjs",
@@ -295,12 +305,18 @@
       "format": "esm"
     },
     "js/infrastructure/workout-repository.mjs": {
-      "bytes": 5076,
-      "imports": [],
+      "bytes": 5733,
+      "imports": [
+        {
+          "path": "js/domain/schedule.mjs",
+          "kind": "import-statement",
+          "original": "../domain/schedule.mjs"
+        }
+      ],
       "format": "esm"
     },
     "js/application/workout-service.mjs": {
-      "bytes": 1393,
+      "bytes": 2068,
       "imports": [
         {
           "path": "js/domain/schedule.mjs",
@@ -327,7 +343,7 @@
       "format": "esm"
     },
     "js/app.mjs": {
-      "bytes": 28175,
+      "bytes": 28094,
       "imports": [
         {
           "path": "js/presentation/session-preview.mjs",
@@ -449,35 +465,35 @@
         "js/presentation/session-preview.mjs": {
           "bytesInOutput": 5917
         },
+        "js/presentation/icons.mjs": {
+          "bytesInOutput": 1168
+        },
         "js/domain/schedule.mjs": {
-          "bytesInOutput": 3910
+          "bytesInOutput": 4210
         },
         "js/presentation/home.mjs": {
-          "bytesInOutput": 4537
-        },
-        "js/presentation/icons.mjs": {
-          "bytesInOutput": 966
+          "bytesInOutput": 4672
         },
         "js/presentation/history.mjs": {
-          "bytesInOutput": 2059
+          "bytesInOutput": 2159
         },
         "js/data/sounds.mjs": {
           "bytesInOutput": 354
         },
         "js/data/version.mjs": {
-          "bytesInOutput": 36
+          "bytesInOutput": 37
         },
         "js/data/palettes.mjs": {
           "bytesInOutput": 1688
         },
         "js/presentation/settings.mjs": {
-          "bytesInOutput": 6949
+          "bytesInOutput": 6210
         },
         "js/infrastructure/download.mjs": {
           "bytesInOutput": 373
         },
         "js/presentation/player.mjs": {
-          "bytesInOutput": 6380
+          "bytesInOutput": 6620
         },
         "js/data/content.mjs": {
           "bytesInOutput": 513808
@@ -501,19 +517,19 @@
           "bytesInOutput": 21699
         },
         "js/infrastructure/workout-repository.mjs": {
-          "bytesInOutput": 5226
+          "bytesInOutput": 5761
         },
         "js/application/workout-service.mjs": {
-          "bytesInOutput": 1294
+          "bytesInOutput": 2026
         },
         "js/infrastructure/audio.mjs": {
           "bytesInOutput": 1112
         },
         "js/app.mjs": {
-          "bytesInOutput": 34552
+          "bytesInOutput": 34457
         }
       },
-      "bytes": 637403
+      "bytes": 638814
     }
   }
 }

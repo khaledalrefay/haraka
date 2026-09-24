@@ -34,7 +34,7 @@
   color: white;
 }
 .day-button.selected .day-marker {
-  color: #F4AE76;
+  color: var(--accent);
 }
 .home-grid {
   display: grid;
@@ -87,8 +87,8 @@
   font-size: 13px;
 }
 .session-hero .pill {
-  background: #344459;
-  color: #F9C199;
+  background: #ffffff18;
+  color: #FFFFFF;
 }
 .primary,
 .secondary,
@@ -109,7 +109,7 @@
   color: var(--on-primary);
 }
 .session-hero .primary {
-  background: #F4AE76;
+  background: var(--accent);
   color: #142333;
   width: 100%;
   margin-top: 8px;

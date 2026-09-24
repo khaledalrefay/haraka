@@ -1,4 +1,6 @@
 const paths = {
+dumbbell:'<path d="M3 9v6m3-8v10m12-10v10m3-8v6M6 12h12M3 9h3m-3 6h3m12-6h3m-3 6h3"/>',
+coffee:'<path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Zm12 1h2a3 3 0 0 1 0 6h-2M9 3c-2 2 2 2 0 4"/>',
 programs:'<rect x="5" y="7" width="15" height="14" rx="3"/><path d="M16 3H6a3 3 0 0 0-3 3v10M9 12h7M9 16h5"/>',
 moon:'<path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/>',
 sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',

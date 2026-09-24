@@ -1,6 +1,6 @@
 import { renderSessionPreview } from "./presentation/session-preview.mjs";
 import { renderHome } from "./presentation/home.mjs";
-import { renderHistory, executionDate } from "./presentation/history.mjs";
+import { renderHistory } from "./presentation/history.mjs";
 import { renderSettings } from "./presentation/settings.mjs";
 import { icon } from "./presentation/icons.mjs";
 import { downloadBackup } from "./infrastructure/download.mjs";
@@ -15,7 +15,7 @@ import { content } from "./data/content.mjs";
 import { openStorage } from "./infrastructure/workout-repository.mjs";
 import { WorkoutService } from "./application/workout-service.mjs";
 import { remaining, compileWorkout } from "./domain/engine.mjs";
-import { todayKey, shift, weekday, days, planFor, slotFor, opportunity, changePlan, updatePlan, swapScheduleDay } from "./domain/schedule.mjs";
+import { executionDate, todayKey, shift, weekday, days, planFor, slotFor, opportunity, changePlan, swapScheduleDay } from "./domain/schedule.mjs";
 import { prepareSound, ring } from "./infrastructure/audio.mjs";
 const $ = (s) => document.querySelector(s);
 const exerciseMap = Object.fromEntries(content.exercises.map((e) => [e.id, e]));
@@ -270,13 +270,15 @@ document.addEventListener("submit", (e) => {
     }
     const plan = { program: draftProgram, level: draftLevel, schedule: ["A", "B", "C"].map((session) => ({ session, day: Number(form.get(`day-${session}`)) })) };
     await refreshState();
-    let next = updatePlan(settings, plan, { active, history });
-    next = { ...next, levels: { ...settings.levels, [draftProgram]: draftLevel } };
-    await saveSettings(next);
+    const next = await svc.savePlan(settings, plan);
+    settings = next;
+    await refreshState();
+    apply();
+    notifyChange();
     formDraft = null;
     settingsPage = "main";
     window.scrollTo({top:0,behavior:'instant'});
-    toast("تم حفظ الإعدادات" + (next.revisions.at(-1).effectiveFrom > todayKey() ? " · الخطة الجديدة من الغد" : " · الخطة الحالية جاهزة"));
+    toast(next.revisions.at(-1).effectiveFrom > todayKey() ? "تم حفظ الجدول · يبدأ من الغد" : "تم الحفظ وتحديث خطة اليوم");
     render();
     window.scrollTo({top:0,behavior:"instant"});
     $("#main").focus({preventScroll:true});

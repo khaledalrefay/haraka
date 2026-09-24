@@ -273,3 +273,18 @@
   --primary:#B0AFFA;
   --on-primary:#17212B;
 }
+
+/* Semantic status and readable timer colors. */
+:root { --success:#23804b; --danger:#bc303b; --timer-ink:var(--accent-ink); }
+:root[data-theme=dark] { --success:#6ed49a; --danger:#ff8790; }
+:root:not([data-palette]),:root[data-palette=classic] { --timer-ink:#bb570b; }
+:root[data-palette=classic][data-theme=dark],:root:not([data-palette])[data-theme=dark] { --timer-ink:var(--accent); }
+:root[data-palette=ocean] { --timer-ink:#b84938; }
+:root[data-palette=forest] { --timer-ink:#a85a22; }
+:root[data-palette=slate] { --timer-ink:#5c761f; }
+:root[data-palette=ink] { --timer-ink:#91701d; }
+:root[data-palette=earth] { --timer-ink:#916031; }
+:root[data-palette=olive] { --timer-ink:#827024; }
+:root[data-palette=rose] { --timer-ink:#71665d; }
+:root[data-palette=plum] { --timer-ink:#6563c6; }
+:root[data-theme=dark] { --timer-ink:var(--accent); }

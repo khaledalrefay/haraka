@@ -243,11 +243,26 @@
     }).join("")}<div class="v-flow-end"><span aria-hidden="true">\u2713</span><strong>\u0646\u0647\u0627\u064A\u0629 \u0627\u0644\u062C\u0644\u0633\u0629</strong></div></div></section>`;
   }
 
+  // js/presentation/icons.mjs
+  var paths = {
+    dumbbell: '<path d="M3 9v6m3-8v10m12-10v10m3-8v6M6 12h12M3 9h3m-3 6h3m12-6h3m-3 6h3"/>',
+    coffee: '<path d="M4 9h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Zm12 1h2a3 3 0 0 1 0 6h-2M9 3c-2 2 2 2 0 4"/>',
+    programs: '<rect x="5" y="7" width="15" height="14" rx="3"/><path d="M16 3H6a3 3 0 0 0-3 3v10M9 12h7M9 16h5"/>',
+    moon: '<path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
+    settings: '<path d="m9 3-.7 2.2-2 .9-2.1-.5-2 3.4 1.5 1.7v2.6L2.2 15l2 3.4 2.1-.5 2 .9L9 21h4l.7-2.2 2-.9 2.1.5 2-3.4-1.5-1.7v-2.6L19.8 9l-2-3.4-2.1.5-2-.9L13 3Z"/><circle cx="11" cy="12" r="3"/>',
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v2"/>',
+    trash: '<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/>',
+    play: '<path d="m9 5 11 7-11 7Z"/>'
+  };
+  var icon = (name) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.info}</svg>`;
+
   // js/domain/schedule.mjs
   var days = ["\u0627\u0644\u0623\u062D\u062F", "\u0627\u0644\u0625\u062B\u0646\u064A\u0646", "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621", "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621", "\u0627\u0644\u062E\u0645\u064A\u0633", "\u0627\u0644\u062C\u0645\u0639\u0629", "\u0627\u0644\u0633\u0628\u062A"];
   function todayKey(now = /* @__PURE__ */ new Date()) {
     return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Damascus", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
   }
+  var executionDate = (r) => r.completedDate || (r.finishedAt ? todayKey(new Date(r.finishedAt)) : r.dateKey);
   function shift(day, n) {
     const d = /* @__PURE__ */ new Date(day + "T12:00:00Z");
     d.setUTCDate(d.getUTCDate() + n);
@@ -265,7 +280,7 @@
   function opportunity(settings2, history2, day = todayKey()) {
     if (history2.some((r) => r.dateKey === day || r.completedDate === day)) return null;
     const slot = slotFor(settings2, day) || slotFor(settings2, shift(day, -1));
-    if (!slot || history2.some((r) => (r.scheduledDate || r.dateKey) === slot.date)) return null;
+    if (!slot || slot.program !== planFor(settings2, day)?.program || slot.level !== planFor(settings2, day)?.level || history2.some((r) => (r.scheduledDate || r.dateKey) === slot.date)) return null;
     return { ...slot, kind: slot.date === day ? "scheduled" : "makeup" };
   }
   function validPlan(p) {
@@ -281,10 +296,10 @@
     return day > scheduled && (day > shift(scheduled, 1) || Boolean(slotFor(settings2, day)));
   }
   function updatePlan(settings2, plan, { active: active2 = null, history: history2 = [], day = todayKey() } = {}) {
-    const old = settings2.revisions.at(-1);
+    const old = settings2.revisions.at(-1), current = planFor(settings2, day);
     const protectedDay = Boolean(active2) || history2.some((r) => r.dateKey === day || r.completedDate === day);
-    if (old && (old.effectiveFrom <= day || protectedDay) && old.program === plan.program && old.level === plan.level && old.schedule.every((a) => plan.schedule.some((b) => a.session === b.session && a.day === b.day))) return settings2;
-    return changePlan(settings2, plan, day, { applyToday: !protectedDay });
+    if (old && old.effectiveFrom <= day && old.program === plan.program && old.level === plan.level && old.schedule.every((a) => plan.schedule.some((b) => a.session === b.session && a.day === b.day))) return settings2;
+    return changePlan(settings2, plan, day, { applyToday: !protectedDay || current?.program !== plan.program || current?.level !== plan.level });
   }
   function swapScheduleDay(schedule, session, day) {
     const selected2 = schedule.find((s) => s.session === session);
@@ -304,29 +319,18 @@
     else card = '<span class="pill">\u064A\u0648\u0645 \u0631\u0627\u062D\u0629</span><h2>\u0645\u0633\u0627\u062D\u0629 \u0644\u0644\u0631\u0627\u062D\u0629</h2><p>\u0633\u062A\u0638\u0647\u0631 \u062C\u0644\u0633\u062A\u0643 \u0639\u0646\u062F \u0645\u0648\u0639\u062F\u0647\u0627 \u0627\u0644\u0642\u0627\u062F\u0645.</p>';
     return `<div class="home-content">${pageHeading("\u0628\u0631\u0646\u0627\u0645\u062C\u064A \u0627\u0644\u064A\u0648\u0645\u064A")}<section class="weekly-calendar"><div class="v-calendar-head">${button("\u2192", "prev-week", "icon-btn", 'aria-label="\u0627\u0644\u0623\u0633\u0628\u0648\u0639 \u0627\u0644\u0633\u0627\u0628\u0642"')}${selected2 !== t ? button("\u0627\u0644\u0639\u0648\u062F\u0629 \u0644\u0644\u064A\u0648\u0645", "today", "text-btn") : `<span>${esc(start)} \u2014 ${esc(shift(start, 6))}</span>`}${button("\u2190", "next-week", "icon-btn", 'aria-label="\u0627\u0644\u0623\u0633\u0628\u0648\u0639 \u0627\u0644\u062A\u0627\u0644\u064A"')}</div><div class="week-strip">${Array.from({ length: 7 }, (_, i) => {
       const d = shift(start, i);
-      return `<button class="day-button ${d === selected2 ? "selected" : ""}" data-day="${d}" aria-label="${days[i]} ${d} \u2014 ${history2.some((r) => r.dateKey === d) ? "\u062C\u0644\u0633\u0629 \u0645\u0633\u062C\u0644\u0629" : slotFor(settings2, d) ? "\u062A\u0645\u0631\u064A\u0646" : "\u0631\u0627\u062D\u0629"}" aria-pressed="${d === selected2}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker">${history2.some((r) => r.dateKey === d) ? "\u2713" : slotFor(settings2, d) ? "\u25CF" : "\xB7"}</span></button>`;
+      const completed = history2.some((r) => executionDate(r) === d && r.status === "completed");
+      const training = completed || Boolean(slotFor(settings2, d));
+      return `<button class="day-button ${d === selected2 ? "selected" : ""}" data-day="${d}" aria-label="${days[i]} ${d} \u2014 ${completed ? "\u062A\u0645\u0631\u064A\u0646 \u0645\u0646\u062C\u0632" : training ? "\u062A\u0645\u0631\u064A\u0646" : "\u0631\u0627\u062D\u0629"}" aria-pressed="${d === selected2}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker ${completed ? "is-completed" : ""} ${training ? "" : "is-rest"}">${icon(training ? "dumbbell" : "coffee")}</span></button>`;
     }).join("")}</div></section><section class="session-hero v-hero">${card}</section></div>`;
   }
 
-  // js/presentation/icons.mjs
-  var paths = {
-    programs: '<rect x="5" y="7" width="15" height="14" rx="3"/><path d="M16 3H6a3 3 0 0 0-3 3v10M9 12h7M9 16h5"/>',
-    moon: '<path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/>',
-    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
-    settings: '<path d="m9 3-.7 2.2-2 .9-2.1-.5-2 3.4 1.5 1.7v2.6L2.2 15l2 3.4 2.1-.5 2 .9L9 21h4l.7-2.2 2-.9 2.1.5 2-3.4-1.5-1.7v-2.6L19.8 9l-2-3.4-2.1.5-2-.9L13 3Z"/><circle cx="11" cy="12" r="3"/>',
-    info: '<circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v2"/>',
-    trash: '<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/>',
-    play: '<path d="m9 5 11 7-11 7Z"/>'
-  };
-  var icon = (name) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.info}</svg>`;
-
   // js/presentation/history.mjs
-  var executionDate = (r) => r.completedDate || (r.finishedAt ? todayKey(new Date(r.finishedAt)) : r.dateKey);
   function renderHistory(history2, month, hidden) {
     const rows = history2.filter((r) => !r.hidden && executionDate(r).startsWith(month)).sort((a, b) => b.finishedAt - a.finishedAt);
     return `${pageHeading("\u0633\u062C\u0644\u0651\u064A")}<div class="v-month-nav">${button("\u2192", "history-prev", "icon-btn", 'aria-label="\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0633\u0627\u0628\u0642"')}<label class="v-month-picker"><span>${new Intl.DateTimeFormat("ar", { month: "long", year: "numeric", timeZone: "UTC", numberingSystem: "latn" }).format(/* @__PURE__ */ new Date(month + "-01T12:00:00Z"))}</span><input aria-label="\u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0634\u0647\u0631" type="month" id="history-month" value="${month}"></label>${button("\u2190", "history-next", "icon-btn", 'aria-label="\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u062A\u0627\u0644\u064A"')}</div>${rows.length ? rows.map((r) => {
       const w = r.snapshot.workout;
-      return `<article class="card record v-compact-record"><div><h3>${esc(sessionName(w.program, w.session))}</h3><small>${executionDate(r)}</small><p class="small muted">${names[w.program]} \xB7 ${levelName(w.level)} \xB7 ${r.status === "completed" ? "\u0645\u0643\u062A\u0645\u0644\u0629" : "\u0627\u0646\u062A\u0647\u0627\u0621 \u0645\u0628\u0643\u0631"}</p></div><div class="v-record-actions">${button(icon("info"), "record", "icon-btn", `data-id="${esc(r.id)}" aria-label="\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062C\u0644\u0633\u0629"`)}${button(icon("trash"), "delete-record", "icon-btn v-delete", `data-id="${esc(r.id)}" aria-label="\u062D\u0630\u0641 \u0627\u0644\u062C\u0644\u0633\u0629"`)}</div></article>`;
+      return `<article class="card record v-compact-record"><button class="v-record-main" data-action="record" data-id="${esc(r.id)}" aria-label="\u062A\u0641\u0627\u0635\u064A\u0644 ${esc(sessionName(w.program, w.session))}"><span class="v-record-title"><strong>${esc(sessionName(w.program, w.session))}</strong><small>${r.status === "completed" ? "\u2713 \u0645\u0643\u062A\u0645\u0644\u0629" : "\u0627\u0646\u062A\u0647\u0627\u0621 \u0645\u0628\u0643\u0631"}</small></span><span class="small muted">${new Intl.DateTimeFormat("ar", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC", numberingSystem: "latn" }).format(/* @__PURE__ */ new Date(executionDate(r) + "T12:00:00Z"))} \xB7 ${levelName(w.level)}</span></button><div class="v-record-actions">${button(icon("trash"), "delete-record", "icon-btn v-delete", `data-id="${esc(r.id)}" aria-label="\u062D\u0630\u0641 \u0627\u0644\u062C\u0644\u0633\u0629"`)}</div></article>`;
     }).join("") : '<section class="card empty"><p>\u0644\u0627 \u062A\u0648\u062C\u062F \u062C\u0644\u0633\u0627\u062A \u0645\u0633\u062C\u0651\u0644\u0629 \u0641\u064A \u0647\u0630\u0627 \u0627\u0644\u0634\u0647\u0631.</p></section>'}${hidden}`;
   }
 
@@ -334,7 +338,7 @@
   var sounds = [["chime", "\u0631\u0646\u064A\u0646 \u0645\u062A\u062F\u0631\u0651\u062C"], ["bell", "\u062C\u0631\u0633"], ["pulse", "\u0646\u0628\u0636\u062A\u0627\u0646"], ["soft", "\u0646\u063A\u0645\u0629 \u0647\u0627\u062F\u0626\u0629"], ["rise", "\u0625\u0634\u0631\u0627\u0642\u0629"], ["silent", "\u0628\u062F\u0648\u0646 \u0635\u0648\u062A"]];
 
   // js/data/version.mjs
-  var APP_VERSION = "2.0.0-beta.9";
+  var APP_VERSION = "2.0.0-beta.10";
 
   // js/data/palettes.mjs
   var palettes = [
@@ -404,7 +408,7 @@
   }
   function renderSettings({ settings: settings2, formDraft: formDraft2, settingsPage: settingsPage2, draftProgram: draftProgram2, active: active2, history: history2, programCards: programCards2, levels: levels2, requirement: requirement2, reminderSection: reminderSection2 }) {
     const plan = settings2.revisions.at(-1), draft = formDraft2 || {};
-    if (settingsPage2 === "plan") return `<section class="v-settings">${pageHeading("\u0628\u0631\u0646\u0627\u0645\u062C\u064A", button("\u0631\u062C\u0648\u0639", "settings-back", "text-btn"))}<form id="settings-form" data-section="plan"><h2 class="v-space">\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u0645\u0633\u062A\u0648\u0649</h2><div class="v-choices">${programCards2()}</div><div class="v-choices v-levels">${levels2()}</div><p>${requirement2()}</p><p class="small muted">${active2 ? "\u0644\u062F\u064A\u0643 \u062C\u0644\u0633\u0629 \u0645\u062D\u0641\u0648\u0638\u0629 \u0645\u0646 " + names[active2.snapshot.workout.program] + ". \u0633\u062A\u0628\u0642\u0649 \u0628\u0645\u062D\u062A\u0648\u0627\u0647\u0627\u060C \u0648\u064A\u0633\u0631\u064A \u0627\u0644\u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u062C\u062F\u064A\u062F \u0645\u0646 \u0627\u0644\u063A\u062F. \u064A\u0645\u0643\u0646\u0643 \u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0627\u0644\u062C\u062F\u064A\u062F \u0627\u0644\u0622\u0646." : history2.some((r) => r.dateKey === todayKey() || r.completedDate === todayKey()) ? "\u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645 \u0645\u0633\u062C\u0651\u0644\u0629\u061B \u064A\u0633\u0631\u064A \u0627\u0644\u062A\u063A\u064A\u064A\u0631 \u0645\u0646 \u0627\u0644\u063A\u062F. \u0644\u062A\u063A\u064A\u064A\u0631 \u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645 \u0627\u062D\u0630\u0641 \u0633\u062C\u0644\u0647\u0627 \u0623\u0648\u0644\u064B\u0627." : "\u064A\u0633\u0631\u064A \u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u0645\u0633\u062A\u0648\u0649 \u0648\u0627\u0644\u062C\u062F\u0648\u0644 \u0645\u0646 \u0627\u0644\u064A\u0648\u0645 \u0639\u0646\u062F \u0627\u0644\u062D\u0641\u0638\u061B \u062A\u0628\u0642\u0649 \u0627\u0644\u062C\u0644\u0633\u0627\u062A \u0627\u0644\u0633\u0627\u0628\u0642\u0629 \u0645\u062D\u0641\u0648\u0638\u0629."}</p>${button("\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u062C\u0644\u0633\u0627\u062A", "preview-plan", "text-btn", 'type="button"')}<h2 class="v-space">\u062C\u062F\u0648\u0644\u064A \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064A</h2><p class="small muted">\u0627\u062E\u062A\u064A\u0627\u0631 \u064A\u0648\u0645 \u0645\u0634\u063A\u0648\u0644 \u064A\u0628\u062F\u0651\u0644 \u064A\u0648\u0645\u064A \u0627\u0644\u062C\u0644\u0633\u062A\u064A\u0646 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627.</p><div class="v-schedule">${["A", "B", "C"].map((letter) => `<label><span>${sessionName(draftProgram2, letter)}</span><select name="day-${letter}">${days.map((name, i) => `<option value="${i}" ${Number(draft[`day-${letter}`] ?? plan.schedule.find((s) => s.session === letter)?.day) === i ? "selected" : ""}>${name}</option>`).join("")}</select></label>`).join("")}</div><button class="primary full v-space" type="submit">\u0627\u0639\u062A\u0645\u0627\u062F \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u062C\u062F\u0648\u0644</button></form></section>`;
+    if (settingsPage2 === "plan") return `<section class="v-settings">${pageHeading("\u0628\u0631\u0646\u0627\u0645\u062C\u064A", button("\u0631\u062C\u0648\u0639", "settings-back", "text-btn"))}<form id="settings-form" data-section="plan"><h2 class="v-space">\u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u0645\u0633\u062A\u0648\u0649</h2><div class="v-choices">${programCards2()}</div><div class="v-choices v-levels">${levels2()}</div><p>${requirement2()}</p><p class="small muted">\u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0623\u0648 \u0627\u0644\u0645\u0633\u062A\u0648\u0649 \u064A\u064F\u0637\u0628\u0651\u064E\u0642 \u0641\u0648\u0631\u064B\u0627 \u0648\u064A\u064E\u062D\u0630\u0641 \u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645 \u0648\u062A\u0642\u062F\u0651\u0645\u0647\u0627 \u0625\u0646 \u0648\u064F\u062C\u062F\u062A. \u062A\u0628\u0642\u0649 \u0633\u062C\u0644\u0627\u062A \u0627\u0644\u0623\u064A\u0627\u0645 \u0627\u0644\u0633\u0627\u0628\u0642\u0629 \u0645\u062D\u0641\u0648\u0638\u0629. \u062A\u0639\u062F\u064A\u0644 \u0627\u0644\u0623\u064A\u0627\u0645 \u0648\u062D\u062F\u0647 \u064A\u062D\u0627\u0641\u0638 \u0639\u0644\u0649 \u062C\u0644\u0633\u0629 \u0627\u0644\u064A\u0648\u0645.</p>${button("\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u062C\u0644\u0633\u0627\u062A", "preview-plan", "text-btn", 'type="button"')}<h2 class="v-space">\u062C\u062F\u0648\u0644\u064A \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064A</h2><p class="small muted">\u0627\u062E\u062A\u064A\u0627\u0631 \u064A\u0648\u0645 \u0645\u0634\u063A\u0648\u0644 \u064A\u0628\u062F\u0651\u0644 \u064A\u0648\u0645\u064A \u0627\u0644\u062C\u0644\u0633\u062A\u064A\u0646 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627.</p><div class="v-schedule">${["A", "B", "C"].map((letter) => `<label><span>${sessionName(draftProgram2, letter)}</span><select name="day-${letter}">${days.map((name, i) => `<option value="${i}" ${Number(draft[`day-${letter}`] ?? plan.schedule.find((s) => s.session === letter)?.day) === i ? "selected" : ""}>${name}</option>`).join("")}</select></label>`).join("")}</div><button class="primary full v-space" type="submit">\u0627\u0639\u062A\u0645\u0627\u062F \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C \u0648\u0627\u0644\u062C\u062F\u0648\u0644</button></form></section>`;
     return `<section class="v-settings">${pageHeading("\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A")}${button(`<span><strong>\u0628\u0631\u0646\u0627\u0645\u062C\u064A</strong><small>${names[plan.program]} \xB7 ${levelName(plan.level)}</small></span><span aria-hidden="true">\u2190</span>`, "settings-plan", "v-settings-link")}<form id="settings-form" class="v-appearance-card" data-section="appearance"><h2 class="v-space">\u0627\u0644\u0645\u0638\u0647\u0631 \u0648\u0627\u0644\u0635\u0648\u062A</h2>${palettePicker(draft.palette ?? settings2.palette)}<label>\u0646\u063A\u0645\u0629 \u0627\u0644\u0645\u0624\u0642\u062A<div class="v-sound-picker"><select name="sound">${sounds.map(([id, name]) => `<option value="${id}" ${(draft.sound ?? settings2.sound) === id ? "selected" : ""}>${name}</option>`).join("")}</select>${button(icon("play"), "test-sound", "icon-btn", 'type="button" aria-label="\u0627\u0633\u062A\u0645\u0639 \u0644\u0644\u0646\u063A\u0645\u0629" title="\u0627\u0633\u062A\u0645\u0639 \u0644\u0644\u0646\u063A\u0645\u0629"')}</div></label><div class="v-buttons v-space"><button class="primary" type="submit">\u062D\u0641\u0638 \u0627\u0644\u0645\u0638\u0647\u0631 \u0648\u0627\u0644\u0635\u0648\u062A</button>${button("\u0625\u0644\u063A\u0627\u0621 \u0627\u0644\u062A\u063A\u064A\u064A\u0631\u0627\u062A", "appearance-cancel", "secondary", 'type="button"')}</div></form><hr><section class="v-space"><h2>\u0646\u0633\u062E\u0629 \u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629</h2><p class="muted">\u0627\u062D\u0641\u0638 \u0625\u0639\u062F\u0627\u062F\u0627\u062A\u0643 \u0648\u0633\u062C\u0644\u0651\u0643 \u0648\u0627\u0644\u062C\u0644\u0633\u0629 \u0627\u0644\u062C\u0627\u0631\u064A\u0629 \u0641\u064A \u0645\u0644\u0641.</p><div class="v-backup-actions">${button("\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A", "export")}${button("\u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0645\u0646 \u0645\u0644\u0641", "import")}</div><input id="backup-file" type="file" accept="application/json,.json" hidden></section><hr>${reminderSection2()}<hr><h2 class="v-space">\u0627\u0644\u062A\u0637\u0628\u064A\u0642</h2>${button("\u062A\u062B\u0628\u064A\u062A \u062D\u0631\u0643\u0629", "install-app")}<p id="install-status" class="small muted"></p><p class="small muted v-space">\u0627\u0644\u0625\u0635\u062F\u0627\u0631 ${APP_VERSION} \xB7 \u0627\u0644\u0635\u0648\u0631 \u0627\u0644\u062A\u0648\u0636\u064A\u062D\u064A\u0629 \u0642\u064A\u062F \u0627\u0644\u062A\u062C\u0647\u064A\u0632</p></section>`;
   }
 
@@ -425,9 +429,9 @@
     const position = s.round ? `\u0627\u0644\u062F\u0648\u0631\u0629 ${s.round} \u0645\u0646 ${s.rounds}` : s.set && s.sets > 1 ? `\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0629 ${s.set} \u0645\u0646 ${s.sets}` : "";
     const context = [s.round ? `\u0627\u0644\u0645\u062D\u0637\u0629 ${s.station} \u0645\u0646 ${s.stations}` : "", s.side ? `${e?.counting.side_means || "\u0627\u0644\u062C\u0647\u0629"}: ${s.side === "right" ? "\u064A\u0645\u064A\u0646" : "\u064A\u0633\u0627\u0631"}` : ""].filter(Boolean).join(" \xB7 ");
     const cue = s.pauseSeconds ? `\u062A\u0648\u0642\u0641 ${s.pauseSeconds} \u062B\u0627\u0646\u064A\u0629 \u062F\u0627\u062E\u0644 \u0643\u0644 \u0639\u062F\u0651\u0629` : s.sides === 2 ? "\u0628\u0627\u0644\u062A\u0628\u0627\u062F\u0644 \xB7 \u0643\u0644 \u062C\u0647\u0629 \u062A\u064F\u062D\u0633\u0628 \u0645\u0646\u0641\u0631\u062F\u0629" : s.pace ? { gentle: "\u0645\u0634\u064A \u0647\u0627\u062F\u0626", progressive: "\u0627\u0631\u0641\u0639 \u0627\u0644\u0625\u064A\u0642\u0627\u0639 \u062A\u062F\u0631\u064A\u062C\u064A\u064B\u0627", active: "\u0625\u064A\u0642\u0627\u0639 \u0646\u0634\u064A\u0637 \u064A\u0633\u0645\u062D \u0628\u0627\u0644\u0643\u0644\u0627\u0645", slow: "\u0645\u0634\u064A \u0628\u0637\u064A\u0621", decelerating: "\u062E\u0641\u0651\u0641 \u0627\u0644\u0625\u064A\u0642\u0627\u0639 \u062A\u062F\u0631\u064A\u062C\u064A\u064B\u0627" }[s.pace] : "";
-    const timerControls = timed ? `<div class="v-timer-actions">${button(active2.timer?.running ? "\u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A" : active2.timer ? "\u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0624\u0642\u062A" : "\u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0645\u0624\u0642\u062A", "timer", "secondary", 'id="timer-button"')}${button("+15 \u062B\u0627\u0646\u064A\u0629", "extend", "secondary", 'aria-label="\u0632\u064A\u0627\u062F\u0629 \u0627\u0644\u0648\u0642\u062A 15 \u062B\u0627\u0646\u064A\u0629"')}</div>` : "";
+    const timerControls = timed ? `<div class="v-timer-actions">${button(active2.timer?.running ? "\u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A" : active2.timer ? "\u0645\u062A\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0624\u0642\u062A" : "\u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0645\u0624\u0642\u062A", "timer", "secondary", 'id="timer-button"')}${button("+15 \u062B\u0627\u0646\u064A\u0629", "extend", "secondary", 'aria-label="\u0632\u064A\u0627\u062F\u0629 \u0627\u0644\u0648\u0642\u062A 15 \u062B\u0627\u0646\u064A\u0629"')}</div>` : '<div class="v-timer-actions v-control-placeholder" aria-hidden="true"></div>';
     const total = active2.snapshot.steps.length;
-    return `<section class="v-player"><div class="v-player-head"><span>${names[w.program]} \xB7 ${sessionName(w.program, w.session)} \xB7 ${levelName(w.level)}</span>${button("\u062E\u0631\u0648\u062C", "leave", "text-btn")}</div><div class="v-segments" aria-label="\u0627\u0644\u062E\u0637\u0648\u0629 ${active2.cursor + 1} \u0645\u0646 ${total}">${active2.snapshot.steps.map((_, i) => `<i class="${i < active2.cursor ? "done" : i === active2.cursor ? "current" : ""}"></i>`).join("")}</div><div class="card v-stage ${isRest ? "v-rest" : "v-work"}"><header class="v-exercise-heading"><div class="v-phase-row"><span class="v-phase">${isRest ? "\u0627\u0633\u062A\u0631\u0627\u062D\u0629 \xB7 " : ""}${phase}</span>${position ? `<div class="v-position muted">${position ? `<span>${esc(position)}</span>` : ""}</div>` : ""}</div><div class="v-title"><h1>${isRest ? "\u0648\u0642\u062A \u0644\u0644\u0631\u0627\u062D\u0629" : esc(movementName(s, active2.snapshot.exercises))}</h1>${!isRest ? button('<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7M12 6v2"/></svg>', "instruction", "icon-btn", `data-id="${e.id}" aria-label="\u0643\u064A\u0641\u064A\u0629 \u0627\u0644\u0623\u062F\u0627\u0621"`) : ""}</div></header>${isRest ? `<div class="v-rest-center"><div class="v-clock" id="clock-ring"><span id="timer-text"></span></div><p class="small muted">\u0627\u0644\u062A\u0627\u0644\u064A: ${esc(next ? movementName(next, active2.snapshot.exercises) : "\u0627\u0646\u062A\u0647\u0627\u0621 \u0627\u0644\u062C\u0644\u0633\u0629")}</p></div>` : `<figure class="v-exercise-image is-loading" aria-busy="true"><div class="v-image-frame"><img src="assets/exercise-images/march.jpg" alt="\u0639\u064A\u0646\u0629 \u0645\u0624\u0642\u062A\u0629 \u0644\u0635\u0648\u0631\u0629 \u0627\u0644\u0645\u0634\u064A \u0644\u0627\u062E\u062A\u0628\u0627\u0631 \u0627\u0644\u0639\u0631\u0636" decoding="async"><span class="v-image-fallback" hidden>\u062A\u0639\u0630\u0651\u0631 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0639\u064A\u0646\u0629 \u2014 \u0627\u0641\u062A\u062D \u0643\u064A\u0641\u064A\u0629 \u0627\u0644\u0623\u062F\u0627\u0621</span></div><figcaption class="v-exercise-caption">${context ? `<strong>${esc(context)}</strong>` : ""}${cue ? `<span>${esc(cue)}</span>` : ""}<small>\u0639\u064A\u0646\u0629 \u0639\u0631\u0636 \u0645\u0624\u0642\u062A\u0629 \xB7 \u0644\u064A\u0633\u062A \u0634\u0631\u062D\u064B\u0627 \u0644\u0644\u062A\u0645\u0631\u064A\u0646 \u0627\u0644\u062D\u0627\u0644\u064A</small></figcaption></figure><div class="v-dose-panel"><div class="v-target"><span class="small muted">\u0627\u0644\u0647\u062F\u0641</span><strong class="v-goal">${goal(s)}</strong></div>${timed ? '<div class="v-timer-readout"><span class="small muted">\u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u062A\u0628\u0642\u064A</span><div class="timer-value" id="timer-text"></div></div>' : ""}</div>`}<div class="v-controls">${timerControls}${button(isRest ? "\u0625\u0646\u0647\u0627\u0621 \u0627\u0644\u0631\u0627\u062D\u0629" : "\u0623\u0646\u0647\u064A\u062A \u0627\u0644\u062A\u0645\u0631\u064A\u0646", isRest ? "finish-rest" : "done", "primary full v-finish")}</div></div><div class="v-session-footer">${button(isRest ? "\u062A\u062E\u0637\u064A \u0627\u0644\u0631\u0627\u062D\u0629" : "\u062A\u062E\u0637\u064A \u0627\u0644\u062A\u0645\u0631\u064A\u0646", "skip", "secondary")}${button("\u0625\u0646\u0647\u0627\u0621 \u0627\u0644\u062C\u0644\u0633\u0629 \u0645\u0628\u0643\u0631\u064B\u0627", "stop", "text-btn")}</div></section>`;
+    return `<section class="v-player"><div class="v-player-head"><span>${names[w.program]} \xB7 ${sessionName(w.program, w.session)} \xB7 ${levelName(w.level)}</span>${button("\u062E\u0631\u0648\u062C", "leave", "text-btn")}</div><div class="v-segments" aria-label="\u0627\u0644\u062E\u0637\u0648\u0629 ${active2.cursor + 1} \u0645\u0646 ${total}">${active2.snapshot.steps.map((_, i) => `<i class="${i < active2.cursor ? "done" : i === active2.cursor ? "current" : ""}"></i>`).join("")}</div><div class="card v-stage ${isRest ? "v-rest" : "v-work"}"><header class="v-exercise-heading"><div class="v-phase-row"><span class="v-phase">${isRest ? "\u0627\u0633\u062A\u0631\u0627\u062D\u0629 \xB7 " : ""}${phase}</span>${position ? `<div class="v-position muted">${position ? `<span>${esc(position)}</span>` : ""}</div>` : ""}</div><div class="v-title"><h1>${isRest ? "\u0648\u0642\u062A \u0627\u0644\u0631\u0627\u062D\u0629" : esc(movementName(s, active2.snapshot.exercises))}</h1>${!isRest ? button('<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7M12 6v2"/></svg>', "instruction", "icon-btn", `data-id="${e.id}" aria-label="\u0643\u064A\u0641\u064A\u0629 \u0627\u0644\u0623\u062F\u0627\u0621"`) : ""}</div></header>${isRest ? `<figure class="v-exercise-image v-rest-image"><div class="v-image-frame v-rest-placeholder" aria-hidden="true"></div><figcaption class="v-exercise-caption"><span>\u0627\u0644\u062A\u0627\u0644\u064A: ${esc(next ? movementName(next, active2.snapshot.exercises) : "\u0627\u0646\u062A\u0647\u0627\u0621 \u0627\u0644\u062C\u0644\u0633\u0629")}</span></figcaption></figure><div class="v-rest-center"><div class="v-clock" id="clock-ring"><span id="timer-text"></span></div></div>` : `<figure class="v-exercise-image is-loading" aria-busy="true"><div class="v-image-frame"><img src="assets/exercise-images/march.jpg" alt="\u0639\u064A\u0646\u0629 \u0645\u0624\u0642\u062A\u0629 \u0644\u0635\u0648\u0631\u0629 \u0627\u0644\u0645\u0634\u064A \u0644\u0627\u062E\u062A\u0628\u0627\u0631 \u0627\u0644\u0639\u0631\u0636" decoding="async"><span class="v-image-fallback" hidden>\u062A\u0639\u0630\u0651\u0631 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0639\u064A\u0646\u0629 \u2014 \u0627\u0641\u062A\u062D \u0643\u064A\u0641\u064A\u0629 \u0627\u0644\u0623\u062F\u0627\u0621</span></div><figcaption class="v-exercise-caption">${context ? `<strong>${esc(context)}</strong>` : ""}${cue ? `<span>${esc(cue)}</span>` : ""}<small>\u0639\u064A\u0646\u0629 \u0639\u0631\u0636 \u0645\u0624\u0642\u062A\u0629 \xB7 \u0644\u064A\u0633\u062A \u0634\u0631\u062D\u064B\u0627 \u0644\u0644\u062A\u0645\u0631\u064A\u0646 \u0627\u0644\u062D\u0627\u0644\u064A</small></figcaption></figure><div class="v-dose-panel"><div class="v-target"><span class="small muted">\u0627\u0644\u0647\u062F\u0641</span><strong class="v-goal">${goal(s)}</strong></div>${timed ? '<div class="v-timer-readout"><span class="small muted">\u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u062A\u0628\u0642\u064A</span><div class="timer-value" id="timer-text"></div></div>' : ""}</div>`}<div class="v-controls">${timerControls}${button(isRest ? "\u0625\u0646\u0647\u0627\u0621 \u0627\u0644\u0631\u0627\u062D\u0629" : "\u0623\u0646\u0647\u064A\u062A \u0627\u0644\u062A\u0645\u0631\u064A\u0646", isRest ? "finish-rest" : "done", "primary full v-finish")}</div></div><div class="v-session-footer">${button(isRest ? "\u062A\u062E\u0637\u064A \u0627\u0644\u0631\u0627\u062D\u0629" : "\u062A\u062E\u0637\u064A \u0627\u0644\u062A\u0645\u0631\u064A\u0646", "skip", "secondary")}${button("\u0625\u0646\u0647\u0627\u0621 \u0627\u0644\u062C\u0644\u0633\u0629 \u0645\u0628\u0643\u0631\u064B\u0627", "stop", "text-btn")}</div></section>`;
   }
 
   // js/data/content.mjs
@@ -15102,6 +15106,17 @@
     saveSettings(settings2) {
       return this.transaction(["settings"], "readwrite", (s) => request(s("settings").put(structuredClone(settings2), "preferences")));
     }
+    savePlan(settings2, { resetDay = null } = {}) {
+      return this.transaction(["settings", "active", "history"], "readwrite", async (s) => {
+        await request(s("settings").put(structuredClone(settings2), "preferences"));
+        if (!resetDay) return;
+        await request(s("active").delete("current"));
+        for (const row of await request(s("history").getAll())) {
+          const executed = executionDate(row);
+          if (executed === resetDay) await request(s("history").delete(row.id));
+        }
+      });
+    }
     exportData() {
       return this.transaction(["settings", "active", "history"], "readonly", async (s) => ({ settings: await request(s("settings").get("preferences")), active: await request(s("active").get("current")) || null, history: await request(s("history").getAll()) }));
     }
@@ -15154,6 +15169,23 @@
       this.repository = repository;
       this.content = content2;
       this.queue = Promise.resolve();
+    }
+    savePlan(settings2, plan, day = todayKey()) {
+      const op = this.queue.then(async () => {
+        const active2 = await this.repository.getActive();
+        const history2 = await this.repository.listHistory();
+        const old = planFor(settings2, day);
+        const reset = Boolean(old && (old.program !== plan.program || old.level !== plan.level));
+        const next = {
+          ...updatePlan(settings2, plan, { active: active2, history: history2, day }),
+          levels: { ...settings2.levels, [plan.program]: plan.level }
+        };
+        await this.repository.savePlan(next, { resetDay: reset ? day : null });
+        return next;
+      });
+      this.queue = op.catch(() => {
+      });
+      return op;
     }
     start(workoutId, options) {
       return this.repository.start(createSession(compileWorkout(this.content, workoutId), options));
@@ -15508,13 +15540,15 @@
       }
       const plan = { program: draftProgram, level: draftLevel, schedule: ["A", "B", "C"].map((session) => ({ session, day: Number(form.get(`day-${session}`)) })) };
       await refreshState();
-      let next = updatePlan(settings, plan, { active, history });
-      next = { ...next, levels: { ...settings.levels, [draftProgram]: draftLevel } };
-      await saveSettings(next);
+      const next = await svc.savePlan(settings, plan);
+      settings = next;
+      await refreshState();
+      apply();
+      notifyChange();
       formDraft = null;
       settingsPage = "main";
       window.scrollTo({ top: 0, behavior: "instant" });
-      toast2("\u062A\u0645 \u062D\u0641\u0638 \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A" + (next.revisions.at(-1).effectiveFrom > todayKey() ? " \xB7 \u0627\u0644\u062E\u0637\u0629 \u0627\u0644\u062C\u062F\u064A\u062F\u0629 \u0645\u0646 \u0627\u0644\u063A\u062F" : " \xB7 \u0627\u0644\u062E\u0637\u0629 \u0627\u0644\u062D\u0627\u0644\u064A\u0629 \u062C\u0627\u0647\u0632\u0629"));
+      toast2(next.revisions.at(-1).effectiveFrom > todayKey() ? "\u062A\u0645 \u062D\u0641\u0638 \u0627\u0644\u062C\u062F\u0648\u0644 \xB7 \u064A\u0628\u062F\u0623 \u0645\u0646 \u0627\u0644\u063A\u062F" : "\u062A\u0645 \u0627\u0644\u062D\u0641\u0638 \u0648\u062A\u062D\u062F\u064A\u062B \u062E\u0637\u0629 \u0627\u0644\u064A\u0648\u0645");
       render();
       window.scrollTo({ top: 0, behavior: "instant" });
       $3("#main").focus({ preventScroll: true });

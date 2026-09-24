@@ -1,3 +1,5 @@
+import { icon } from "./icons.mjs";
+import { executionDate } from "../domain/schedule.mjs";
 import { pageHeading } from './page-heading.mjs';
 import { esc, button } from './html.mjs';
 import { names, levelName, sessionName } from '../data/program-labels.mjs';
@@ -13,6 +15,8 @@ export function renderHome({settings, selected, active, history}) {
   else card = '<span class="pill">يوم راحة</span><h2>مساحة للراحة</h2><p>ستظهر جلستك عند موعدها القادم.</p>';
   return `<div class="home-content">${pageHeading("برنامجي اليومي")}<section class="weekly-calendar"><div class="v-calendar-head">${button("→", "prev-week", "icon-btn", 'aria-label="الأسبوع السابق"')}${selected !== t ? button("العودة لليوم", "today", "text-btn") : `<span>${esc(start)} — ${esc(shift(start, 6))}</span>`}${button("←", "next-week", "icon-btn", 'aria-label="الأسبوع التالي"')}</div><div class="week-strip">${Array.from({ length: 7 }, (_, i) => {
     const d = shift(start, i);
-    return `<button class="day-button ${d === selected ? "selected" : ""}" data-day="${d}" aria-label="${days[i]} ${d} — ${history.some(r => r.dateKey === d) ? "جلسة مسجلة" : slotFor(settings,d) ? "تمرين" : "راحة"}" aria-pressed="${d === selected}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker">${history.some((r) => r.dateKey === d) ? "✓" : slotFor(settings, d) ? "●" : "·"}</span></button>`;
+    const completed = history.some(r => executionDate(r) === d && r.status === "completed");
+    const training = completed || Boolean(slotFor(settings, d));
+    return `<button class="day-button ${d === selected ? "selected" : ""}" data-day="${d}" aria-label="${days[i]} ${d} — ${completed ? "تمرين منجز" : training ? "تمرين" : "راحة"}" aria-pressed="${d === selected}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker ${completed ? "is-completed" : ""} ${training ? "" : "is-rest"}">${icon(training ? "dumbbell" : "coffee")}</span></button>`;
   }).join("")}</div></section><section class="session-hero v-hero">${card}</section></div>`;
 }

@@ -1348,3 +1348,70 @@ body:not(.training) #main { max-width:760px; margin-inline:auto; }
  .home-content .day-button { padding-block:2px; min-height:58px; }
  .home-content .v-hero .primary { margin-top:2px; }
 }
+
+/* Shared player geometry: only the rest clock yields to available space. */
+.v-player .v-stage:is(.v-work,.v-rest) {
+  display:grid;
+  grid-template-rows:72px auto minmax(64px,1fr) 100px;
+  gap:8px;
+  padding:14px;
+  align-items:stretch;
+}
+.v-player .v-title { justify-content:space-between; text-align:start; min-height:44px; }
+.v-player .v-title h1 { text-align:start; font-size:20px; line-height:1.3; margin:0; flex:1; }
+.v-player .v-exercise-image {
+  grid-row:2; height:auto; min-height:0; max-height:none; max-width:none;
+  width:100%; margin:0; display:grid; grid-template-rows:clamp(90px,19dvh,200px) 42px;
+  gap:4px; align-self:start; justify-items:stretch;
+}
+.v-player .v-exercise-image .v-image-frame {
+  height:100%; width:100%; flex:none; display:flex; align-items:center; justify-content:center;
+}
+.v-player .v-image-frame img { width:100%; height:100%; max-height:100%; object-fit:contain; }
+.v-player .v-exercise-image figcaption.v-exercise-caption {
+  display:flex; flex-direction:column; justify-content:center; gap:1px; padding:3px 7px;
+  margin:0; width:100%; box-sizing:border-box; background:var(--soft); border-radius:8px; font-size:11px; line-height:1.2;
+}
+.v-player .v-exercise-caption small { font-size:9px; }
+.v-player .v-rest-placeholder { background:var(--soft); border:1px solid var(--line); border-radius:12px; }
+.v-player .v-dose-panel { grid-row:3; align-self:end; margin:0; padding:8px; min-height:64px; }
+.v-dose-panel .timer-value { color:var(--timer-ink); font-size:30px !important; }
+.v-player .v-controls { grid-row:4; display:grid; grid-template-rows:44px 48px; gap:8px; align-self:end; }
+.v-player .v-timer-actions button,.v-player #timer-button { min-height:44px; height:44px; }
+.v-control-placeholder { height:44px; }
+.v-player .v-rest-center { grid-row:3; align-self:stretch; container-type:size; justify-content:flex-end; gap:0; }
+.v-player .v-rest-center .v-clock { --ring-size:min(100cqh,160px); width:var(--ring-size); height:var(--ring-size); flex:none; padding:4px; }
+.v-rest-center .v-clock:before { inset:4px; }
+.v-rest-center .v-clock span { font-size:clamp(22px,22cqh,38px); color:var(--timer-ink); }
+.v-rest-center .v-clock::after { width:8px; height:8px; left:calc(50% - 4px); top:calc(50% - 4px); }
+/* Semantic colors and consistent interactive spacing across every theme. */
+.home-content .day-marker { display:grid; place-items:center; width:28px; height:28px; border:1px solid transparent; border-radius:50%; line-height:1; margin:0 auto; color:var(--ink); }
+.day-marker svg { width:20px; height:20px; }
+.home-content .day-marker.is-completed { border-color:var(--success); }
+.home-content .day-marker.is-rest { color:var(--muted); }
+.home-content .day-button { gap:3px; }
+.v-compact-record { position:relative; padding:8px 10px; gap:10px; min-height:68px; }
+.v-record-main { position:static; border:0; background:none; padding:0; min-width:0; flex:1; display:grid; gap:5px; text-align:start; color:var(--ink); }
+.v-record-main:after { content:""; position:absolute; inset:0; border-radius:inherit; }
+.v-record-main:focus-visible:after { outline:2px solid var(--primary); outline-offset:2px; }
+.v-record-title { display:flex; align-items:center; flex-wrap:wrap; gap:4px 10px; }
+.v-record-title strong { font-size:16px; line-height:1.4; }
+.v-record-title small { font-size:11px; color:var(--muted); }
+.v-record-main > .small { font-size:12px; line-height:1.4; }
+.v-record-actions { position:relative; z-index:1; }
+.v-delete { color:var(--danger); border-color:transparent; background:transparent; }
+.v-delete:hover { background:color-mix(in srgb,var(--danger) 10%,var(--card)); }
+button:focus-visible,summary:focus-visible { outline:2px solid var(--primary); outline-offset:3px; }
+button:active:not(:disabled) { filter:brightness(.94); }
+.v-settings form > p { line-height:1.7; }
+.v-settings .v-choices { gap:10px; }
+.v-settings hr { margin-block:24px; border:0; border-top:1px solid var(--line); }
+.v-buttons,.v-backup-actions { gap:10px; }
+.v-library-group + .v-library-group { margin-top:24px; }
+@media(max-height:650px) {
+ .v-player .v-stage:is(.v-work,.v-rest) { grid-template-rows:64px auto minmax(48px,1fr) 100px; gap:5px; padding:10px; }
+ .v-player .v-exercise-image { grid-template-rows:90px 38px; }
+ .v-player .v-title h1 { font-size:18px; }
+ .v-player .v-dose-panel { min-height:48px; padding:4px; }
+ .v-dose-panel .timer-value { font-size:26px !important; }
+}

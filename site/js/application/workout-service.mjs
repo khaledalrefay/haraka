@@ -1,10 +1,24 @@
-import { todayKey, activeExpired } from "../domain/schedule.mjs";
+import { todayKey, activeExpired, planFor, updatePlan } from "../domain/schedule.mjs";
 import { compileWorkout, createSession, reduceSession } from "../domain/engine.mjs";
 class WorkoutService {
   constructor(repository, content) {
     this.repository = repository;
     this.content = content;
     this.queue = Promise.resolve();
+  }
+  savePlan(settings, plan, day = todayKey()) {
+    const op = this.queue.then(async () => {
+      const active = await this.repository.getActive();
+      const history = await this.repository.listHistory();
+      const old = planFor(settings, day);
+      const reset = Boolean(old && (old.program !== plan.program || old.level !== plan.level));
+      const next = { ...updatePlan(settings, plan, { active, history, day }),
+        levels: { ...settings.levels, [plan.program]: plan.level } };
+      await this.repository.savePlan(next, { resetDay: reset ? day : null });
+      return next;
+    });
+    this.queue = op.catch(() => {});
+    return op;
   }
   start(workoutId, options) {
     return this.repository.start(createSession(compileWorkout(this.content, workoutId), options));

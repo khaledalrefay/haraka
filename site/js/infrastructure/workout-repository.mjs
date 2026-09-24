@@ -1,3 +1,4 @@
+import { executionDate } from "../domain/schedule.mjs";
 const DATABASE_NAME = "haraka-vnext";
 const DATABASE_VERSION = 1;
 function openStorage({ name = DATABASE_NAME, factory = globalThis.indexedDB } = {}) {
@@ -59,6 +60,18 @@ class Repository {
   }
   saveSettings(settings) {
     return this.transaction(["settings"], "readwrite", (s) => request(s("settings").put(structuredClone(settings), "preferences")));
+  }
+  savePlan(settings, { resetDay = null } = {}) {
+    return this.transaction(["settings", "active", "history"], "readwrite", async (s) => {
+      await request(s("settings").put(structuredClone(settings), "preferences"));
+      if (!resetDay) return;
+      // There is one current session. Changing the training prescription invalidates it.
+      await request(s("active").delete("current"));
+      for (const row of await request(s("history").getAll())) {
+        const executed = executionDate(row);
+        if (executed === resetDay) await request(s("history").delete(row.id));
+      }
+    });
   }
   exportData() {
     return this.transaction(["settings", "active", "history"], "readonly", async (s) => ({ settings: await request(s("settings").get("preferences")), active: await request(s("active").get("current")) || null, history: await request(s("history").getAll()) }));

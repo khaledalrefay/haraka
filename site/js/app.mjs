@@ -17,12 +17,12 @@ import { content } from "./data/content.mjs";
 import { openStorage } from "./infrastructure/workout-repository.mjs";
 import { WorkoutService } from "./application/workout-service.mjs";
 import { remaining, compileWorkout } from "./domain/engine.mjs";
-import { executionDate, todayKey, shift, weekday, days, planFor, slotFor, opportunity, changePlan, swapScheduleDay } from "./domain/schedule.mjs";
+import { samePlan, weekStart, executionDate, todayKey, shift, weekday, days, planFor, slotFor, opportunity, changePlan, swapScheduleDay } from "./domain/schedule.mjs";
 import { prepareSound, ring } from "./infrastructure/audio.mjs";
 const $ = (s) => document.querySelector(s);
 const exerciseMap = Object.fromEntries(content.exercises.map((e) => [e.id, e]));
 let repo, svc, settings, active, history = [], view = "today", selected = todayKey(), busy = false, onboardingStage = 0, draftProgram = "move", draftLevel = 1, lastFocus, toastTimer, formDraft;
-let pendingBackup = null, observedDay = todayKey(), historyMonth = todayKey().slice(0,7), settingsPage = "main";
+let pendingPlan = null, pendingBackup = null, observedDay = todayKey(), historyMonth = todayKey().slice(0,7), settingsPage = "main";
 const changes = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("haraka-v2-change") : null;
 const notifyChange = () => {
   changes?.postMessage("changed");
@@ -219,7 +219,11 @@ function refreshClock() {
   if (text && text.textContent !== display) text.textContent = display;
   const ratio = 1 - Math.min(1, ms / (active.timer?.totalMs ?? (s.seconds ?? s.target) * 1e3));
   $("#clock-ring")?.style.setProperty("--progress", `${ratio * 360}deg`);
-  if (s.type !== "rest") $("#timer-button")?.style.setProperty("--fill", `${ratio * 100}%`);
+  if (s.type !== "rest") {
+    const btn=$("#timer-button");btn?.style.setProperty("--fill", `${ratio * 100}%`);
+    btn?.classList.toggle('timer-running',Boolean(active.timer?.running && ms>0));
+    btn?.classList.toggle('timer-complete',ms<=0);btn?.classList.toggle('timer-has-progress',ratio>0);
+  }
   if (active.timer?.running && ms > 0 && !document.hidden && clockFrame === null) clockFrame = requestAnimationFrame(animateClock);
   if (active.timer?.running && ms === 0 && !busy && !document.hidden) run(async () => {
     ring(settings.sound);
@@ -272,18 +276,10 @@ document.addEventListener("submit", (e) => {
     }
     const plan = { program: draftProgram, level: draftLevel, schedule: ["A", "B", "C"].map((session) => ({ session, day: Number(form.get(`day-${session}`)) })) };
     await refreshState();
-    const next = await svc.savePlan(settings, plan);
-    settings = next;
-    await refreshState();
-    apply();
-    notifyChange();
-    formDraft = null;
-    settingsPage = "main";
-    window.scrollTo({top:0,behavior:'instant'});
-    toast(next.revisions.at(-1).effectiveFrom > todayKey() ? "تم حفظ الجدول · يبدأ من الغد" : "تم الحفظ وتحديث خطة اليوم");
-    render();
-    window.scrollTo({top:0,behavior:"instant"});
-    $("#main").focus({preventScroll:true});
+    if (samePlan(settings.revisions.at(-1),plan)) { toast('لا توجد تغييرات في الخطة'); return; }
+    pendingPlan = plan;
+    show(`${modalHead('متى تريد تطبيق الخطة؟')}<p>اختر موعد بدء البرنامج والمستوى والجدول الجديد.</p><div class="v-plan-timing"><h3>من هذا الأسبوع · ${weekStart(todayKey())}</h3><p>ستُمسح بيانات التدريب وجلسات هذا الأسبوع، بما فيها الجلسة الجارية والمنجزة. تبقى الأسابيع السابقة محفوظة.</p>${button('مسح جلسات الأسبوع وتطبيق الخطة','apply-plan','primary full','data-timing="this-week"')}<h3>من الأسبوع القادم · ${shift(weekStart(todayKey()),7)}</h3><p>تبقى خطة هذا الأسبوع وجلساته كما هي، وتبدأ الجديدة يوم الأحد القادم.</p>${button('تطبيق من الأسبوع القادم','apply-plan','secondary full','data-timing="next-week"')}${button('إلغاء','close','text-btn')}</div>`);
+
   });
 });
 document.addEventListener("click", (e) => {
@@ -334,12 +330,22 @@ document.addEventListener("click", (e) => {
     show(`${modalHead("استعراض البرامج")}<p class="muted">المعاينة لا تغيّر برنامجك أو جدولك.</p><div class="v-choices">${Object.keys(names).map((p) => button(names[p] + " — " + descriptions[p], "browse-program", "v-program", `data-id="${p}"`)).join("")}</div>`);
     return;
   }
-  if (a === "detail-level") {
-    const previousFocus=lastFocus;
-    show(programComparison(b.dataset.id, Number(b.dataset.levelId)));
-    lastFocus=previousFocus;
+  if (a === 'apply-plan') {
+    if (!pendingPlan) return;
+    run(async()=>{
+      const plan=pendingPlan;
+      settings=await svc.savePlan(settings,plan,todayKey(),b.dataset.timing);
+      pendingPlan=null; close(); formDraft=null; settingsPage='main'; selected=todayKey();
+      await refreshState(); notifyChange();
+      await navigate('today');
+      toast(b.dataset.timing==='this-week'?'تم تطبيق الخطة وإعادة ضبط الأسبوع':`تبدأ الخطة الجديدة يوم الأحد ${settings.revisions.at(-1).effectiveFrom}`);
+    });return;
+  }
+  if (a === 'detail-level' || a === 'detail-session') {
+    const previousFocus=lastFocus, level=a==='detail-level'?Number(b.dataset.value):Number(b.dataset.levelId), session=a==='detail-session'?b.dataset.value:b.dataset.session;
+    show(programComparison(b.dataset.id,level,session));lastFocus=previousFocus;
     $('#modal').scrollTop=0;
-    document.querySelector(`#level-tab-${b.dataset.levelId}`).focus({preventScroll:true});
+    document.querySelector(`#${a==='detail-level'?'level':'session'}-tab-${b.dataset.value}`).focus({preventScroll:true});
     return;
   }
   if (a === "browse-program") {
@@ -371,7 +377,7 @@ document.addEventListener("click", (e) => {
     return;
   }
   if (a === "close") {
-    pendingBackup = null;
+    pendingBackup = null; pendingPlan = null;
     close();
     return;
   }
@@ -388,7 +394,7 @@ document.addEventListener("click", (e) => {
     return;
   }
   if (a === "preview-plan") {
-    show(`${modalHead("معاينة جلسات البرنامج")}<div class="v-buttons">${["A", "B", "C"].map((l) => button(sessionName(draftProgram, l), "preview", "secondary", `data-workout="${draftProgram}-${l.toLowerCase()}-${draftLevel}"`)).join("")}</div>`);
+    show(programComparison(draftProgram,draftLevel));
     return;
   }
   if (a === "leave") {
@@ -495,15 +501,15 @@ document.addEventListener("change", (e) => {
     show(`${modalHead("استعادة النسخة الاحتياطية؟")}<p>ستُستبدل إعدادات هذا الجهاز وسجلّه بالملف المختار: ${pendingBackup.history.filter((r) => !r.hidden).length} جلسة، ${pendingBackup.active ? "مع جلسة جارية" : "دون جلسة جارية"}. صدّر بياناتك أولًا إذا أردت الاحتفاظ بها.</p><p>التذكيرات مرتبطة بالجهاز ولا تُنقل بالملف.</p><div class="v-buttons">${button("إلغاء", "close")}${button("استعادة واستبدال", "confirm-import", "primary")}</div>`);
   });
 });
-function programComparison(p, level = settings.levels?.[p] || 1) {
- return renderProgramDetails(p, level, modalHead);
+function programComparison(p, level = settings.levels?.[p] || 1, session = "A") {
+ return renderProgramDetails(compileWorkout(content,`${p}-${session.toLowerCase()}-${level}`), modalHead);
 }
 document.addEventListener('keydown', e => {
- const tab=e.target.closest('[role="tab"][data-action="detail-level"]');
+ const tab=e.target.closest('.v-program-details [role="tab"]');
  if (!tab || !['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
- e.preventDefault();
- const n=Number(tab.dataset.levelId), target=e.key==='Home'?1:e.key==='End'?3:((n-1+(e.key==='ArrowLeft'?1:2))%3)+1;
- document.querySelector(`#level-tab-${target}`)?.click();
+ e.preventDefault();const tabs=[...tab.parentElement.querySelectorAll('[role="tab"]')],index=tabs.indexOf(tab);
+ const target=e.key==='Home'?0:e.key==='End'?tabs.length-1:(index+(e.key==='ArrowLeft'?1:tabs.length-1))%tabs.length;
+ tabs[target].click();
 });
 observeTitles();
 async function boot() {

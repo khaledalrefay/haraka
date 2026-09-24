@@ -267,7 +267,7 @@
   min-height: 48px;
 }
 .bottom-nav button.active {
-  background: var(--soft);
+  background: transparent;
   color: var(--ink);
   font-weight: 700;
 }

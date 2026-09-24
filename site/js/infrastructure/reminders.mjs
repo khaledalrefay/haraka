@@ -17,7 +17,7 @@ function preferences(device = readDevice()) {
     timezone: "Asia/Damascus",
     entries: plan?.schedule || settings.revisions.at(-1).schedule,
     scheduleRevisions: settings.revisions.map((r) => ({ effectiveFrom: r.effectiveFrom, entries: r.schedule })).slice(-50),
-    doneKeys: [...new Set([...history].sort((a, b) => a.scheduledDate.localeCompare(b.scheduledDate)).map((r) => occurrence(r.scheduledDate || r.dateKey, r.snapshot.workout.session)))].slice(-100),
+    doneKeys: [...new Set([...history].sort((a, b) => (a.scheduledDate || a.dateKey).localeCompare(b.scheduledDate || b.dateKey)).map((r) => occurrence(r.scheduledDate || r.dateKey, r.snapshot.workout.session)))].slice(-100),
     skipDates: [...new Set(history.flatMap((r) => [r.dateKey, r.completedDate].filter(Boolean)))].sort().slice(-10)
   };
 }

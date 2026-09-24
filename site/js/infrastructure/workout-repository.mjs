@@ -61,9 +61,18 @@ class Repository {
   saveSettings(settings) {
     return this.transaction(["settings"], "readwrite", (s) => request(s("settings").put(structuredClone(settings), "preferences")));
   }
-  savePlan(settings, { resetDay = null } = {}) {
+  savePlan(settings, { resetDay = null, resetRange = null } = {}) {
     return this.transaction(["settings", "active", "history"], "readwrite", async (s) => {
       await request(s("settings").put(structuredClone(settings), "preferences"));
+      if (resetRange) {
+        const inside = date => date && date >= resetRange.start && date <= resetRange.end;
+        const active = await request(s('active').get('current'));
+        if (active && [active.dateKey,active.scheduledDate].some(inside)) await request(s('active').delete('current'));
+        for (const row of await request(s('history').getAll())) {
+          if ([executionDate(row),row.dateKey,row.scheduledDate].some(inside)) await request(s('history').delete(row.id));
+        }
+        return;
+      }
       if (!resetDay) return;
       // There is one current session. Changing the training prescription invalidates it.
       await request(s("active").delete("current"));

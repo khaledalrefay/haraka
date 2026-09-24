@@ -644,23 +644,12 @@ dialog.wide {
   line-height: 1.45;
   min-height: 0;
 }
-.v-work .v-exercise-image {
-  width: 100%;
-  max-width: none;
-  max-height: none;
-  gap: 4px;
-  justify-self: center;
-}
 .v-image-frame {
   background: transparent;
   border-radius: 10px;
 }
 .v-image-frame img {
   object-fit: contain;
-}
-.v-work .v-exercise-image figcaption {
-  font-size: 10px;
-  line-height: 1.3;
 }
 .v-dose-panel {
   display: flex;
@@ -819,10 +808,6 @@ dialog.wide {
     --ring-size:120px;
   }
 }
-.v-work .v-image-frame {
-  width: 100%;
-  background: transparent;
-}
 .v-player .v-stage.v-work,
 .v-player .v-stage.v-rest {
   grid-template-columns: minmax(0, 1fr);
@@ -918,37 +903,6 @@ dialog.wide {
   font-size: 11px;
   text-align: end;
   line-height: 1.4;
-}
-.v-work .v-exercise-image {
-  height: 100%;
-  min-height: 0;
-  justify-content: flex-start;
-  align-self: start;
-}
-.v-work .v-image-frame {
-  height: auto;
-  aspect-ratio: auto;
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 12px;
-}
-.v-work .v-image-frame img {
-  position: static;
-  inset: auto;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 12px;
-  display: block;
-}
-.v-work .v-exercise-image figcaption {
-  flex-shrink: 0;
 }
 @media (max-height: 700px) {
   .v-player .v-stage.v-work {
@@ -1102,8 +1056,10 @@ input:focus-visible {
 
 .home-content .v-calendar-head { margin:0; font-size:13px; }
 .home-content .week-strip { margin:6px 0 0; gap:5px; }
-.home-content .day-button { min-height:72px; padding:5px 1px; gap:0; font-size:12px; border-radius:12px; }
+.home-content .day-button { min-width:0; min-height:72px; padding:5px 1px; gap:0; font-size:12px; border-radius:12px; }
 .home-content .day-button b { font-size:20px; }
+.home-content .day-button > span:first-child { display:block; max-width:100%; font-size:clamp(9px,2.45vw,11px); white-space:nowrap; line-height:1.5; }
+.home-content .week-strip { grid-template-columns:repeat(7,minmax(0,1fr)); }
 .home-content .v-hero { margin:0; padding:20px; display:flex; flex-direction:column; gap:8px; }
 .home-content .v-hero h2 { margin:4px 0; font-size:clamp(22px,5vw,29px); }
 .home-content .v-hero .pill { align-self:flex-start; }
@@ -1132,10 +1088,8 @@ input:focus-visible {
 .v-compact-record > div:first-child { flex:1; min-width:0; }
 .v-compact-record h3 { font-size:18px; }
 .v-compact-record .v-record-actions { flex-direction:row; gap:6px; flex-shrink:0; }
-.v-work .v-exercise-image figcaption.v-exercise-caption { display:grid; gap:3px; padding:7px 10px; background:var(--soft); border-radius:10px; font-size:13px; line-height:1.4; color:var(--ink); }
 .v-exercise-caption small { color:var(--muted); font-size:10px; }
 .v-player .v-stage.v-work { grid-template-rows:auto minmax(70px,1fr) auto minmax(0,0fr) auto; }
-.v-work .v-image-frame { align-items:center; }
 .v-work #timer-button { background:var(--soft); }
 .v-work #timer-button:after { background:var(--accent); opacity:.32; border-inline-end:2px solid var(--accent); }
 .v-rest #timer-button:after { display:none; }
@@ -1153,7 +1107,6 @@ input:focus-visible {
  .home-content .v-hero { padding:14px; gap:4px; }
  .home-content .day-button { min-height:62px; }
  .home-screen .shell { padding-bottom:78px; }
- .v-work .v-exercise-image figcaption.v-exercise-caption { padding:4px 7px; gap:1px; font-size:11px; }
  .v-exercise-caption small { font-size:9px; }
 }
 .home-content .day-button { line-height:1.2; }
@@ -1283,7 +1236,9 @@ button:active:not(:disabled) { filter:brightness(.94); }
 
 /* Palette roles: accent fills carry dark readable text; accent strokes sit on a dark surface. */
 .v-library-icon { flex:0 0 42px; height:42px; display:grid; place-items:center; border-radius:13px; background:var(--accent-surface); color:var(--accent); }
-.bottom-nav button.active { background:var(--accent-soft); box-shadow:inset 0 -3px var(--accent); }
+.bottom-nav button.active { background:transparent; box-shadow:none; }
+.bottom-nav button { position:relative; }
+.bottom-nav button.active::after { content:""; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:30px; height:3px; background:var(--accent); border-radius:2px; }
 .bottom-nav button.active .icon { color:var(--ink); }
 .v-program.selected { border-color:var(--accent); background:var(--accent-soft); box-shadow:inset -4px 0 var(--accent); }
 .v-segments i.current { background:var(--accent); box-shadow:0 0 0 1px var(--ink); }
@@ -1292,7 +1247,7 @@ button:active:not(:disabled) { filter:brightness(.94); }
 .v-flow-goal,.pill { background:var(--accent-soft); color:var(--ink); }
 .v-flow-goal { border-inline-start:3px solid var(--accent); }
 .v-flow-end > span { background:var(--accent); color:var(--on-accent); }
-.home-content .day-button.selected { border-color:var(--accent); box-shadow:inset 0 -3px var(--accent); }
+.home-content .day-button.selected { border-color:color-mix(in srgb,var(--accent) 38%,var(--navy)); box-shadow:inset 0 -1px color-mix(in srgb,var(--accent) 42%,var(--navy)); }
 .home-content .day-marker.is-completed { color:var(--accent); background:var(--accent-surface); border-color:transparent; }
 .home-content .day-button.selected .day-marker { color:var(--accent); }
 .home-content .v-hero .primary { background:var(--accent); color:var(--on-accent); }
@@ -1322,26 +1277,18 @@ button:focus-visible,summary:focus-visible { outline:2px solid var(--ink); outli
 .v-level-tabs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; background:var(--soft); padding:4px; border-radius:14px; }
 .v-level-tabs button { min-height:46px; padding:8px 4px; background:transparent; color:var(--muted); border-radius:10px; border-bottom:3px solid transparent; }
 .v-level-tabs [aria-selected=true] { color:var(--ink); font-weight:700; background:var(--accent-soft); border-color:var(--accent); }
-.v-level-description { margin-block:14px 22px; border-inline-start:3px solid var(--accent); padding-inline-start:12px; }
-.v-detail-session { padding:16px; margin-block:16px; border:1px solid var(--line); border-radius:18px; background:var(--card); }
-.v-detail-session h3 { margin-bottom:12px; }
-.v-detail-exercises { margin-block:8px 14px; }
-.v-detail-exercise { min-height:92px; padding-block:10px; display:grid; grid-template-rows:2.8rem auto; gap:4px; }
-.v-detail-exercise + .v-detail-exercise { border-top:1px solid var(--line); }
-.v-detail-exercise small { color:var(--muted); }
-.v-detail-exercise:has(.title-expanded) { grid-template-rows:auto auto; }
 @media(max-width:600px) {
  #modal.wide { width:100%; max-width:none; height:100dvh; max-height:100dvh; margin:0; border:0; border-radius:0; padding:16px; }
  .v-details-sticky { top:-16px; padding-top:max(12px,env(safe-area-inset-top)); }
 }
 /* Shared fixed controls; the image is top-aligned directly after the title. */
 .v-player .v-stage:is(.v-work,.v-rest) { display:grid; grid-template-rows:72px auto minmax(64px,1fr) 100px; gap:8px; padding:14px; align-items:stretch; }
-.v-player .v-exercise-image { grid-row:2; height:auto; min-height:0; max-height:none; max-width:none; width:100%; margin:0; display:grid; grid-template-rows:min(clamp(90px,27dvh,260px),calc((100vw - 60px)*.5581)) 48px; gap:6px; align-self:start; justify-items:stretch; }
+.v-player .v-exercise-image { grid-row:2; height:auto; min-height:0; max-height:none; max-width:none; width:100%; min-width:0; margin:0; display:grid; grid-template-columns:minmax(0,1fr); justify-content:stretch; justify-self:stretch; grid-template-rows:min(clamp(90px,27dvh,260px),calc((100vw - 60px)*.5581)) 48px; gap:6px; align-self:start; justify-items:stretch; }
 .v-player .v-exercise-image .v-image-frame { height:100%; width:100%; min-height:0; flex:none; display:flex; align-items:flex-start; justify-content:center; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; }
 .v-player .v-image-frame img { position:static; inset:auto; width:100%; height:100%; max-height:100%; object-fit:contain; object-position:center top; border-radius:0; }
 .v-player .v-exercise-image figcaption.v-exercise-caption { display:flex; flex-direction:column; justify-content:center; gap:2px; padding:5px 9px; margin:0; width:100%; box-sizing:border-box; border:1px dashed var(--line); background:var(--soft); border-radius:9px; font-size:12px; line-height:1.3; text-align:right; }
 .v-player .v-exercise-caption small { font-size:10px; }
-.v-player .v-dose-panel { grid-row:3; align-self:end; margin:0; padding:8px; min-height:64px; border-inline-start:3px solid var(--accent); }
+.v-player .v-dose-panel { grid-row:3; align-self:end; margin:0; padding:8px; min-height:64px; border:0; background:transparent; box-shadow:none; }
 .v-dose-panel .timer-value { color:var(--timer-ink); }
 @media(max-height:740px) {
  .v-player .v-exercise-image { grid-template-rows:clamp(90px,20dvh,148px) 46px; }
@@ -1353,3 +1300,23 @@ button:focus-visible,summary:focus-visible { outline:2px solid var(--ink); outli
  .v-player .v-exercise-caption small { font-size:9px; }
  .v-player .v-dose-panel { min-height:48px; padding:4px; }
 }
+/* Week application and read-only program explorer. */
+.v-plan-timing { display:grid; gap:12px; margin-top:20px; }
+.v-plan-timing h3:not(:first-child) { margin-top:12px; }
+.v-plan-timing p { color:var(--muted); font-size:14px; }
+.v-makeup-card { display:grid; gap:10px; padding:18px; background:var(--card); border:1px solid var(--accent); border-inline-start-width:4px; border-radius:20px; }
+.v-makeup-card .pill { justify-self:start; }
+.v-makeup-card p,.v-pending-plan { color:var(--muted); font-size:13px; }
+.v-pending-plan { padding:10px; border-inline-start:3px solid var(--accent); }
+.v-session-tabs { margin-top:7px; background:transparent; padding:0; }
+.v-session-tabs button { font-size:13px; line-height:1.4; min-height:52px; padding:6px 3px; overflow-wrap:anywhere; }
+.v-program-details .v-preview-intro { margin-top:12px; padding:14px; }
+.v-program-details .v-preview-intro h2 { font-size:22px; }
+.v-phase-number,.v-flow-node { border-radius:50%; aspect-ratio:1; display:grid; place-items:center; padding:2px 0 0; line-height:1; font-family:Tahoma,Arial,sans-serif; font-variant-numeric:tabular-nums; }
+/* A small travelling wave at the fill edge. Progress itself remains time-based. */
+.v-work #timer-button::after { border-inline-end:0; }
+.v-work #timer-button::before { content:""; pointer-events:none; position:absolute; z-index:-1; top:-16px; bottom:-16px; inset-inline-start:calc(var(--fill,0%) - 7px); width:14px; border:0; border-radius:0; background:radial-gradient(ellipse at right,var(--accent) 56%,transparent 60%) 0 0 / 14px 22px repeat-y; opacity:.28; animation:timer-wave 1.8s linear infinite; animation-play-state:paused; }
+.v-work #timer-button.timer-running::before { animation-play-state:running; }
+.v-work #timer-button:not(.timer-has-progress)::before,.v-work #timer-button.timer-complete::before { display:none; }
+@keyframes timer-wave { from { transform:translateY(0); } to { transform:translateY(22px); } }
+@media(prefers-reduced-motion:reduce) { .v-work #timer-button::before { display:none; animation:none; } }

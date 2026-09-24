@@ -19,7 +19,7 @@ function slotFor(settings, day) {
 }
 function opportunity(settings, history, day = todayKey()) {
   if (history.some((r) => r.dateKey === day || r.completedDate === day)) return null;
-  const slot = slotFor(settings, day) || slotFor(settings, shift(day, -1));
+  const slot = slotFor(settings, day) || (weekday(day) !== 0 ? slotFor(settings, shift(day, -1)) : null);
   if (!slot || slot.program !== planFor(settings, day)?.program || slot.level !== planFor(settings, day)?.level || history.some((r) => (r.scheduledDate || r.dateKey) === slot.date)) return null;
   return { ...slot, kind: slot.date === day ? "scheduled" : "makeup" };
 }
@@ -61,3 +61,13 @@ export {
   validPlan,
   weekday
 };
+
+export const weekStart = day => shift(day, -weekday(day));
+export const samePlan = (a,b) => Boolean(a && b && a.program===b.program && a.level===b.level && a.schedule.length===b.schedule.length && a.schedule.every(x=>b.schedule.some(y=>x.day===y.day&&x.session===y.session)));
+export function schedulePlan(settings, plan, day, timing) {
+ if (!validPlan(plan)) throw Error('اختر ثلاثة أيام مختلفة وجلسات A وB وC دون تكرار.');
+ if (!['this-week','next-week'].includes(timing)) throw Error('اختر موعد تطبيق الخطة.');
+ if (samePlan(settings.revisions.at(-1),plan)) return {settings, resetRange:null};
+ const start=weekStart(day), effectiveFrom=timing==='this-week'?start:shift(start,7);
+ return {settings:{...settings,levels:{...settings.levels,[plan.program]:plan.level},revisions:[...settings.revisions.filter(r=>r.effectiveFrom<effectiveFrom),{...plan,effectiveFrom}]},resetRange:timing==='this-week'?{start,end:shift(start,6)}:null};
+}

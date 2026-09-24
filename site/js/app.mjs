@@ -1,3 +1,5 @@
+import { observeTitles } from './presentation/fit-titles.mjs';
+import { renderProgramDetails } from './presentation/program-details.mjs';
 import { renderSessionPreview } from "./presentation/session-preview.mjs";
 import { renderHome } from "./presentation/home.mjs";
 import { renderHistory } from "./presentation/history.mjs";
@@ -44,7 +46,7 @@ function apply() {
 function show(html) {
   lastFocus = document.activeElement;
   $("#modal-content").innerHTML = html;
-  $("#modal").classList.toggle("wide", html.includes("v-comparison"));
+  $("#modal").classList.toggle("wide", html.includes("v-program-details"));
   if (!$("#modal").open) $("#modal").showModal();
 }
 function modalHead(title) {
@@ -70,7 +72,7 @@ function requirement() {
   return draftProgram === "move" ? "حائط وكرسي ثابت، وبساط في المستويين 2 و3." : "بساط وحائط وكرسي وسطح ثابت مناسب؛ دمبل واحد لجلسات السحب.";
 }
 function onboarding() {
-  return `<section class="card v-onboarding"><span class="eyebrow">${onboardingStage === 0 ? "1 — اختر برنامجك" : "2 — اختر مستواك"}</span><h1>${onboardingStage === 0 ? "ما نوع الحركة الذي يناسبك؟" : names[draftProgram]}</h1><p class="muted v-space">${onboardingStage === 0 ? "يمكنك تغيير البرنامج لاحقًا من الإعدادات." : "المستويات خاصة بهذا البرنامج، والاختيار يدوي دون اختبار."}</p><div class="v-choices">${onboardingStage === 0 ? programCards() : levels()}</div>${onboardingStage === 1 ? `<p class="v-space">${requirement()}</p><p class="small muted">تعلم المقاومة يحتاج توجيهًا مؤهلًا لليافعين؛ توقف عند الألم أو فقدان التحكم.</p><div class="v-buttons">${button("رجوع", "onboard-back")}${button("معاينة الجلسات", "preview-plan")}${button("اعتماد اختياري", "onboard-save", "primary")}</div>` : `<div class="v-buttons">${button("التالي", "onboard-next", "primary")}</div>`}</section>`;
+  return `<section class="card v-onboarding"><span class="eyebrow">${onboardingStage === 0 ? "1 — اختر برنامجك" : "2 — اختر مستواك"}</span><h1>${onboardingStage === 0 ? "ما نوع الحركة الذي يناسبك؟" : names[draftProgram]}</h1><p class="muted v-space">${onboardingStage === 0 ? "يمكنك تغيير البرنامج لاحقًا من الإعدادات." : "المستويات خاصة بهذا البرنامج، والاختيار يدوي دون اختبار."}</p><div class="v-choices">${onboardingStage === 0 ? programCards() : levels()}</div>${onboardingStage === 1 ? `<p class="v-space">${requirement()}</p><p class="small muted">تعلم المقاومة يحتاج توجيهًا مؤهلًا لليافعين؛ توقف عند الألم أو فقدان التحكم.</p><div class="v-buttons v-onboarding-actions">${button("رجوع", "onboard-back")}${button("معاينة الجلسات", "preview-plan")}${button("اعتماد اختياري", "onboard-save", "primary")}</div>` : `<div class="v-buttons">${button("التالي", "onboard-next", "primary")}</div>`}</section>`;
 }
 let previewSnapshot = null, previewReturn = null;
 function preview(id) {
@@ -332,6 +334,14 @@ document.addEventListener("click", (e) => {
     show(`${modalHead("استعراض البرامج")}<p class="muted">المعاينة لا تغيّر برنامجك أو جدولك.</p><div class="v-choices">${Object.keys(names).map((p) => button(names[p] + " — " + descriptions[p], "browse-program", "v-program", `data-id="${p}"`)).join("")}</div>`);
     return;
   }
+  if (a === "detail-level") {
+    const previousFocus=lastFocus;
+    show(programComparison(b.dataset.id, Number(b.dataset.levelId)));
+    lastFocus=previousFocus;
+    $('#modal').scrollTop=0;
+    document.querySelector(`#level-tab-${b.dataset.levelId}`).focus({preventScroll:true});
+    return;
+  }
   if (a === "browse-program") {
     show(programComparison(b.dataset.id));
     return;
@@ -485,12 +495,17 @@ document.addEventListener("change", (e) => {
     show(`${modalHead("استعادة النسخة الاحتياطية؟")}<p>ستُستبدل إعدادات هذا الجهاز وسجلّه بالملف المختار: ${pendingBackup.history.filter((r) => !r.hidden).length} جلسة، ${pendingBackup.active ? "مع جلسة جارية" : "دون جلسة جارية"}. صدّر بياناتك أولًا إذا أردت الاحتفاظ بها.</p><p>التذكيرات مرتبطة بالجهاز ولا تُنقل بالملف.</p><div class="v-buttons">${button("إلغاء", "close")}${button("استعادة واستبدال", "confirm-import", "primary")}</div>`);
   });
 });
-function programComparison(p) {
-  return `${modalHead(names[p])}<p class="muted">${descriptions[p]}</p><p class="small muted v-space">على الهاتف، اسحب الجدول أفقيًا لمقارنة المستويات.</p>${["A", "B", "C"].map((letter) => `<h3 class="v-space">${sessionName(p, letter)}</h3><div class="v-comparison" role="region" aria-label="مقارنة مستويات ${sessionName(p, letter)}" tabindex="0"><table><thead><tr>${[1, 2, 3].map((l) => `<th scope="col">${levelName(l)}</th>`).join("")}</tr></thead><tbody><tr>${[1, 2, 3].map((l) => {
-    const w = content.workouts.find((w2) => w2.id === `${p}-${letter.toLowerCase()}-${l}`);
-    return `<td><p class="small muted">${levelText[p][l - 1]}</p>${w.blocks.filter((b) => !["warmup", "cooldown"].includes(b.id)).map((b) => `<p class="pill">${b.kind === "repeat" ? `دورتان` : b.id === "strength" ? "القوة" : "التمارين"}</p>${b.items.filter((x) => x.exercise_id).map((x) => `<div class="v-preview-row"><strong>${esc(exerciseMap[x.exercise_id].name_ar)}</strong><small>${x.target} ${x.unit === "seconds" ? "ثانية" : x.unit === "cycles" ? "دورات" : "عدّات"}${x.sides === 2 ? " لكل جهة" : ""}${x.sets > 1 ? ` · ${x.sets} مجموعات` : ""}${x.pause_seconds ? ` · توقف ${x.pause_seconds}ث` : ""}</small></div>`).join("")}`).join("")}</td>`;
-  }).join("")}</tr><tr class="v-comparison-actions">${[1,2,3].map(l=>`<td>${button("التسلسل الكامل", "preview", "secondary", `data-workout="${p}-${letter.toLowerCase()}-${l}"`)}</td>`).join('')}</tr></tbody></table></div>`).join("")}${button("كل البرامج", "preview-all", "text-btn")}`;
+function programComparison(p, level = settings.levels?.[p] || 1) {
+ return renderProgramDetails(p, level, modalHead);
 }
+document.addEventListener('keydown', e => {
+ const tab=e.target.closest('[role="tab"][data-action="detail-level"]');
+ if (!tab || !['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+ e.preventDefault();
+ const n=Number(tab.dataset.levelId), target=e.key==='Home'?1:e.key==='End'?3:((n-1+(e.key==='ArrowLeft'?1:2))%3)+1;
+ document.querySelector(`#level-tab-${target}`)?.click();
+});
+observeTitles();
 async function boot() {
   try {
     repo = await openStorage();

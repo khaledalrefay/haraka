@@ -17,6 +17,6 @@ export function renderHome({settings, selected, active, history}) {
     const d = shift(start, i);
     const completed = history.some(r => executionDate(r) === d && r.status === "completed");
     const training = completed || Boolean(slotFor(settings, d));
-    return `<button class="day-button ${d === selected ? "selected" : ""}" data-day="${d}" aria-label="${days[i]} ${d} — ${completed ? "تمرين منجز" : training ? "تمرين" : "راحة"}" aria-pressed="${d === selected}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker ${completed ? "is-completed" : ""} ${training ? "" : "is-rest"}">${icon(training ? "dumbbell" : "coffee")}</span></button>`;
+    return `<button class="day-button ${d === selected ? "selected" : ""}" data-day="${d}" aria-label="${days[i]} ${d} — ${completed ? "تمرين منجز" : training ? "تمرين" : "راحة"}" aria-pressed="${d === selected}"><span>${days[i]}</span><b>${Number(d.slice(-2))}</b><span class="day-marker ${completed ? "is-completed" : ""} ${training ? "" : "is-rest"}">${icon(completed ? "check" : training ? "dumbbell" : "coffee")}</span></button>`;
   }).join("")}</div></section><section class="session-hero v-hero">${card}</section></div>`;
 }

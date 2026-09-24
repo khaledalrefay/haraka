@@ -6,12 +6,13 @@
     "test": "node --test tests/vnext/*.test.mjs",
     "test:pwa": "node tests/offline.cjs && node tests/push-handler.cjs",
     "test:browser": "node tests/vnext/storage.browser.cjs && node tests/vnext/ui.browser.cjs && node tests/vnext/release.browser.cjs && node tests/vnext/redesign.browser.cjs && node tests/vnext/flow.browser.cjs && node tests/vnext/beta10.browser.cjs",
-    "check:architecture": "python3 ../tools/check-architecture.py"
+    "check:architecture": "python3 ../tools/check-architecture.py",
+    "test:beta11": "node tests/vnext/beta11.browser.cjs"
   },
   "devDependencies": {
     "esbuild": "0.28.2",
     "playwright": "1.62.1"
   },
-  "version": "2.0.0-beta.10",
+  "version": "2.0.0-beta.11",
   "type": "module"
 }

@@ -3,7 +3,7 @@ const palettes = [
     "classic",
     "كحلي وبرتقالي",
     "#24415D",
-    "#E58A48"
+    "#F4AE76"
   ],
   [
     "ocean",

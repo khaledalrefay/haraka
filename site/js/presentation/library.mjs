@@ -1,3 +1,4 @@
+import { icon } from './icons.mjs';
 import { pageHeading } from './page-heading.mjs';
 import { content } from "../data/content.mjs";
 import { esc } from "./html.mjs";
@@ -22,7 +23,7 @@ function filteredExercises() {
   return content.exercises.filter((e) => normalizeSearch(e.name_ar + " " + e.id + " " + e.equipment + " " + libraryGroups.find((g) => g.ids.includes(e.id))?.name).includes(q)).sort((a, b) => libraryName(a).localeCompare(libraryName(b), "ar"));
 }
 function libraryCard(e) {
-  return `<button class="exercise-card" data-action="instruction" data-id="${e.id}"><span class="v-library-icon" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h6a3 3 0 0 1 3 3v14a4 4 0 0 0-4-3H4zM13 7a3 3 0 0 1 3-3h4v14h-3a4 4 0 0 0-4 3"/></svg></span><span class="exercise-caption"><strong dir="auto">${esc(libraryName(e))}</strong>${e.id === "march" ? '<span class="v-library-note">هادئ · متدرج · نشيط · بطيء</span>' : ""}<small>${e.equipment === "لا شيء" ? "دون أدوات" : esc(e.equipment)}</small></span><span class="v-library-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m14 6-6 6 6 6"/></svg></span></button>`;
+  return `<button class="exercise-card" data-action="instruction" data-id="${e.id}"><span class="v-library-icon" aria-hidden="true">${icon('motion')}</span><span class="exercise-caption"><strong dir="auto" data-fit-title>${esc(libraryName(e))}</strong>${e.id === "march" ? '<span class="v-library-note">هادئ · متدرج · نشيط · بطيء</span>' : ""}<small>${e.equipment === "لا شيء" ? "دون أدوات" : esc(e.equipment)}</small></span><span class="v-library-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m14 6-6 6 6 6"/></svg></span></button>`;
 }
 function libraryRows() {
   const rows = filteredExercises();

@@ -107,7 +107,7 @@ small,
   display: grid;
   place-items: center;
   background: var(--navy);
-  color: #F4AE76;
+  color: var(--accent);
   width: 48px;
   height: 48px;
   border-radius: 15px;
